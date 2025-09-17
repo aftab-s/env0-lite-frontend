@@ -1,0 +1,8 @@
+{
+  "/_not-found/page": "/_not-found",
+  "/cloudProvider/page": "/cloudProvider",
+  "/dashboard/page": "/dashboard",
+  "/favicon.ico/route": "/favicon.ico",
+  "/integration/page": "/integration",
+  "/page": "/"
+}
