@@ -1,0 +1,15 @@
+{
+  "pages": {
+    "/cloudProvider/page": [
+      "static/chunks/ff1a16fafef87110.js",
+      "static/chunks/7dd66bdf8a7e5707.js",
+      "static/chunks/5181b2bf0aec9508.css",
+      "static/chunks/3b3e68914aac7414.js",
+      "static/chunks/fd23c2cbb40c6a07.js",
+      "static/chunks/f2441e65e5af3638.js",
+      "static/chunks/6fc8155694fa8991.js",
+      "static/chunks/47f477e3d2ef265b.js",
+      "static/chunks/turbopack-0bb734db775210c4.js"
+    ]
+  }
+}
