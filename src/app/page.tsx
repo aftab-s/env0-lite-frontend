@@ -5,9 +5,18 @@ import { logIn } from "@/services/query/useAuthentication";
 import { signIn, useSession } from "next-auth/react";
 import Image from "next/image";
 import { useState } from "react";
+import { useDarkMode } from "@/context/DarkModeProvider";
 
 export default function AuthForm() {
-  const { data: session } = useSession(); // ✅ works now that SessionProvider is added
+  const { data: session } = useSession();
+  const { darkMode } = useDarkMode();
+
+  const mainBg = darkMode ? "bg-[#111111]" : "bg-[#EFEFEF]";
+  const textColor = darkMode ? "text-white" : "text-black";
+  const subTextColor = darkMode ? "text-gray-400" : "text-gray-600";
+  const borderColor = darkMode ? "border-[#2A2A2A]" : "border-gray-300";
+  const hoverBg = darkMode ? "hover:bg-[#3c3c3c]" : "hover:bg-gray-100";
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
@@ -31,19 +40,20 @@ export default function AuthForm() {
     setErrors({});
 
     try {
-      await logIn({
-        email,
-        password,
-      });
+      await logIn({ email, password });
     } catch (error) {
       console.error("Login failed:", error);
     }
   };
 
   return (
-    <div className="w-screen h-full flex flex-col items-center justify-center bg-[#111111]">
+    <div
+      className={`w-screen h-full flex flex-col items-center justify-center ${mainBg} transition-colors duration-500`}
+    >
       <div className="w-85 mb-5 flex flex-col items-start justify-center">
-        <span className="font-semibold text-[20px]">Sign In to TerraFuel</span>
+        <span className={`font-semibold text-[20px] ${textColor}`}>
+          Sign In to TerraFuel
+        </span>
       </div>
 
       <div className="w-85">
@@ -53,7 +63,7 @@ export default function AuthForm() {
             <button
               key={provider}
               onClick={() => signIn(provider.toLowerCase())}
-              className="flex items-center justify-center gap-2 w-full border border-[#2A2A2A] rounded-[5px] py-1 hover:bg-[#3c3c3c]"
+              className={`flex items-center justify-center gap-2 w-full border ${borderColor} rounded-[5px] py-1 ${hoverBg}`}
             >
               <Image
                 src={`/login/${provider}.svg`}
@@ -61,7 +71,11 @@ export default function AuthForm() {
                 width={20}
                 height={20}
                 priority
-                className="m-2"
+                className={`m-2 ${
+                  darkMode && (provider === "Github" || provider === "Google")
+                    ? ""
+                    : "invert"
+                }`}
               />
             </button>
           ))}
@@ -69,7 +83,13 @@ export default function AuthForm() {
 
         {/* OR Divider */}
         <div className="flex items-center justify-center gap-2 mb-6">
-          <span className="text-sm text-gray-500 bg-[#0A0A0A] px-3">or</span>
+          <span
+            className={`text-sm px-3 rounded ${
+              darkMode ? "text-gray-400 bg-[#0A0A0A]" : "text-gray-500 bg-gray-300"
+            }`}
+          >
+            or
+          </span>
         </div>
 
         {/* Email/Password Form */}
@@ -98,22 +118,39 @@ export default function AuthForm() {
         </form>
 
         {/* Links */}
-        <div className="mt-6 flex flex-col items-start gap-2 text-[12px]">
-          <a href="#" className="text-[#A259FF] hover:underline">
+        <div
+          className={`mt-6 flex flex-col items-start gap-2 text-[12px] ${subTextColor}`}
+        >
+          <a
+            href="#"
+            className={`hover:underline ${
+              darkMode ? "text-[#A259FF]" : "text-[#6B21A8]"
+            }`}
+          >
             Sign in with SSO
           </a>
           <p>
             Need an account?{" "}
-            <a href="/signup" className="text-[#A259FF] hover:underline">
+            <a
+              href="/signup"
+              className={`hover:underline ${
+                darkMode ? "text-[#A259FF]" : "text-[#6B21A8]"
+              }`}
+            >
               Sign up
             </a>
           </p>
           <p>
             Forgot your password?{" "}
-            <a href="/forgot-password" className="text-[#A259FF] hover:underline">
+            <a
+              href="/forgot-password"
+              className={`hover:underline ${
+                darkMode ? "text-[#A259FF]" : "text-[#6B21A8]"
+              }`}
+            >
               Reset it
             </a>
-          </p>
+  </p>
         </div>
       </div>
     </div>

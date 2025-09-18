@@ -245,9 +245,7 @@ __turbopack_context__.s([
     "GET",
     ()=>handler,
     "POST",
-    ()=>handler,
-    "default",
-    ()=>BitbucketProvider
+    ()=>handler
 ]);
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$session$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/lib/session.ts [app-route] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2d$auth$2f$next$2f$index$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next-auth/next/index.js [app-route] (ecmascript)");
@@ -311,7 +309,6 @@ const authOption = {
         },
         session: __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$session$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["session"],
         async redirect ({ url, baseUrl }) {
-            // Always send users to dashboard
             return `${baseUrl}/dashboard`;
         },
         async jwt ({ token, profile }) {

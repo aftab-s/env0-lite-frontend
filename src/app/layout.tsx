@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
-import Image from "next/image";
 import Providers from "./providers";
+import { DarkModeProvider } from "@/context/DarkModeProvider";
+import Header from "@/components/header/page";
 
 const inter = Inter({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
 
@@ -23,24 +24,16 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
       <body
         className={`h-screen flex flex-col ${geistSans.variable} ${geistMono.variable} ${inter.className} antialiased`}
       >
-        <div className={`flex h-fit w-screen ${inter.className} bg-[#111111]`}>
-              <div className="p-3 flex items-stretch justify-center h-fit">
-                <div className="flex items-center justify-center flex-1">
-                  <Image src="/login/Logo.svg" alt="Logo" width={30} height={35} priority /></div>
-                <div className="flex items-center justify-center flex-1 ">
-                  <span className="ml-3">TerraFuel</span>
-                </div>
-              </div>
-            </div>
-         <Providers>{children}</Providers>
+        <DarkModeProvider>
+          <Header />
+          <Providers>{children}</Providers>
+        </DarkModeProvider>
       </body>
     </html>
   );

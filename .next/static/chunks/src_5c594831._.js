@@ -9,17 +9,25 @@ __turbopack_context__.s([
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/image.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$context$2f$DarkModeProvider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/context/DarkModeProvider.tsx [app-client] (ecmascript)");
 ;
 var _s = __turbopack_context__.k.signature();
 "use client";
+;
 ;
 ;
 function CommonDropdown(param) {
     let { value, onChange, options, placeholder = "Select...", helperText, error } = param;
     var _options_find;
     _s();
+    const { darkMode } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$context$2f$DarkModeProvider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useDarkMode"])();
     const [open, setOpen] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const dropdownRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(null);
+    const bgColor = darkMode ? "bg-[#111111]" : "bg-white";
+    const borderColor = error ? "border-red-500" : darkMode ? "border-[#2A2A2A]" : "border-gray-300";
+    const textColor = darkMode ? "text-white" : "text-black";
+    const helperColor = darkMode ? "text-gray-400" : "text-gray-600";
+    const hoverBg = darkMode ? "hover:bg-[#2A2A2A]" : "hover:bg-gray-100";
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "CommonDropdown.useEffect": ()=>{
             const handleClickOutside = {
@@ -41,14 +49,14 @@ function CommonDropdown(param) {
         ref: dropdownRef,
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "w-full rounded-[5px] border px-3 py-2 text-[14px] bg-[#111111] cursor-pointer flex justify-between items-center ".concat(error ? "border-red-500" : "border-[#2A2A2A]"),
+                className: "w-full rounded-[5px] border px-3 py-2 text-[14px] cursor-pointer flex justify-between items-center ".concat(bgColor, " ").concat(borderColor, " ").concat(textColor),
                 onClick: ()=>setOpen(!open),
                 children: [
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                         children: selectedLabel || placeholder
                     }, void 0, false, {
                         fileName: "[project]/src/components/Dropdown/page.tsx",
-                        lineNumber: 50,
+                        lineNumber: 63,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -56,22 +64,22 @@ function CommonDropdown(param) {
                         alt: "Dropdown",
                         width: 10,
                         height: 10,
-                        className: "ml-2 transition-transform ".concat(open ? "rotate-180" : "", " filter invert")
+                        className: "ml-2 transition-transform ".concat(open ? "rotate-180" : "", " ").concat(darkMode ? "invert" : "")
                     }, void 0, false, {
                         fileName: "[project]/src/components/Dropdown/page.tsx",
-                        lineNumber: 51,
+                        lineNumber: 64,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/Dropdown/page.tsx",
-                lineNumber: 44,
+                lineNumber: 59,
                 columnNumber: 7
             }, this),
             open && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "absolute top-full left-0 w-full bg-[#111111] border border-[#2A2A2A] rounded-[5px] z-10 max-h-60 overflow-y-auto mt-1",
+                className: "absolute top-full left-0 w-full ".concat(bgColor, " border ").concat(borderColor, " rounded-[5px] z-10 max-h-60 overflow-y-auto mt-1"),
                 children: options.map((option)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "px-3 py-2 text-[14px] hover:bg-[#2A2A2A] cursor-pointer",
+                        className: "px-3 py-2 text-[14px] cursor-pointer ".concat(hoverBg),
                         onClick: ()=>{
                             onChange(option.value);
                             setOpen(false);
@@ -79,12 +87,12 @@ function CommonDropdown(param) {
                         children: option.label
                     }, option.value, false, {
                         fileName: "[project]/src/components/Dropdown/page.tsx",
-                        lineNumber: 63,
+                        lineNumber: 80,
                         columnNumber: 13
                     }, this))
             }, void 0, false, {
                 fileName: "[project]/src/components/Dropdown/page.tsx",
-                lineNumber: 61,
+                lineNumber: 76,
                 columnNumber: 9
             }, this),
             error ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -92,24 +100,28 @@ function CommonDropdown(param) {
                 children: error
             }, void 0, false, {
                 fileName: "[project]/src/components/Dropdown/page.tsx",
-                lineNumber: 79,
+                lineNumber: 95,
                 columnNumber: 9
             }, this) : helperText ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                className: "text-gray-400 text-xs mt-1",
+                className: "".concat(helperColor, " text-xs mt-1"),
                 children: helperText
             }, void 0, false, {
                 fileName: "[project]/src/components/Dropdown/page.tsx",
-                lineNumber: 81,
+                lineNumber: 97,
                 columnNumber: 9
             }, this) : null
         ]
     }, void 0, true, {
         fileName: "[project]/src/components/Dropdown/page.tsx",
-        lineNumber: 43,
+        lineNumber: 58,
         columnNumber: 5
     }, this);
 }
-_s(CommonDropdown, "6QGvlA8yoVm3ercldYN7fVS4nbM=");
+_s(CommonDropdown, "YGXJ0aEvqwsmHX6opezWmA7LhrQ=", false, function() {
+    return [
+        __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$context$2f$DarkModeProvider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useDarkMode"]
+    ];
+});
 _c = CommonDropdown;
 var _c;
 __turbopack_context__.k.register(_c, "CommonDropdown");
@@ -125,22 +137,35 @@ __turbopack_context__.s([
     ()=>Button
 ]);
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$context$2f$DarkModeProvider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/context/DarkModeProvider.tsx [app-client] (ecmascript)");
+;
+var _s = __turbopack_context__.k.signature();
 "use client";
 ;
 function Button(param) {
     let { children, onClick, type = "button", className = "", disabled = false } = param;
+    _s();
+    const { darkMode } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$context$2f$DarkModeProvider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useDarkMode"])();
+    const bgColor = darkMode ? "bg-white" : "bg-black";
+    const textColor = darkMode ? "text-black" : "text-white";
+    const hoverBg = darkMode ? "hover:bg-gray-200" : "hover:bg-gray-800";
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
         type: type,
         onClick: onClick,
         disabled: disabled,
-        className: "w-full text-[14px] bg-[#FFFFFF] text-black rounded-[5px] py-2 font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed ".concat(className),
+        className: "w-full text-[14px] rounded-[5px] py-2 font-medium ".concat(bgColor, " ").concat(textColor, " ").concat(hoverBg, " disabled:opacity-50 disabled:cursor-not-allowed ").concat(className),
         children: children
     }, void 0, false, {
         fileName: "[project]/src/components/PrimaryButton/page.tsx",
-        lineNumber: 20,
+        lineNumber: 27,
         columnNumber: 5
     }, this);
 }
+_s(Button, "HvlUGfrb1+gsCIZD1j97B64/TGM=", false, function() {
+    return [
+        __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$context$2f$DarkModeProvider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useDarkMode"]
+    ];
+});
 _c = Button;
 var _c;
 __turbopack_context__.k.register(_c, "Button");
@@ -156,27 +181,37 @@ __turbopack_context__.s([
     ()=>Input
 ]);
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$context$2f$DarkModeProvider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/context/DarkModeProvider.tsx [app-client] (ecmascript)");
+;
+var _s = __turbopack_context__.k.signature();
 "use client";
 ;
 function Input(param) {
     let { label, helperText, error, className = "", ...props } = param;
+    _s();
+    const { darkMode } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$context$2f$DarkModeProvider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useDarkMode"])();
+    const labelColor = darkMode ? "text-[#EDEDED]" : "text-gray-700";
+    const bgColor = darkMode ? "bg-[#111111]" : "bg-white";
+    const borderColor = error ? "border-red-500" : darkMode ? "border-[#2A2A2A]" : "border-gray-300";
+    const textColor = darkMode ? "text-white" : "text-black";
+    const helperColor = darkMode ? "text-gray-400" : "text-gray-600";
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
         className: "flex flex-col gap-1",
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
-                className: "block text-[12px] font-normal text-[#EDEDED]",
+                className: "block text-[12px] font-normal ".concat(labelColor),
                 children: label
             }, void 0, false, {
                 fileName: "[project]/src/components/Input/page.tsx",
-                lineNumber: 19,
+                lineNumber: 32,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                 ...props,
-                className: "w-full rounded-[5px] border px-3 py-2 text-[14px] focus:outline-none ".concat(error ? "border-red-500" : "border-[#2A2A2A]", " ").concat(className)
+                className: "w-full rounded-[5px] border px-3 py-2 text-[14px] focus:outline-none ".concat(bgColor, " ").concat(borderColor, " ").concat(textColor, " ").concat(className)
             }, void 0, false, {
                 fileName: "[project]/src/components/Input/page.tsx",
-                lineNumber: 20,
+                lineNumber: 35,
                 columnNumber: 7
             }, this),
             error ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -184,23 +219,28 @@ function Input(param) {
                 children: error
             }, void 0, false, {
                 fileName: "[project]/src/components/Input/page.tsx",
-                lineNumber: 27,
+                lineNumber: 40,
                 columnNumber: 9
             }, this) : helperText ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                className: "text-gray-400 text-xs",
+                className: "".concat(helperColor, " text-xs"),
                 children: helperText
             }, void 0, false, {
                 fileName: "[project]/src/components/Input/page.tsx",
-                lineNumber: 29,
+                lineNumber: 42,
                 columnNumber: 9
             }, this) : null
         ]
     }, void 0, true, {
         fileName: "[project]/src/components/Input/page.tsx",
-        lineNumber: 18,
+        lineNumber: 31,
         columnNumber: 5
     }, this);
 }
+_s(Input, "HvlUGfrb1+gsCIZD1j97B64/TGM=", false, function() {
+    return [
+        __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$context$2f$DarkModeProvider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useDarkMode"]
+    ];
+});
 _c = Input;
 var _c;
 __turbopack_context__.k.register(_c, "Input");
@@ -310,8 +350,10 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Dropdown$2f$page$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/components/Dropdown/page.tsx [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$PrimaryButton$2f$page$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/components/PrimaryButton/page.tsx [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Input$2f$page$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/components/Input/page.tsx [app-client] (ecmascript)");
-var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$services$2f$query$2f$useAuthentication$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/services/query/useAuthentication.ts [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$context$2f$DarkModeProvider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/context/DarkModeProvider.tsx [app-client] (ecmascript)");
+// TODO: replace with your actual signup service
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$services$2f$query$2f$useAuthentication$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/services/query/useAuthentication.ts [app-client] (ecmascript)");
 ;
 var _s = __turbopack_context__.k.signature();
 "use client";
@@ -320,8 +362,13 @@ var _s = __turbopack_context__.k.signature();
 ;
 ;
 ;
+;
 function SignupForm() {
     _s();
+    const { darkMode } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$context$2f$DarkModeProvider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useDarkMode"])();
+    const bgColor = darkMode ? "bg-[#11111]" : "bg-[#EFEFEF]";
+    const textColor = darkMode ? "text-white" : "text-black";
+    const subTextColor = darkMode ? "text-gray-400" : "text-gray-600";
     const [name, setName] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
     const [email, setEmail] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
     const [password, setPassword] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
@@ -352,10 +399,9 @@ function SignupForm() {
                 password,
                 role
             });
-            console.log({
+            console.log("Signup successful:", {
                 name,
                 email,
-                password,
                 role
             });
         } catch (error) {
@@ -363,21 +409,21 @@ function SignupForm() {
         }
     };
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-        className: "w-screen h-full flex flex-col items-center justify-center bg-[#111111]",
+        className: "w-screen h-full flex flex-col items-center justify-center transition-colors duration-500 ".concat(bgColor),
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "w-85 mb-5 flex flex-col items-start justify-center",
                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                    className: "font-semibold text-[20px]",
+                    className: "font-semibold text-[20px] ".concat(textColor),
                     children: "Sign Up for TerraFuel"
                 }, void 0, false, {
                     fileName: "[project]/src/app/signup/page.tsx",
-                    lineNumber: 67,
+                    lineNumber: 75,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/app/signup/page.tsx",
-                lineNumber: 66,
+                lineNumber: 74,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -397,7 +443,7 @@ function SignupForm() {
                                 error: errors.name
                             }, void 0, false, {
                                 fileName: "[project]/src/app/signup/page.tsx",
-                                lineNumber: 72,
+                                lineNumber: 82,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Input$2f$page$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -410,17 +456,17 @@ function SignupForm() {
                                 error: errors.email
                             }, void 0, false, {
                                 fileName: "[project]/src/app/signup/page.tsx",
-                                lineNumber: 82,
+                                lineNumber: 92,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
-                                        className: "block text-[12px] font-normal mb-1 text-[#EDEDED]",
+                                        className: "block text-[12px] font-normal mb-1 ".concat(textColor),
                                         children: "Role"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/signup/page.tsx",
-                                        lineNumber: 93,
+                                        lineNumber: 103,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Dropdown$2f$page$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -440,13 +486,13 @@ function SignupForm() {
                                         helperText: "Choose a role for this account"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/signup/page.tsx",
-                                        lineNumber: 96,
+                                        lineNumber: 108,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/signup/page.tsx",
-                                lineNumber: 92,
+                                lineNumber: 102,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Input$2f$page$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -459,7 +505,7 @@ function SignupForm() {
                                 error: errors.password
                             }, void 0, false, {
                                 fileName: "[project]/src/app/signup/page.tsx",
-                                lineNumber: 108,
+                                lineNumber: 120,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Input$2f$page$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -472,7 +518,7 @@ function SignupForm() {
                                 error: errors.confirmPassword
                             }, void 0, false, {
                                 fileName: "[project]/src/app/signup/page.tsx",
-                                lineNumber: 118,
+                                lineNumber: 130,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$PrimaryButton$2f$page$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -480,55 +526,59 @@ function SignupForm() {
                                 children: "Sign Up"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/signup/page.tsx",
-                                lineNumber: 128,
+                                lineNumber: 140,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/signup/page.tsx",
-                        lineNumber: 71,
+                        lineNumber: 81,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "mt-6 flex flex-col items-start gap-2 text-[12px]",
+                        className: "mt-6 flex flex-col items-start gap-2 text-[12px] ".concat(subTextColor),
                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                             children: [
                                 "Already have an account?",
                                 " ",
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
                                     href: "/",
-                                    className: "text-[#A259FF] hover:underline",
+                                    className: "hover:underline ".concat(darkMode ? "text-[#A259FF]" : "text-[#6B21A8]"),
                                     children: "Sign in"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/signup/page.tsx",
-                                    lineNumber: 134,
+                                    lineNumber: 146,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/signup/page.tsx",
-                            lineNumber: 132,
+                            lineNumber: 144,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/app/signup/page.tsx",
-                        lineNumber: 131,
+                        lineNumber: 143,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/signup/page.tsx",
-                lineNumber: 70,
+                lineNumber: 80,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/signup/page.tsx",
-        lineNumber: 65,
+        lineNumber: 71,
         columnNumber: 5
     }, this);
 }
-_s(SignupForm, "rR3M6G6vFGRhYn63zwhGd+AZ09I=");
+_s(SignupForm, "Rac7Z2f0dzIkE2iJkGtQ5BLKLts=", false, function() {
+    return [
+        __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$context$2f$DarkModeProvider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useDarkMode"]
+    ];
+});
 _c = SignupForm;
 var _c;
 __turbopack_context__.k.register(_c, "SignupForm");
