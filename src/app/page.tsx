@@ -1,161 +1,121 @@
 "use client";
-import { useState } from "react";
+import Button from "@/components/PrimaryButton/page";
+import Input from "@/components/Input/page";
+import { logIn } from "@/services/query/useAuthentication";
+import { signIn, useSession } from "next-auth/react";
 import Image from "next/image";
+import { useState } from "react";
 
-const LoginPage = () => {
-  const [darkMode, setDarkMode] = useState(false);
+export default function AuthForm() {
+  const { data: session } = useSession(); // ✅ works now that SessionProvider is added
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
 
-  // Right side conditional classes
-  const rightBg = darkMode ? "bg-black" : "bg-white";
-  const headingColor = darkMode ? "text-white" : "text-gray-900";
-  const subHeadingColor = darkMode ? "text-[#374151]" : "text-gray-500";
-  const inputBg = darkMode
-    ? "bg-gray-800 text-white placeholder-gray-400"
-    : "bg-white text-black placeholder-[#A9A9A9]";
-  const borderColor = darkMode ? "border-gray-700" : "border-gray-300";
-  const tabActiveColor = darkMode ? "#A5BCFD" : "#021A5A";
-  const tabInactiveColor = darkMode ? "#6B7280" : "#6B7280";
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const newErrors: { email?: string; password?: string } = {};
+    if (!email.trim()) newErrors.email = "Email is required";
+    else {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) newErrors.email = "Invalid email format";
+    }
+    if (!password.trim()) newErrors.password = "Password is required";
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    setErrors({});
+
+    try {
+      await logIn({
+        email,
+        password,
+      });
+    } catch (error) {
+      console.error("Login failed:", error);
+    }
+  };
 
   return (
-    <div className="flex h-screen w-screen relative">
-      {/* Dark mode toggle */}
-       <div className="absolute top-4 right-4 z-10 flex items-center">
-        <div
-          className={`w-14 h-7 flex items-center rounded-full p-1 cursor-pointer transition-colors duration-300 ${
-            darkMode ? "bg-gray-600" : "bg-yellow-300"
-          }`}
-          onClick={() => setDarkMode(!darkMode)}
-        >
-          {/* Slider circle */}
-          <div
-            className={`bg-white w-5 h-5 rounded-full shadow-md transform transition-transform duration-300 ${
-              darkMode ? "translate-x-7" : "translate-x-0"
-            }`}
-          ></div>
-          {/* Optional icons */}
-          <span className="absolute left-1 text-xs">{darkMode ? "🌙" : "🌞"}</span>
-        </div>
+    <div className="w-screen h-full flex flex-col items-center justify-center bg-[#111111]">
+      <div className="w-85 mb-5 flex flex-col items-start justify-center">
+        <span className="font-semibold text-[20px]">Sign In to TerraFuel</span>
       </div>
 
-      {/* Left side gradient (unchanged, never reacts to dark mode) */}
-      <div className="flex flex-1 h-full items-center justify-center bg-gradient-to-r from-[#E0E7FF] to-[#EFF6FF]">
-        <Image src="/login/Logo.svg" alt="Logo" width={125} height={38} priority />
-      </div>
-
-      {/* Right side */}
-      <div
-        className={`flex flex-2 items-center justify-center ${rightBg} h-full transition-colors duration-500`}>
-        <div className="w-full max-w-sm space-y-6 px-4">
-
-          {/* Heading */}
-          <div className="space-y-2">
-            <div className={`font-extrabold text-[29px] leading-[36px] font-inter ${headingColor} transition-colors duration-500`}>
-              Welcome to Fuel
-            </div>
-            <div className={`font-normal text-[14.74px] leading-[24px] font-inter ${subHeadingColor} transition-colors duration-500`}>
-              Frictionless deployment of infrastructure
-            </div>
-          </div>
-
-          {/* Tabs: Login | Sign Up */}
-          <div className="flex border-b transition-colors duration-300" style={{ borderColor: darkMode ? '#1F2228' : '#D1D5DB' }}>
+      <div className="w-85">
+        {/* OAuth Buttons */}
+        <div className="flex gap-3 mb-6">
+          {["Github", "Gitlab", "Bitbucket", "Google"].map((provider) => (
             <button
-              className={`px-3 py-2 text-center font-inter font-bold text-[11px] leading-[20px] border-b-2 transition-colors duration-300`}
-              style={{
-                color: tabActiveColor,
-                borderColor: tabActiveColor
-              }}
-            >
-              Login
-            </button>
-            <button
-              className={`px-3 py-2 text-center font-inter font-bold text-[11px] leading-[20px] border-b-2 border-transparent transition-colors duration-500`}
-              style={{ color: tabInactiveColor }}
-            >
-              Sign Up
-            </button>
-          </div>
-
-          {/* Login form */}
-          <form className="space-y-4">
-            {/* Email */}
-            <div className="flex flex-col gap-1">
-              <label className={`text-[12px] leading-[20px] font-inter font-medium ${subHeadingColor} transition-colors duration-500`}>
-                Email
-              </label>
-              <input
-                type="email"
-                placeholder="you@example.com"
-                className={`w-full rounded-[6px] px-3 py-2 text-[13px] ${inputBg} border border-t-[0.8px] ${borderColor}
-                  focus:border-[#021A5A] focus:ring focus:ring-[#021A5A] focus:ring-opacity-50
-                  transition-colors duration-500`}
-              />
-            </div>
-
-            {/* Password */}
-            <div className="flex flex-col gap-1">
-              <label className={`text-[12px] leading-[20px] font-inter font-medium ${subHeadingColor} transition-colors duration-500`}>
-                Password
-              </label>
-              <input
-                type="password"
-                placeholder="••••••••"
-                className={`w-full rounded-[6px] px-3 py-2 text-[13px] ${inputBg} border border-t-[0.8px] ${borderColor}
-                  focus:border-[#021A5A] focus:ring focus:ring-[#021A5A] focus:ring-opacity-50
-                  transition-colors duration-500`}
-              />
-            </div>
-
-            {/* Continue button */}
-            <button
-              type="submit"
-              className={`w-full font-inter text-[14px] py-2 font-bold   rounded-md
-                ${darkMode ? "bg-[#A5BCFD]  text-black" : "bg-[#021A5A] dark:bg-[#2563EB] text-white"}
-                transition-colors duration-500
-                hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1`}
-            >
-              Continue
-            </button>
-          </form>
-
-          {/* OR Divider */}
-          <div className="flex items-center my-4">
-            <div className={`flex-1 h-px ${darkMode ? "bg-[#1F2228]" : "bg-[#E5E7EB]"} transition-colors duration-300`}></div>
-            <span className={`mx-3 text-[10px] font-inter ${darkMode ? "text-gray-400" : "text-[#9CA3AF]"} `}>OR</span>
-            <div className={`flex-1 h-px ${darkMode ? "bg-[#1F2228]" : "bg-[#E5E7EB]"} transition-colors duration-300`}></div>
-          </div>
-
-          {/* Github Button */}
-          <div>
-            <button
-              type="button"
-              className={`w-full font-inter text-[14px] py-2 px-4 font-bold 
-                ${darkMode ? "bg-[#C8D2E0]  text-black" : "bg-[#1F2937] dark:bg-gray-800 text-white"}
-                 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2
-                 focus:ring-indigo-500 focus:ring-offset-1 flex items-center justify-center
-                 transition-colors duration-500`}
+              key={provider}
+              onClick={() => signIn(provider.toLowerCase())}
+              className="flex items-center justify-center gap-2 w-full border border-[#2A2A2A] rounded-[5px] py-1 hover:bg-[#3c3c3c]"
             >
               <Image
-                src="/login/github.svg"
-                alt="Github logo"
-                width={18}
-                height={18}
-                className="inline-block mr-2 mb-1"
+                src={`/login/${provider}.svg`}
+                alt={provider}
+                width={20}
+                height={20}
+                priority
+                className="m-2"
               />
-              Continue with Github
             </button>
+          ))}
+        </div>
 
-            {/* Forgot Password */}
-            <div className="flex items-center my-4 justify-center">
-              <span className={`mx-3 text-[12px] font-inter ${darkMode ? "text-[#63B3ED]" : "text-[#007CD8]"}`}>
-                Forgot Password?
-              </span>
-            </div>
-          </div>
+        {/* OR Divider */}
+        <div className="flex items-center justify-center gap-2 mb-6">
+          <span className="text-sm text-gray-500 bg-[#0A0A0A] px-3">or</span>
+        </div>
+
+        {/* Email/Password Form */}
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <Input
+            helperText="Enter your email"
+            label="Email"
+            type="email"
+            placeholder="your@email.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            error={errors.email}
+          />
+
+          <Input
+            helperText="Enter your password"
+            label="Password"
+            type="password"
+            placeholder="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            error={errors.password}
+          />
+
+          <Button type="submit">Sign In</Button>
+        </form>
+
+        {/* Links */}
+        <div className="mt-6 flex flex-col items-start gap-2 text-[12px]">
+          <a href="#" className="text-[#A259FF] hover:underline">
+            Sign in with SSO
+          </a>
+          <p>
+            Need an account?{" "}
+            <a href="/signup" className="text-[#A259FF] hover:underline">
+              Sign up
+            </a>
+          </p>
+          <p>
+            Forgot your password?{" "}
+            <a href="/forgot-password" className="text-[#A259FF] hover:underline">
+              Reset it
+            </a>
+          </p>
         </div>
       </div>
     </div>
   );
-};
-
-export default LoginPage;
+}

@@ -1,0 +1,176 @@
+"use client";
+import Input from "@/components/Input/page";
+import Button from "@/components/PrimaryButton/page";
+import { useState } from "react";
+
+export default function ForgotPassword() {
+  const [step, setStep] = useState<"email" | "otp" | "reset">("email");
+  const [email, setEmail] = useState("");
+  const [otp, setOtp] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [errors, setErrors] = useState<{
+    email?: string;
+    otp?: string;
+    password?: string;
+    confirmPassword?: string;
+  }>({});
+
+  const handleEmailSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const newErrors: typeof errors = {};
+
+    if (!email.trim()) newErrors.email = "Email is required";
+    else {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) newErrors.email = "Invalid email format";
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    setErrors({});
+    try {
+      // Call API to send OTP
+      // await sendOtp({ email });
+      console.log("OTP sent to:", email);
+      setStep("otp");
+    } catch (error) {
+      console.error("Failed to send OTP:", error);
+    }
+  };
+
+  const handleOtpSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const newErrors: typeof errors = {};
+
+    if (!otp.trim()) newErrors.otp = "OTP is required";
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    setErrors({});
+    try {
+      // Call API to verify OTP
+      // const valid = await verifyOtp({ email, otp });
+      const valid = true; // simulate success
+      if (valid) {
+        setStep("reset");
+      } else {
+        setErrors({ otp: "Invalid OTP" });
+      }
+    } catch (error) {
+      console.error("OTP verification failed:", error);
+    }
+  };
+
+  const handleResetSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const newErrors: typeof errors = {};
+
+    if (!password.trim()) newErrors.password = "Password is required";
+    else if (password.length < 6)
+      newErrors.password = "Password must be at least 6 characters";
+
+    if (confirmPassword !== password)
+      newErrors.confirmPassword = "Passwords do not match";
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    setErrors({});
+    try {
+      // Call API to reset password
+      // await resetPassword({ email, password });
+      console.log("Password reset for:", email);
+      alert("Password reset successful! You can now log in.");
+      setStep("email");
+      setEmail("");
+      setPassword("");
+      setConfirmPassword("");
+      setOtp("");
+    } catch (error) {
+      console.error("Password reset failed:", error);
+    }
+  };
+
+  return (
+    <div className="w-screen h-full flex flex-col items-center justify-center bg-[#111111]">
+      <div className="w-85 mb-5 flex flex-col items-start justify-center">
+        <span className="font-semibold text-[20px]">Forgot Password</span>
+      </div>
+
+      <div className="w-85">
+        {step === "email" && (
+          <form onSubmit={handleEmailSubmit} className="flex flex-col gap-4">
+            <Input
+              helperText="Registered Account Email foo recovery"
+              label="Email"
+              type="email"
+              placeholder="your@email.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              error={errors.email}
+            />
+            <Button type="submit">Send OTP</Button>
+          </form>
+        )}
+
+        {step === "otp" && (
+          <form onSubmit={handleOtpSubmit} className="flex flex-col gap-4">
+            <Input
+              helperText="Enter the OTP sent to your email"
+              label="OTP"
+              type="text"
+              placeholder="Enter OTP"
+              value={otp}
+              onChange={(e) => setOtp(e.target.value)}
+              error={errors.otp}
+            />
+            <Button type="submit">Verify OTP</Button>
+          </form>
+        )}
+
+        {step === "reset" && (
+          <form onSubmit={handleResetSubmit} className="flex flex-col gap-4">
+            <Input
+              helperText="Your email cannot be changed"
+              label="Email"
+              type="email"
+              placeholder="your@email.com"
+              value={email}
+              onChange={() => {}}
+              error={errors.email}
+              disabled
+            />
+            <Input
+              helperText="Enter new password"
+              label="Password"
+              type="password"
+              placeholder="New password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              error={errors.password}
+            />
+            <Input
+              helperText="Confirm new password"
+              label="Confirm Password"
+              type="password"
+              placeholder="Confirm password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              error={errors.confirmPassword}
+            />
+            <Button type="submit">Reset Password</Button>
+          </form>
+        )}
+      </div>
+    </div>
+  );
+}

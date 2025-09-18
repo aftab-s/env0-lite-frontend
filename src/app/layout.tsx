@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
+import Image from "next/image";
+import Providers from "./providers";
+
+const inter = Inter({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,9 +29,18 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`h-screen flex flex-col ${geistSans.variable} ${geistMono.variable} ${inter.className} antialiased`}
       >
-        {children}
+        <div className={`flex h-fit w-screen ${inter.className} bg-[#111111]`}>
+              <div className="p-3 flex items-stretch justify-center h-fit">
+                <div className="flex items-center justify-center flex-1">
+                  <Image src="/login/Logo.svg" alt="Logo" width={30} height={35} priority /></div>
+                <div className="flex items-center justify-center flex-1 ">
+                  <span className="ml-3">TerraFuel</span>
+                </div>
+              </div>
+            </div>
+         <Providers>{children}</Providers>
       </body>
     </html>
   );
