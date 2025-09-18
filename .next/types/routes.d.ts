@@ -4,7 +4,7 @@
 type AppRoutes = "/" | "/cloudProvider" | "/dashboard" | "/forgot-password" | "/integration" | "/signup"
 type AppRouteHandlerRoutes = "/api/auth/[...nextauth]"
 type PageRoutes = never
-type LayoutRoutes = "/"
+type LayoutRoutes = "/" | "/dashboard"
 type RedirectRoutes = never
 type RewriteRoutes = never
 type Routes = AppRoutes | PageRoutes | LayoutRoutes | RedirectRoutes | RewriteRoutes | AppRouteHandlerRoutes
@@ -25,6 +25,7 @@ export type ParamsOf<Route extends Routes> = ParamMap[Route]
 
 interface LayoutSlotMap {
   "/": never
+  "/dashboard": never
 }
 
 
