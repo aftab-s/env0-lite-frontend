@@ -1,5 +1,6 @@
 "use client";
 import React, { ReactNode } from "react";
+import { useDarkMode } from "@/context/DarkModeProvider";
 
 interface ButtonProps {
   children: ReactNode;
@@ -16,12 +17,18 @@ export default function Button({
   className = "",
   disabled = false,
 }: ButtonProps) {
+  const { darkMode } = useDarkMode();
+
+  const bgColor = darkMode ? "bg-white" : "bg-black";
+  const textColor = darkMode ? "text-black" : "text-white";
+  const hoverBg = darkMode ? "hover:bg-gray-200" : "hover:bg-gray-800";
+
   return (
     <button
       type={type}
       onClick={onClick}
       disabled={disabled}
-      className={`w-full text-[14px] bg-[#FFFFFF] text-black rounded-[5px] py-2 font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
+      className={`w-full text-[14px] rounded-[5px] py-2 font-medium ${bgColor} ${textColor} ${hoverBg} disabled:opacity-50 disabled:cursor-not-allowed ${className} `}
     >
       {children}
     </button>

@@ -1,20 +1,28 @@
 "use client";
 import Input from "@/components/Input/page";
 import Button from "@/components/PrimaryButton/page";
+import { useDarkMode } from "@/context/DarkModeProvider";
 import { useState } from "react";
 
 export default function ForgotPassword() {
+  const { darkMode } = useDarkMode();
+
   const [step, setStep] = useState<"email" | "otp" | "reset">("email");
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [message, setMessage] = useState("");
   const [errors, setErrors] = useState<{
     email?: string;
     otp?: string;
     password?: string;
     confirmPassword?: string;
   }>({});
+
+  const mainBg = darkMode ? "bg-[#111111]" : "bg-[#EFEFEF]";
+  const textColor = darkMode ? "text-white" : "text-black";
+  const subTextColor = darkMode ? "text-gray-400" : "text-gray-600";
 
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,45 +34,30 @@ export default function ForgotPassword() {
       if (!emailRegex.test(email)) newErrors.email = "Invalid email format";
     }
 
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
+    if (Object.keys(newErrors).length > 0) return setErrors(newErrors);
 
     setErrors({});
     try {
-      // Call API to send OTP
       // await sendOtp({ email });
-      console.log("OTP sent to:", email);
+      setMessage("If this email is registered, an OTP has been sent.");
       setStep("otp");
-    } catch (error) {
-      console.error("Failed to send OTP:", error);
+    } catch {
+      setMessage("Something went wrong. Please try again.");
     }
   };
 
   const handleOtpSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const newErrors: typeof errors = {};
-
-    if (!otp.trim()) newErrors.otp = "OTP is required";
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
+    if (!otp.trim()) return setErrors({ otp: "OTP is required" });
 
     setErrors({});
     try {
-      // Call API to verify OTP
       // const valid = await verifyOtp({ email, otp });
-      const valid = true; // simulate success
-      if (valid) {
-        setStep("reset");
-      } else {
-        setErrors({ otp: "Invalid OTP" });
-      }
-    } catch (error) {
-      console.error("OTP verification failed:", error);
+      const valid = true;
+      if (valid) setStep("reset");
+      else setErrors({ otp: "Invalid OTP" });
+    } catch {
+      setMessage("OTP verification failed. Try again.");
     }
   };
 
@@ -79,38 +72,40 @@ export default function ForgotPassword() {
     if (confirmPassword !== password)
       newErrors.confirmPassword = "Passwords do not match";
 
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
+    if (Object.keys(newErrors).length > 0) return setErrors(newErrors);
 
     setErrors({});
     try {
-      // Call API to reset password
       // await resetPassword({ email, password });
-      console.log("Password reset for:", email);
-      alert("Password reset successful! You can now log in.");
+      setMessage("Password reset successful. You can now log in.");
       setStep("email");
       setEmail("");
       setPassword("");
       setConfirmPassword("");
       setOtp("");
-    } catch (error) {
-      console.error("Password reset failed:", error);
+    } catch {
+      setMessage("Password reset failed. Please try again.");
     }
   };
 
   return (
-    <div className="w-screen h-full flex flex-col items-center justify-center bg-[#111111]">
+    <div
+      className={`w-screen h-full flex flex-col items-center justify-center ${mainBg} transition-colors duration-500`}
+    >
       <div className="w-85 mb-5 flex flex-col items-start justify-center">
-        <span className="font-semibold text-[20px]">Forgot Password</span>
+        <span className={`font-semibold text-[20px] ${textColor}`}>
+          Forgot Password
+        </span>
+        {message && (
+          <span className={`text-sm mt-1 ${subTextColor}`}>{message}</span>
+        )}
       </div>
 
       <div className="w-85">
         {step === "email" && (
           <form onSubmit={handleEmailSubmit} className="flex flex-col gap-4">
             <Input
-              helperText="Registered Account Email foo recovery"
+              helperText="Registered account email"
               label="Email"
               type="email"
               placeholder="your@email.com"
@@ -134,6 +129,13 @@ export default function ForgotPassword() {
               error={errors.otp}
             />
             <Button type="submit">Verify OTP</Button>
+            <button
+              type="button"
+              onClick={handleEmailSubmit}
+              className="text-xs text-[#6B21A8] hover:underline"
+            >
+              Resend OTP
+            </button>
           </form>
         )}
 
@@ -143,10 +145,7 @@ export default function ForgotPassword() {
               helperText="Your email cannot be changed"
               label="Email"
               type="email"
-              placeholder="your@email.com"
               value={email}
-              onChange={() => {}}
-              error={errors.email}
               disabled
             />
             <Input

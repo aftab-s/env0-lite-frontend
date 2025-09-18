@@ -58,7 +58,6 @@ const authOption: NextAuthOptions = {
     },
     session,
     async redirect({ url, baseUrl }) {
-    // Always send users to dashboard
     return `${baseUrl}/dashboard`;
     },
     async jwt({ token, profile }) {
@@ -85,7 +84,7 @@ const authOption: NextAuthOptions = {
   },
 }
 
-export default function BitbucketProvider<P extends Record<string, any>>(
+function BitbucketProvider<P extends Record<string, any>>(
   options: OAuthUserConfig<P>
 ): OAuthConfig<P> {
   return {
@@ -94,7 +93,7 @@ export default function BitbucketProvider<P extends Record<string, any>>(
     type: "oauth",
     authorization: {
       url: "https://bitbucket.org/site/oauth2/authorize",
-      params: { scope: "account email" }, // 👈 scope goes here
+      params: { scope: "account email" }, 
     },
     token: "https://bitbucket.org/site/oauth2/access_token",
     userinfo: "https://api.bitbucket.org/2.0/user",
@@ -102,7 +101,7 @@ export default function BitbucketProvider<P extends Record<string, any>>(
       return {
         id: profile.uuid,
         name: profile.display_name,
-        email: profile.email ?? null, // may require /2.0/user/emails API call
+        email: profile.email ?? null,
         image: profile.links?.avatar?.href ?? null,
       };
     },
