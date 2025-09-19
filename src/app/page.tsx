@@ -7,16 +7,19 @@ import Image from "next/image";
 import { useState } from "react";
 import { useDarkMode } from "@/context/DarkModeProvider";
 import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+import { setUser } from "@/redux/slice/authSlice";
 
 export default function AuthForm() {
   const { data: session } = useSession();
   const { darkMode } = useDarkMode();
+  const dispatch = useDispatch();
 
   const mainBg = darkMode ? "bg-[#111111]" : "bg-[#EFEFEF]";
   const textColor = darkMode ? "text-white" : "text-black";
   const subTextColor = darkMode ? "text-gray-400" : "text-gray-600";
   const borderColor = darkMode ? "border-[#2A2A2A]" : "border-gray-300";
-  const hoverBg = darkMode ? "hover:bg-[#3c3c3c]" : "hover:bg-gray-100";
+  const hoverBg = darkMode ? "hover:bg-[#3c3c3c]" : "hover:bg-gray-300";
   const router = useRouter();
 
   const [email, setEmail] = useState("");
@@ -42,8 +45,20 @@ export default function AuthForm() {
     setErrors({});
 
     try {
-      // await logIn({ email, password });
-      router.push('/dashboard');
+      // Call your login API
+      const user = await logIn({ email, password });
+
+      if (!user) throw new Error("Invalid credentials");
+
+      // Save user in Redux
+      dispatch(
+        setUser({
+          email: user.email,
+          role: user.role || "user",
+        })
+      );
+
+      router.push("/dashboard");
     } catch (error) {
       console.error("Login failed:", error);
     }
@@ -63,24 +78,29 @@ export default function AuthForm() {
         {/* OAuth Buttons */}
         <div className="flex gap-3 mb-6">
           {["Github", "Gitlab", "Bitbucket", "Google"].map((provider) => (
-            <button
-              key={provider}
-              onClick={() => signIn(provider.toLowerCase())}
-              className={`flex items-center justify-center gap-2 w-full border ${borderColor} rounded-[5px] py-1 ${hoverBg}`}
-            >
-              <Image
-                src={`/login/${provider}.svg`}
-                alt={provider}
-                width={20}
-                height={20}
-                priority
-                className={`m-2 ${
-                  darkMode && (provider === "Github" || provider === "Google")
-                    ? ""
-                    : "invert"
-                }`}
-              />
-            </button>
+            <div key={provider} className="relative group w-full">
+              <button
+                onClick={() => signIn(provider.toLowerCase())}
+                className={`flex items-center justify-center gap-2 w-full border ${borderColor} rounded-[5px] py-1 ${hoverBg}`}
+              >
+                <Image
+                  src={`/login/${provider}.svg`}
+                  alt={provider}
+                  width={20}
+                  height={20}
+                  priority
+                  className={`m-2 ${
+                    darkMode && (provider === "Github" || provider === "Google")
+                      ? ""
+                      : "invert"
+                  }`}
+                />
+              </button>
+              {/* Tooltip */}
+              <span className="absolute left-1/2 -translate-x-1/2 -bottom-7 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+                {provider}
+              </span>
+            </div>
           ))}
         </div>
 
@@ -121,39 +141,22 @@ export default function AuthForm() {
         </form>
 
         {/* Links */}
-        <div
-          className={`mt-6 flex flex-col items-start gap-2 text-[12px] ${subTextColor}`}
-        >
-          <a
-            href="#"
-            className={`hover:underline ${
-              darkMode ? "text-[#A259FF]" : "text-[#6B21A8]"
-            }`}
-          >
+        <div className={`mt-6 flex flex-col items-start gap-2 text-[12px] ${subTextColor}`}>
+          <a href="#" className={`hover:underline ${darkMode ? "text-[#A259FF]" : "text-[#6B21A8]"}`}>
             Sign in with SSO
           </a>
           <p>
             Need an account?{" "}
-            <a
-              href="/signup"
-              className={`hover:underline ${
-                darkMode ? "text-[#A259FF]" : "text-[#6B21A8]"
-              }`}
-            >
+            <a href="/signup" className={`hover:underline ${darkMode ? "text-[#A259FF]" : "text-[#6B21A8]"}`}>
               Sign up
             </a>
           </p>
           <p>
             Forgot your password?{" "}
-            <a
-              href="/forgot-password"
-              className={`hover:underline ${
-                darkMode ? "text-[#A259FF]" : "text-[#6B21A8]"
-              }`}
-            >
+            <a href="/forgot-password" className={`hover:underline ${darkMode ? "text-[#A259FF]" : "text-[#6B21A8]"}`}>
               Reset it
             </a>
-  </p>
+          </p>
         </div>
       </div>
     </div>
