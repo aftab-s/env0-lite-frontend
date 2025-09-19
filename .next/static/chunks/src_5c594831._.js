@@ -49,7 +49,7 @@ function CommonDropdown(param) {
         ref: dropdownRef,
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "w-full rounded-[5px] border px-3 py-2 text-[14px] cursor-pointer flex justify-between items-center ".concat(bgColor, " ").concat(borderColor, " ").concat(textColor),
+                className: "w-full rounded-[5px] border px-3 py-2 text-[14px] cursor-pointer flex justify-between items-center ".concat(bgColor, " ").concat(borderColor, " ").concat(textColor, " transition-colors duration-500"),
                 onClick: ()=>setOpen(!open),
                 children: [
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -77,7 +77,7 @@ function CommonDropdown(param) {
                 columnNumber: 7
             }, this),
             open && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "absolute top-full left-0 w-full ".concat(bgColor, " border ").concat(borderColor, " rounded-[5px] z-10 max-h-60 overflow-y-auto mt-1"),
+                className: "absolute top-full left-0 w-full ".concat(bgColor, " border ").concat(borderColor, " rounded-[5px] z-10 max-h-60 overflow-y-auto mt-1 transition-colors duration-500"),
                 children: options.map((option)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "px-3 py-2 text-[14px] cursor-pointer ".concat(hoverBg),
                         onClick: ()=>{
@@ -153,7 +153,7 @@ function Button(param) {
         type: type,
         onClick: onClick,
         disabled: disabled,
-        className: "w-full text-[14px] rounded-[5px] py-2 font-medium ".concat(bgColor, " ").concat(textColor, " ").concat(hoverBg, " disabled:opacity-50 disabled:cursor-not-allowed ").concat(className),
+        className: "w-full text-[14px] rounded-[5px] py-2 font-medium ".concat(bgColor, " ").concat(textColor, " ").concat(hoverBg, " disabled:opacity-50 disabled:cursor-not-allowed ").concat(className, " "),
         children: children
     }, void 0, false, {
         fileName: "[project]/src/components/PrimaryButton/page.tsx",
@@ -199,7 +199,7 @@ function Input(param) {
         className: "flex flex-col gap-1",
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
-                className: "block text-[12px] font-normal ".concat(labelColor),
+                className: "block text-[12px] font-normal ".concat(labelColor, " transition-colors duration-500"),
                 children: label
             }, void 0, false, {
                 fileName: "[project]/src/components/Input/page.tsx",
@@ -208,7 +208,7 @@ function Input(param) {
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                 ...props,
-                className: "w-full rounded-[5px] border px-3 py-2 text-[14px] focus:outline-none ".concat(bgColor, " ").concat(borderColor, " ").concat(textColor, " ").concat(className)
+                className: "w-full rounded-[5px] border px-3 py-2 text-[14px] focus:outline-none ".concat(bgColor, " ").concat(borderColor, " ").concat(textColor, " ").concat(className, " transition-colors duration-500")
             }, void 0, false, {
                 fileName: "[project]/src/components/Input/page.tsx",
                 lineNumber: 35,
@@ -222,7 +222,7 @@ function Input(param) {
                 lineNumber: 40,
                 columnNumber: 9
             }, this) : helperText ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                className: "".concat(helperColor, " text-xs"),
+                className: "".concat(helperColor, " text-xs transition-colors duration-500"),
                 children: helperText
             }, void 0, false, {
                 fileName: "[project]/src/components/Input/page.tsx",

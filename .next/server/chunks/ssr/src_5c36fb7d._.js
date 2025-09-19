@@ -7,18 +7,20 @@ __turbopack_context__.s([
     ()=>__TURBOPACK__default__export__
 ]);
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react-jsx-dev-runtime.js [app-ssr] (ecmascript)");
-var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/image.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$context$2f$DarkModeProvider$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/context/DarkModeProvider.tsx [app-ssr] (ecmascript)");
 'use client';
 ;
 ;
-const Sidebar = ({ darkMode })=>{
-    const sidebarBg = darkMode ? 'bg-[#1A1A1A]' : 'bg-[#FFFFFF]';
+const Sidebar = ()=>{
+    const { darkMode } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$context$2f$DarkModeProvider$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useDarkMode"])();
+    const sidebarBg = darkMode ? 'bg-[#1A1A1A]' : 'bg-white';
     const logoText = darkMode ? 'text-white' : 'text-black';
-    const menuItemBg = darkMode ? 'bg-[#374151]' : 'bg-[#E5E7EB]';
-    const menuItemText = darkMode ? 'text-white' : 'text-[#374151]';
+    const borderColor = darkMode ? 'border-gray-700' : 'border-gray-200';
+    const inactiveMenuText = darkMode ? 'text-gray-400' : 'text-gray-600';
+    const inactiveMenuHoverBg = darkMode ? 'hover:bg-[#374151]' : 'hover:bg-gray-100';
+    const inactiveMenuHoverText = darkMode ? 'hover:text-white' : 'hover:text-black';
     const activeMenuBg = darkMode ? 'bg-[#0070F3]' : 'bg-[#EFF6FF]';
-    const activeMenuText = darkMode ? 'text-[#FFFFFF]' : 'text-[#2563EB]';
-    const inactiveMenuText = darkMode ? 'text-gray-400' : 'text-[#6B7280]';
+    const activeMenuText = darkMode ? 'text-white' : 'text-[#2563EB]';
     const menuItems = [
         {
             name: 'Projects',
@@ -38,69 +40,38 @@ const Sidebar = ({ darkMode })=>{
         }
     ];
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-        className: `w-48 h-screen ${sidebarBg} border-r ${darkMode ? 'border-gray-700' : 'border-gray-200'} transition-colors duration-500`,
-        children: [
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "flex items-center px-4 py-6",
-                children: [
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
-                        src: "/login/Logo.svg",
-                        alt: "Logo",
-                        width: 30,
-                        height: 38,
-                        priority: true,
-                        className: "mr-2"
-                    }, void 0, false, {
-                        fileName: "[project]/src/components/common/Sidebar.tsx",
-                        lineNumber: 34,
-                        columnNumber: 9
-                    }, ("TURBOPACK compile-time value", void 0)),
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                        className: `font-inter font-semibold text-base ${logoText} transition-colors duration-500`,
-                        children: "Fuel"
-                    }, void 0, false, {
-                        fileName: "[project]/src/components/common/Sidebar.tsx",
-                        lineNumber: 35,
-                        columnNumber: 9
-                    }, ("TURBOPACK compile-time value", void 0))
-                ]
-            }, void 0, true, {
-                fileName: "[project]/src/components/common/Sidebar.tsx",
-                lineNumber: 33,
-                columnNumber: 7
-            }, ("TURBOPACK compile-time value", void 0)),
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("nav", {
-                className: "px-3",
-                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
-                    className: "space-y-1",
-                    children: menuItems.map((item, index)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
-                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                className: `w-full text-left px-3 py-2 rounded-md text-sm font-inter font-medium transition-colors duration-300 cursor-pointer ${item.active ? `${activeMenuBg} ${activeMenuText}` : `hover:${menuItemBg} ${inactiveMenuText} hover:${menuItemText}`}`,
-                                children: item.name
-                            }, void 0, false, {
-                                fileName: "[project]/src/components/common/Sidebar.tsx",
-                                lineNumber: 47,
-                                columnNumber: 15
-                            }, ("TURBOPACK compile-time value", void 0))
-                        }, index, false, {
+        className: `w-65 h-screen ${sidebarBg} border-r ${borderColor} transition-colors duration-500`,
+        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("nav", {
+            className: "px-3 py-5",
+            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
+                className: "space-y-1",
+                children: menuItems.map((item, index)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                            className: `w-full text-left px-3 py-2 rounded-md text-sm font-inter font-medium transition-colors duration-300 cursor-pointer ${item.active ? `${activeMenuBg} ${activeMenuText}` : `${inactiveMenuText} ${inactiveMenuHoverBg} ${inactiveMenuHoverText}`}`,
+                            children: item.name
+                        }, void 0, false, {
                             fileName: "[project]/src/components/common/Sidebar.tsx",
-                            lineNumber: 46,
-                            columnNumber: 13
-                        }, ("TURBOPACK compile-time value", void 0)))
-                }, void 0, false, {
-                    fileName: "[project]/src/components/common/Sidebar.tsx",
-                    lineNumber: 44,
-                    columnNumber: 9
-                }, ("TURBOPACK compile-time value", void 0))
+                            lineNumber: 34,
+                            columnNumber: 15
+                        }, ("TURBOPACK compile-time value", void 0))
+                    }, index, false, {
+                        fileName: "[project]/src/components/common/Sidebar.tsx",
+                        lineNumber: 33,
+                        columnNumber: 13
+                    }, ("TURBOPACK compile-time value", void 0)))
             }, void 0, false, {
                 fileName: "[project]/src/components/common/Sidebar.tsx",
-                lineNumber: 43,
-                columnNumber: 7
+                lineNumber: 31,
+                columnNumber: 9
             }, ("TURBOPACK compile-time value", void 0))
-        ]
-    }, void 0, true, {
+        }, void 0, false, {
+            fileName: "[project]/src/components/common/Sidebar.tsx",
+            lineNumber: 30,
+            columnNumber: 7
+        }, ("TURBOPACK compile-time value", void 0))
+    }, void 0, false, {
         fileName: "[project]/src/components/common/Sidebar.tsx",
-        lineNumber: 27,
+        lineNumber: 25,
         columnNumber: 5
     }, ("TURBOPACK compile-time value", void 0));
 };

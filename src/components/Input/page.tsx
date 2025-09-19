@@ -28,19 +28,24 @@ export default function Input({
   const helperColor = darkMode ? "text-gray-400" : "text-gray-600";
 
   return (
-    <div className="flex flex-col gap-1">
-      <label className={`block text-[12px] font-normal ${labelColor} transition-colors duration-500`}>
+    <div className={`flex flex-col gap-1 ${className}`}> {/* apply className here */}
+      <label
+        className={`block text-[12px] font-normal ${labelColor} transition-colors duration-500`}
+      >
         {label}
       </label>
       <input
         {...props}
-        className={`w-full rounded-[5px] border px-3 py-2 text-[14px] focus:outline-none ${bgColor} ${borderColor} ${textColor} ${className} transition-colors duration-500`}
+        className={`w-full rounded-[5px] border px-3 py-2 text-[14px] focus:outline-none ${bgColor} ${borderColor} ${textColor} transition-colors duration-500`}
       />
       {error ? (
         <p className="text-red-500 text-xs">{error}</p>
       ) : helperText ? (
-        <p className={`${helperColor} text-xs transition-colors duration-500`}>{helperText}</p>
+        <p className={`${helperColor} text-xs transition-colors duration-500`}>
+          {helperText}
+        </p>
       ) : null}
     </div>
   );
 }
+
