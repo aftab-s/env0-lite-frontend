@@ -74,12 +74,12 @@ export default function CommonDropdown({
 
       {open && (
         <div
-          className={`absolute top-full left-0 w-full ${bgColor} border ${borderColor} rounded-[5px] z-10 max-h-60 overflow-y-auto mt-1 transition-colors duration-500`}
+          className={`absolute top-full left-0 w-full ${bgColor} border ${borderColor} rounded-[5px] z-10 max-h-60 overflow-y-auto mt-[-18px] transition-colors duration-500`}
         >
           {options.map((option) => (
             <div
               key={option.value}
-              className={`px-3 py-2 text-[14px] cursor-pointer ${hoverBg}`}
+              className={`px-3 py-2 text-[14px] cursor-pointer ${hoverBg} ${textColor}`}
               onClick={() => {
                 onChange(option.value);
                 setOpen(false);

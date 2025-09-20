@@ -40,7 +40,7 @@ export async function fetchRepoTree({
 }: FetchRepoTreeParams): Promise<RepoTreeNode[]> {
   const apiBaseUrl = apiEndpoints.github;
 
-  const url = `${apiBaseUrl.getTree}/${encodeURIComponent(email)}/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/tree`;
+  const url = `${apiBaseUrl.getTree}/${email}/${owner}/${repo}/tree`;
   
   const response = await axiosPrivate.get(url, {
     params: { ref: branch }, 

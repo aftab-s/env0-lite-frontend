@@ -140,7 +140,7 @@ const apiEndpoints = {
     auth: {
         signUp: "/api/users/signup",
         login: "/api/users/login",
-        byEmail: "/api/users/email"
+        byEmail: "/api/users/users/email"
     },
     github: {
         getRepo: "/api/github-pat/repos/:email",
@@ -236,11 +236,20 @@ async function authSignIn(params) {
     const response = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$config$2f$axios$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["default"].post(apiBaseUrl.signUp, params);
     return response.data;
 }
-async function checkUserByEmail(params) {
+const checkUserByEmail = async ({ email })=>{
     const apiBaseUrl = __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$config$2f$api$2d$endpoints$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["apiEndpoints"].auth;
-    const response = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$config$2f$axios$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["default"].post(apiBaseUrl.byEmail, params);
-    return response.data;
-}
+    try {
+        const response = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$config$2f$axios$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["default"].post(apiBaseUrl.byEmail, {
+            email
+        });
+        return response.data; // existing user
+    } catch (err) {
+        if (err.response?.status === 404) {
+            return null;
+        }
+        throw err;
+    }
+};
 }),
 "[project]/src/app/api/auth/[...nextauth]/route.ts [app-route] (ecmascript)", ((__turbopack_context__) => {
 "use strict";
@@ -251,11 +260,11 @@ __turbopack_context__.s([
     "POST",
     ()=>handler
 ]);
-var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$session$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/lib/session.ts [app-route] (ecmascript)");
-var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2d$auth$2f$next$2f$index$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next-auth/next/index.js [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2d$auth$2f$index$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next-auth/index.js [app-route] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2d$auth$2f$providers$2f$google$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next-auth/providers/google.js [app-route] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2d$auth$2f$providers$2f$github$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next-auth/providers/github.js [app-route] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2d$auth$2f$providers$2f$gitlab$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next-auth/providers/gitlab.js [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$session$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/lib/session.ts [app-route] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$services$2f$query$2f$useAuthentication$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/services/query/useAuthentication.ts [app-route] (ecmascript)");
 ;
 ;
@@ -263,103 +272,72 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$services$2f$query$2f$
 ;
 ;
 ;
-const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
-const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
-const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID;
-const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
-const authOption = {
+const authOptions = {
     session: {
-        strategy: 'jwt'
+        strategy: "jwt"
     },
     providers: [
-        (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2d$auth$2f$providers$2f$github$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["default"])({
-            clientId: GITHUB_CLIENT_ID,
-            clientSecret: GITHUB_CLIENT_SECRET
-        }),
         (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2d$auth$2f$providers$2f$google$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["default"])({
-            clientId: GOOGLE_CLIENT_ID,
-            clientSecret: GOOGLE_CLIENT_SECRET
+            clientId: process.env.GOOGLE_CLIENT_ID,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET
+        }),
+        (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2d$auth$2f$providers$2f$github$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["default"])({
+            clientId: process.env.GITHUB_CLIENT_ID,
+            clientSecret: process.env.GITHUB_CLIENT_SECRET,
+            authorization: {
+                params: {
+                    scope: "read:user user:email"
+                }
+            }
         }),
         (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2d$auth$2f$providers$2f$gitlab$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["default"])({
-            clientId: process.env.GITLAB_CLIENT_ID,
-            clientSecret: process.env.GITLAB_CLIENT_SECRET
-        }),
-        BitbucketProvider({
             clientId: process.env.GITLAB_CLIENT_ID,
             clientSecret: process.env.GITLAB_CLIENT_SECRET
         })
     ],
     callbacks: {
-        async signIn ({ profile }) {
-            if (!profile?.email) throw new Error("No profile");
+        session: __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$session$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["session"],
+        async jwt ({ token, profile }) {
+            console.log("cdsc", token, profile);
+            if (!profile?.email) return token;
             try {
                 // 1. Check if user exists in DB
-                const existingUser = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$services$2f$query$2f$useAuthentication$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["checkUserByEmail"])({
+                let existingUser = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$services$2f$query$2f$useAuthentication$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["checkUserByEmail"])({
                     email: profile.email
                 });
-                if (existingUser) {
-                    return true;
+                // 2. If not, create them
+                if (!existingUser) {
+                    existingUser = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$services$2f$query$2f$useAuthentication$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["authSignIn"])({
+                        email: profile.email,
+                        name: profile.name || "",
+                        role: 'user',
+                        password: 'null'
+                    });
                 }
-                const res = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$services$2f$query$2f$useAuthentication$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["authSignIn"])({
-                    email: profile?.email,
-                    password: "",
-                    role: 'user'
-                });
+                // 3. Attach DB info to JWT
+                token.email = existingUser.email;
+                token.role = existingUser.role || "user";
+                token.name = existingUser.name;
             } catch (err) {
-                console.error("API error:", err);
-                return false;
-            }
-            return true;
-        },
-        session: __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$session$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["session"],
-        async redirect ({ url, baseUrl }) {
-            return `${baseUrl}/dashboard`;
-        },
-        async jwt ({ token, profile }) {
-            try {
-                if (!profile?.email) throw new Error("No email in profile");
-                const existingUser = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$services$2f$query$2f$useAuthentication$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["checkUserByEmail"])({
-                    email: profile.email
-                });
-                const providerId = profile.id || profile.sub || profile.uuid;
-                token.id = existingUser?.userId.toString() || providerId;
-                token.email = profile.email;
-                token.role = existingUser?.role || "user";
-            } catch (err) {
-                console.error("JWT callback error:", err);
-                token.id = token.id || "unknown";
-                token.email = token.email || "unknown@example.com";
-                token.role = token.role || "user";
+                console.error("JWT DB error:", err);
             }
             return token;
+        },
+        async redirect ({ url, baseUrl }) {
+            return `${baseUrl}/dashboard`;
+        }
+    },
+    pages: {
+        signIn: "/",
+        error: "/"
+    },
+    events: {
+        async signIn ({ user }) {
+            console.log("✅ User signed in:", user.email);
         }
     }
 };
-function BitbucketProvider(options) {
-    return {
-        id: "bitbucket",
-        name: "Bitbucket",
-        type: "oauth",
-        authorization: {
-            url: "https://bitbucket.org/site/oauth2/authorize",
-            params: {
-                scope: "account email"
-            }
-        },
-        token: "https://bitbucket.org/site/oauth2/access_token",
-        userinfo: "https://api.bitbucket.org/2.0/user",
-        async profile (profile, tokens) {
-            return {
-                id: profile.uuid,
-                name: profile.display_name,
-                email: profile.email ?? null,
-                image: profile.links?.avatar?.href ?? null
-            };
-        },
-        options
-    };
-}
-const handler = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2d$auth$2f$next$2f$index$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["default"])(authOption);
+const handler = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2d$auth$2f$index$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["default"])(authOptions);
 ;
 }),
 ];

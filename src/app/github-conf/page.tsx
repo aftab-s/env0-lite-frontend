@@ -26,7 +26,7 @@ export default function GithubConfigPage() {
   useEffect(() => {
     async function loadTree() {
       try {
-        const repoTree = await fetchRepoTree({email:'',owner:'',repo: '',branch: "main"});
+        const repoTree = await fetchRepoTree({email:'msrahul6111@gmail.com',owner:'aftab-s',repo: 'env0-lite-backend',branch: "main"});
         setTree(repoTree);
       } catch (err) {
         console.error("Failed to load repo tree:", err);

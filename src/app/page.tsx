@@ -9,6 +9,7 @@ import { useDarkMode } from "@/context/DarkModeProvider";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { setUser } from "@/redux/slice/authSlice";
+import AuthRedirect from "@/components/AuthRedirect/page";
 
 export default function AuthForm() {
   const { data: session } = useSession();
@@ -68,6 +69,7 @@ export default function AuthForm() {
     <div
       className={`w-screen h-full flex flex-col items-center justify-center ${mainBg} transition-colors duration-500`}
     >
+      {/* <AuthRedirect /> */}
       <div className="w-85 mb-5 flex flex-col items-start justify-center">
         <span className={`font-semibold text-[20px] ${textColor}`}>
           Sign In to TerraFuel
