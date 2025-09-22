@@ -20,28 +20,35 @@ function Button(param) {
     let textColor = "";
     let border = "";
     let hoverBg = "";
-    let widthClass = "w-full"; // default full width for primary
+    let widthClass = "w-full";
     switch(variant){
         case "primary":
             bgColor = darkMode ? "bg-white" : "bg-black";
             textColor = darkMode ? "text-black" : "text-white";
             hoverBg = darkMode ? "hover:bg-gray-200" : "hover:bg-gray-800";
             border = "border-none";
-            widthClass = "w-full"; // full width
+            widthClass = "w-full";
             break;
         case "secondary":
             bgColor = "bg-transparent";
             textColor = darkMode ? "text-white" : "text-black";
             border = "border border-[#4B5563]";
             hoverBg = darkMode ? "hover:bg-gray-700" : "hover:bg-gray-200";
-            widthClass = "w-auto px-4"; // smaller width
+            widthClass = "w-auto px-4";
             break;
         case "tertiary":
             bgColor = "bg-[#0070F3]";
             textColor = "text-white";
             border = "border-none";
             hoverBg = "hover:bg-[#0055c2]";
-            widthClass = "w-auto px-4"; // smaller width
+            widthClass = "w-auto px-4";
+            break;
+        case "social":
+            bgColor = "bg-transparent";
+            textColor = darkMode ? "text-white" : "text-black";
+            border = "border border-[#2F343C]";
+            hoverBg = darkMode ? "hover:bg-[#3A3F46]" : "hover:bg-[#F3F4F6]";
+            widthClass = "w-fit px-4 flex items-center gap-2";
             break;
     }
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -52,7 +59,7 @@ function Button(param) {
         children: children
     }, void 0, false, {
         fileName: "[project]/src/components/PrimaryButton/page.tsx",
-        lineNumber: 55,
+        lineNumber: 62,
         columnNumber: 5
     }, this);
 }
@@ -158,7 +165,7 @@ const apiEndpoints = {
         byEmail: "/api/users/users/email"
     },
     github: {
-        getRepo: "/api/github-pat/repos/:email",
+        getRepo: "/api/github-pat/repos",
         getTree: "/api/github-pat/repos"
     }
 };

@@ -8,7 +8,7 @@ interface ButtonProps {
   type?: "button" | "submit" | "reset";
   className?: string;
   disabled?: boolean;
-  variant?: "primary" | "secondary" | "tertiary";
+  variant?: "primary" | "secondary" | "tertiary" | "social";
 }
 
 export default function Button({
@@ -25,7 +25,7 @@ export default function Button({
   let textColor = "";
   let border = "";
   let hoverBg = "";
-  let widthClass = "w-full"; // default full width for primary
+  let widthClass = "w-full";
 
   switch (variant) {
     case "primary":
@@ -33,21 +33,28 @@ export default function Button({
       textColor = darkMode ? "text-black" : "text-white";
       hoverBg = darkMode ? "hover:bg-gray-200" : "hover:bg-gray-800";
       border = "border-none";
-      widthClass = "w-full"; // full width
+      widthClass = "w-full font-medium";
       break;
     case "secondary":
-      bgColor = "bg-transparent";
-      textColor = darkMode ? "text-white" : "text-black";
-      border = "border border-[#4B5563]";
+      bgColor = "bg-transparent font-bold ";
+      textColor = darkMode ? "text-[#374151]" : "text-black";
+      border = "border border-[#2F343C]";
       hoverBg = darkMode ? "hover:bg-gray-700" : "hover:bg-gray-200";
-      widthClass = "w-auto px-4"; // smaller width
+      widthClass = "w-auto px-4";
       break;
     case "tertiary":
-      bgColor = "bg-[#0070F3]";
-      textColor = "text-white";
+      bgColor = "bg-[#A5BCFD]";
+      textColor = "text-black font-bold";
       border = "border-none";
       hoverBg = "hover:bg-[#0055c2]";
-      widthClass = "w-auto px-4"; // smaller width
+      widthClass = "w-auto px-4";
+      break;
+    case "social": // New variant for Google/GitHub/etc.
+      bgColor = "bg-transparent";
+      textColor = darkMode ? "text-white" : "text-black";
+      border = "border border-[#2F343C]";
+      hoverBg = darkMode ? "hover:bg-[#3A3F46]" : "hover:bg-[#F3F4F6]";
+      widthClass = "w-fit px-4 flex items-center gap-2";
       break;
   }
 
@@ -56,7 +63,7 @@ export default function Button({
       type={type}
       onClick={onClick}
       disabled={disabled}
-      className={`text-[14px] rounded-[5px] py-2 font-medium transition-colors duration-300
+      className={`text-[14px] rounded-[5px] py-2 transition-colors duration-300
         ${bgColor} ${textColor} ${border} ${hoverBg} ${widthClass} disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
     >
       {children}

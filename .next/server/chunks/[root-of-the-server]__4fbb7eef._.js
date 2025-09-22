@@ -116,7 +116,11 @@ __turbopack_context__.s([
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2d$auth$2f$index$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next-auth/index.js [app-route] (ecmascript)");
 ;
 const session = async ({ session, token })=>{
-    session.user.id = token.id;
+    if (!session.user) session.user = {};
+    session.user.email = token.email;
+    session.user.name = token.name;
+    session.user.role = token.role;
+    session.user.githubAccessToken = token.githubAccessToken; // this is the key
     return session;
 };
 const getUserSession = async ()=>{
@@ -143,8 +147,9 @@ const apiEndpoints = {
         byEmail: "/api/users/users/email"
     },
     github: {
-        getRepo: "/api/github-pat/repos/:email",
-        getTree: "/api/github-pat/repos"
+        getRepo: "/api/github-pat/repos",
+        getTree: "/api/github-pat/repos",
+        getBranch: "/api/github-pat/repos/get-branch"
     }
 };
 ;
@@ -286,7 +291,7 @@ const authOptions = {
             clientSecret: process.env.GITHUB_CLIENT_SECRET,
             authorization: {
                 params: {
-                    scope: "read:user user:email"
+                    scope: "read:user user:email repo"
                 }
             }
         }),
@@ -297,15 +302,12 @@ const authOptions = {
     ],
     callbacks: {
         session: __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$session$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["session"],
-        async jwt ({ token, profile }) {
-            console.log("cdsc", token, profile);
+        async jwt ({ token, profile, account }) {
             if (!profile?.email) return token;
             try {
-                // 1. Check if user exists in DB
                 let existingUser = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$services$2f$query$2f$useAuthentication$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["checkUserByEmail"])({
                     email: profile.email
                 });
-                // 2. If not, create them
                 if (!existingUser) {
                     existingUser = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$services$2f$query$2f$useAuthentication$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["authSignIn"])({
                         email: profile.email,
@@ -318,13 +320,13 @@ const authOptions = {
                 token.email = existingUser.email;
                 token.role = existingUser.role || "user";
                 token.name = existingUser.name;
+                if (account?.access_token) {
+                    token.githubAccessToken = account.access_token;
+                }
             } catch (err) {
                 console.error("JWT DB error:", err);
             }
             return token;
-        },
-        async redirect ({ url, baseUrl }) {
-            return `${baseUrl}/dashboard`;
         }
     },
     pages: {

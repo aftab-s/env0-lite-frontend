@@ -28,7 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`h-screen flex flex-col ${geistSans.variable} ${geistMono.variable} ${inter.className} antialiased`}
+        className={`h-screen flex flex-col ${geistSans.variable} ${geistMono.variable} ${inter.className} antialiased overflow-hidden`}
       >
         <DarkModeProvider>
           <Header />

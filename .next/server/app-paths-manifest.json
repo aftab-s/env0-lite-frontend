@@ -3,5 +3,8 @@
   "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
   "/dashboard/page": "app/dashboard/page.js",
   "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/github-conf/[owner]/[repo]/page": "app/github-conf/[owner]/[repo]/page.js",
+  "/github-repo/[owner]/[repo]/page": "app/github-repo/[owner]/[repo]/page.js",
+  "/github-repo/page": "app/github-repo/page.js",
   "/page": "app/page.js"
 }

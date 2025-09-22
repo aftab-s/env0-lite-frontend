@@ -17,7 +17,7 @@ const authOptions: NextAuthOptions = {
     GitHubProvider({
       clientId: process.env.GITHUB_CLIENT_ID!,
       clientSecret: process.env.GITHUB_CLIENT_SECRET!,
-      authorization: { params: { scope: "read:user user:email" } },
+      authorization: { params: { scope: "read:user user:email repo" } },
     }),
     GitLabProvider({
       clientId: process.env.GITLAB_CLIENT_ID!,
@@ -27,7 +27,7 @@ const authOptions: NextAuthOptions = {
   callbacks: {
     session,
 
-    async jwt({ token, profile }) {
+    async jwt({ token, profile, account }) {
       
       if (!profile?.email) return token
 
@@ -47,15 +47,19 @@ const authOptions: NextAuthOptions = {
         token.email = existingUser.email
         token.role = existingUser.role || "user"
         token.name = existingUser.name
+
+        if (account?.access_token) {
+          token.githubAccessToken = account.access_token;
+        }
       } catch (err) {
         console.error("JWT DB error:", err)
       }
 
       return token
     },
-    async redirect({ url, baseUrl }) {
-    return `${baseUrl}/dashboard`;
-  },
+    // async redirect({ url, baseUrl }) {
+    // return `${baseUrl}/dashboard`;
+  // },
   },
   pages: {
     signIn: "/",   

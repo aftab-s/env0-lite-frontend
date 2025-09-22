@@ -5,8 +5,9 @@ const apiEndpoints = {
         byEmail: "/api/users/users/email"
     },
     github: {
-        getRepo: "/api/github-pat/repos/:email",
-        getTree: "/api/github-pat/repos"
+        getRepo: "/api/github-pat/repos",
+        getTree: "/api/github-pat/repos",
+        getBranch: "/api/github-pat/repos/get-branch"
     }
 }
 
