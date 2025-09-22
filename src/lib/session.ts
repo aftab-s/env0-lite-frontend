@@ -1,8 +1,13 @@
 import { User, getServerSession } from 'next-auth'
 
 export const session = async ({ session, token }: any) => {
-  session.user.id = token.id
-  return session
+  if (!session.user) session.user = {};
+
+  session.user.email = token.email;
+  session.user.name = token.name;
+  session.user.role = token.role;
+  session.user.githubAccessToken = token.githubAccessToken; // this is the key
+  return session;
 }
 
 export const getUserSession = async (): Promise<User> => {

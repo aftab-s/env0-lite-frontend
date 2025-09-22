@@ -17,28 +17,35 @@ function Button({ children, onClick, type = "button", className = "", disabled =
     let textColor = "";
     let border = "";
     let hoverBg = "";
-    let widthClass = "w-full"; // default full width for primary
+    let widthClass = "w-full";
     switch(variant){
         case "primary":
             bgColor = darkMode ? "bg-white" : "bg-black";
             textColor = darkMode ? "text-black" : "text-white";
             hoverBg = darkMode ? "hover:bg-gray-200" : "hover:bg-gray-800";
             border = "border-none";
-            widthClass = "w-full"; // full width
+            widthClass = "w-full";
             break;
         case "secondary":
             bgColor = "bg-transparent";
             textColor = darkMode ? "text-white" : "text-black";
             border = "border border-[#4B5563]";
             hoverBg = darkMode ? "hover:bg-gray-700" : "hover:bg-gray-200";
-            widthClass = "w-auto px-4"; // smaller width
+            widthClass = "w-auto px-4";
             break;
         case "tertiary":
             bgColor = "bg-[#0070F3]";
             textColor = "text-white";
             border = "border-none";
             hoverBg = "hover:bg-[#0055c2]";
-            widthClass = "w-auto px-4"; // smaller width
+            widthClass = "w-auto px-4";
+            break;
+        case "social":
+            bgColor = "bg-transparent";
+            textColor = darkMode ? "text-white" : "text-black";
+            border = "border border-[#2F343C]";
+            hoverBg = darkMode ? "hover:bg-[#3A3F46]" : "hover:bg-[#F3F4F6]";
+            widthClass = "w-fit px-4 flex items-center gap-2";
             break;
     }
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -50,7 +57,7 @@ function Button({ children, onClick, type = "button", className = "", disabled =
         children: children
     }, void 0, false, {
         fileName: "[project]/src/components/PrimaryButton/page.tsx",
-        lineNumber: 55,
+        lineNumber: 62,
         columnNumber: 5
     }, this);
 }
@@ -128,10 +135,10 @@ const apiEndpoints = {
     auth: {
         signUp: "/api/users/signup",
         login: "/api/users/login",
-        byEmail: "/api/users/email"
+        byEmail: "/api/users/users/email"
     },
     github: {
-        getRepo: "/api/github-pat/repos/:email",
+        getRepo: "/api/github-pat/repos",
         getTree: "/api/github-pat/repos"
     }
 };
@@ -272,11 +279,20 @@ async function authSignIn(params) {
     const response = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$config$2f$axios$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].post(apiBaseUrl.signUp, params);
     return response.data;
 }
-async function checkUserByEmail(params) {
+const checkUserByEmail = async ({ email })=>{
     const apiBaseUrl = __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$config$2f$api$2d$endpoints$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["apiEndpoints"].auth;
-    const response = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$config$2f$axios$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].post(apiBaseUrl.byEmail, params);
-    return response.data;
-}
+    try {
+        const response = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$config$2f$axios$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].post(apiBaseUrl.byEmail, {
+            email
+        });
+        return response.data; // existing user
+    } catch (err) {
+        if (err.response?.status === 404) {
+            return null;
+        }
+        throw err;
+    }
+};
 }),
 "[project]/src/app/page.tsx [app-ssr] (ecmascript)", ((__turbopack_context__) => {
 "use strict";
@@ -362,12 +378,12 @@ function AuthForm() {
                     children: "Sign In to TerraFuel"
                 }, void 0, false, {
                     fileName: "[project]/src/app/page.tsx",
-                    lineNumber: 72,
+                    lineNumber: 74,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/app/page.tsx",
-                lineNumber: 71,
+                lineNumber: 73,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -395,12 +411,12 @@ function AuthForm() {
                                             className: `m-2 ${darkMode && (provider === "Github" || provider === "Google") ? "" : "invert"}`
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/page.tsx",
-                                            lineNumber: 86,
+                                            lineNumber: 88,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/page.tsx",
-                                        lineNumber: 82,
+                                        lineNumber: 84,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -408,18 +424,18 @@ function AuthForm() {
                                         children: provider
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/page.tsx",
-                                        lineNumber: 100,
+                                        lineNumber: 102,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, provider, true, {
                                 fileName: "[project]/src/app/page.tsx",
-                                lineNumber: 81,
+                                lineNumber: 83,
                                 columnNumber: 13
                             }, this))
                     }, void 0, false, {
                         fileName: "[project]/src/app/page.tsx",
-                        lineNumber: 79,
+                        lineNumber: 81,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -429,12 +445,12 @@ function AuthForm() {
                             children: "or"
                         }, void 0, false, {
                             fileName: "[project]/src/app/page.tsx",
-                            lineNumber: 109,
+                            lineNumber: 111,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/app/page.tsx",
-                        lineNumber: 108,
+                        lineNumber: 110,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
@@ -451,7 +467,7 @@ function AuthForm() {
                                 error: errors.email
                             }, void 0, false, {
                                 fileName: "[project]/src/app/page.tsx",
-                                lineNumber: 120,
+                                lineNumber: 122,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Input$2f$page$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -464,7 +480,7 @@ function AuthForm() {
                                 error: errors.password
                             }, void 0, false, {
                                 fileName: "[project]/src/app/page.tsx",
-                                lineNumber: 130,
+                                lineNumber: 132,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$PrimaryButton$2f$page$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -472,13 +488,13 @@ function AuthForm() {
                                 children: "Sign In"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/page.tsx",
-                                lineNumber: 140,
+                                lineNumber: 142,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/page.tsx",
-                        lineNumber: 119,
+                        lineNumber: 121,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -490,7 +506,7 @@ function AuthForm() {
                                 children: "Sign in with SSO"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/page.tsx",
-                                lineNumber: 145,
+                                lineNumber: 147,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -503,13 +519,13 @@ function AuthForm() {
                                         children: "Sign up"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/page.tsx",
-                                        lineNumber: 150,
+                                        lineNumber: 152,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/page.tsx",
-                                lineNumber: 148,
+                                lineNumber: 150,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -522,31 +538,31 @@ function AuthForm() {
                                         children: "Reset it"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/page.tsx",
-                                        lineNumber: 156,
+                                        lineNumber: 158,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/page.tsx",
-                                lineNumber: 154,
+                                lineNumber: 156,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/page.tsx",
-                        lineNumber: 144,
+                        lineNumber: 146,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/page.tsx",
-                lineNumber: 77,
+                lineNumber: 79,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/page.tsx",
-        lineNumber: 68,
+        lineNumber: 69,
         columnNumber: 5
     }, this);
 }

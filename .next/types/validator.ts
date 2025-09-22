@@ -74,10 +74,10 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
   type __Unused = __Check
 }
 
-// Validate ../../src/app/github-conf/page.tsx
+// Validate ../../src/app/github-repo/[owner]/[repo]/page.tsx
 {
-  type __IsExpected<Specific extends AppPageConfig<"/github-conf">> = Specific
-  const handler = {} as typeof import("../../src/app/github-conf/page.js")
+  type __IsExpected<Specific extends AppPageConfig<"/github-repo/[owner]/[repo]">> = Specific
+  const handler = {} as typeof import("../../src/app/github-repo/[owner]/[repo]/page.js")
   type __Check = __IsExpected<typeof handler>
   // @ts-ignore
   type __Unused = __Check
@@ -141,10 +141,10 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
   type __Unused = __Check
 }
 
-// Validate ../../src/app/github-conf/layout.tsx
+// Validate ../../src/app/github-conf/[owner]/[repo]/layout.tsx
 {
-  type __IsExpected<Specific extends LayoutConfig<"/github-conf">> = Specific
-  const handler = {} as typeof import("../../src/app/github-conf/layout.js")
+  type __IsExpected<Specific extends LayoutConfig<"/github-conf/[owner]/[repo]">> = Specific
+  const handler = {} as typeof import("../../src/app/github-conf/[owner]/[repo]/layout.js")
   type __Check = __IsExpected<typeof handler>
   // @ts-ignore
   type __Unused = __Check

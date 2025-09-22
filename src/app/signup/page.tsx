@@ -100,13 +100,9 @@ export default function SignupForm() {
           />
 
           <div>
-            <label
-              className={`block text-[12px] font-normal mb-1 ${textColor}`}
-            >
-              Role
-            </label>
             <CommonDropdown
               value={role}
+              label="Role"
               onChange={setRole}
               options={[
                 { label: "User", value: "user" },
