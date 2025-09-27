@@ -516,8 +516,16 @@
 @layer components;
 
 @layer utilities {
+  .visible {
+    visibility: visible;
+  }
+
   .absolute {
     position: absolute;
+  }
+
+  .fixed {
+    position: fixed;
   }
 
   .relative {
@@ -526,10 +534,6 @@
 
   .inset-0 {
     inset: calc(var(--spacing) * 0);
-  }
-
-  .top-2 {
-    top: calc(var(--spacing) * 2);
   }
 
   .top-4 {
@@ -542,10 +546,6 @@
 
   .right-1 {
     right: calc(var(--spacing) * 1);
-  }
-
-  .right-2 {
-    right: calc(var(--spacing) * 2);
   }
 
   .right-4 {
@@ -612,10 +612,6 @@
     margin-bottom: calc(var(--spacing) * 2);
   }
 
-  .mb-3 {
-    margin-bottom: calc(var(--spacing) * 3);
-  }
-
   .mb-4 {
     margin-bottom: calc(var(--spacing) * 4);
   }
@@ -648,6 +644,10 @@
     display: block;
   }
 
+  .contents {
+    display: contents;
+  }
+
   .flex {
     display: flex;
   }
@@ -658,10 +658,6 @@
 
   .h-5 {
     height: calc(var(--spacing) * 5);
-  }
-
-  .h-6 {
-    height: calc(var(--spacing) * 6);
   }
 
   .h-7 {
@@ -710,10 +706,6 @@
 
   .w-5 {
     width: calc(var(--spacing) * 5);
-  }
-
-  .w-6 {
-    width: calc(var(--spacing) * 6);
   }
 
   .w-8 {
@@ -788,10 +780,6 @@
     animation: var(--animate-spin);
   }
 
-  .cursor-default {
-    cursor: default;
-  }
-
   .cursor-pointer {
     cursor: pointer;
   }
@@ -812,10 +800,6 @@
     align-items: flex-start;
   }
 
-  .justify-baseline {
-    justify-content: baseline;
-  }
-
   .justify-between {
     justify-content: space-between;
   }
@@ -826,10 +810,6 @@
 
   .justify-end {
     justify-content: flex-end;
-  }
-
-  .justify-start {
-    justify-content: flex-start;
   }
 
   .gap-1 {
@@ -964,10 +944,6 @@
     border-color: #2f343c;
   }
 
-  .border-\[\#4B5563\] {
-    border-color: #4b5563;
-  }
-
   .border-\[\#E5E7EB\] {
     border-color: #e5e7eb;
   }
@@ -1038,16 +1014,6 @@
 
   .bg-black {
     background-color: var(--color-black);
-  }
-
-  .bg-black\/30 {
-    background-color: rgba(0, 0, 0, .3);
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .bg-black\/30 {
-      background-color: color-mix(in oklab, var(--color-black) 30%, transparent);
-    }
   }
 
   .bg-gray-300 {

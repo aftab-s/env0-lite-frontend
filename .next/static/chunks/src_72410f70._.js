@@ -27,18 +27,18 @@ function Button(param) {
             textColor = darkMode ? "text-black" : "text-white";
             hoverBg = darkMode ? "hover:bg-gray-200" : "hover:bg-gray-800";
             border = "border-none";
-            widthClass = "w-full";
+            widthClass = "w-full font-medium";
             break;
         case "secondary":
-            bgColor = "bg-transparent";
-            textColor = darkMode ? "text-white" : "text-black";
-            border = "border border-[#4B5563]";
+            bgColor = "bg-transparent font-bold ";
+            textColor = darkMode ? "text-[#374151]" : "text-black";
+            border = "border border-[#2F343C]";
             hoverBg = darkMode ? "hover:bg-gray-700" : "hover:bg-gray-200";
             widthClass = "w-auto px-4";
             break;
         case "tertiary":
-            bgColor = "bg-[#0070F3]";
-            textColor = "text-white";
+            bgColor = "bg-[#A5BCFD]";
+            textColor = "text-black font-bold";
             border = "border-none";
             hoverBg = "hover:bg-[#0055c2]";
             widthClass = "w-auto px-4";
@@ -55,7 +55,7 @@ function Button(param) {
         type: type,
         onClick: onClick,
         disabled: disabled,
-        className: "text-[14px] rounded-[5px] py-2 font-medium transition-colors duration-300\n        ".concat(bgColor, " ").concat(textColor, " ").concat(border, " ").concat(hoverBg, " ").concat(widthClass, " disabled:opacity-50 disabled:cursor-not-allowed ").concat(className),
+        className: "text-[14px] rounded-[5px] py-2 transition-colors duration-300\n        ".concat(bgColor, " ").concat(textColor, " ").concat(border, " ").concat(hoverBg, " ").concat(widthClass, " disabled:opacity-50 disabled:cursor-not-allowed ").concat(className),
         children: children
     }, void 0, false, {
         fileName: "[project]/src/components/PrimaryButton/page.tsx",
@@ -166,7 +166,8 @@ const apiEndpoints = {
     },
     github: {
         getRepo: "/api/github-pat/repos",
-        getTree: "/api/github-pat/repos"
+        getTree: "/api/github-pat/repos",
+        getBranch: "/api/github-pat/repos/get-branch"
     }
 };
 ;
