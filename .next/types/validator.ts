@@ -74,6 +74,15 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
   type __Unused = __Check
 }
 
+// Validate ../../src/app/github-connect/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/github-connect">> = Specific
+  const handler = {} as typeof import("../../src/app/github-connect/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
 // Validate ../../src/app/github-repo/[owner]/[repo]/page.tsx
 {
   type __IsExpected<Specific extends AppPageConfig<"/github-repo/[owner]/[repo]">> = Specific
