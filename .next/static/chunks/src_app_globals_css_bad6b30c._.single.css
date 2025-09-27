@@ -99,6 +99,8 @@
     --color-blue-200: #bedbff;
     --color-blue-800: #193cb8;
     --color-slate-300: #cad5e2;
+    --color-slate-700: #314158;
+    --color-slate-900: #0f172b;
     --color-gray-100: #f3f4f6;
     --color-gray-200: #e5e7eb;
     --color-gray-300: #d1d5dc;
@@ -146,6 +148,8 @@
       --color-blue-200: color(display-p3 .76688 .855207 .987483);
       --color-blue-800: color(display-p3 .134023 .230647 .695537);
       --color-slate-300: color(display-p3 .800294 .834432 .882803);
+      --color-slate-700: color(display-p3 .205992 .253487 .336039);
+      --color-slate-900: color(display-p3 .0639692 .0891152 .163036);
       --color-gray-100: color(display-p3 .953567 .956796 .964321);
       --color-gray-200: color(display-p3 .899787 .906171 .92106);
       --color-gray-300: color(display-p3 .822033 .835264 .858521);
@@ -166,6 +170,8 @@
       --color-blue-200: lab(86.15% -4.04379 -21.0797);
       --color-blue-800: lab(30.2514% 27.7854 -70.2699);
       --color-slate-300: lab(84.7652% -1.94535 -7.93337);
+      --color-slate-700: lab(26.9569% -1.47018 -15.6993);
+      --color-slate-900: lab(7.78673% 1.82346 -15.0537);
       --color-gray-100: lab(96.1596% -.082314 -1.13575);
       --color-gray-200: lab(91.6229% -.159085 -2.26791);
       --color-gray-300: lab(85.1236% -.612259 -3.7138);
@@ -591,6 +597,40 @@
     z-index: 10;
   }
 
+  .container {
+    width: 100%;
+  }
+
+  @media (min-width: 40rem) {
+    .container {
+      max-width: 40rem;
+    }
+  }
+
+  @media (min-width: 48rem) {
+    .container {
+      max-width: 48rem;
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .container {
+      max-width: 64rem;
+    }
+  }
+
+  @media (min-width: 80rem) {
+    .container {
+      max-width: 80rem;
+    }
+  }
+
+  @media (min-width: 96rem) {
+    .container {
+      max-width: 96rem;
+    }
+  }
+
   .m-2 {
     margin: calc(var(--spacing) * 2);
   }
@@ -695,6 +735,10 @@
     display: grid;
   }
 
+  .h-3\.5 {
+    height: calc(var(--spacing) * 3.5);
+  }
+
   .h-4 {
     height: calc(var(--spacing) * 4);
   }
@@ -753,6 +797,10 @@
 
   .min-h-screen {
     min-height: 100vh;
+  }
+
+  .w-3\.5 {
+    width: calc(var(--spacing) * 3.5);
   }
 
   .w-4 {
@@ -1128,6 +1176,14 @@
     background-color: #e4e4e4;
   }
 
+  .bg-\[\#f5f5f5\] {
+    background-color: #f5f5f5;
+  }
+
+  .bg-\[\#f9f9f9\] {
+    background-color: #f9f9f9;
+  }
+
   .bg-black {
     background-color: var(--color-black);
   }
@@ -1146,6 +1202,14 @@
 
   .bg-gray-800 {
     background-color: var(--color-gray-800);
+  }
+
+  .bg-slate-700 {
+    background-color: var(--color-slate-700);
+  }
+
+  .bg-slate-900 {
+    background-color: var(--color-slate-900);
   }
 
   .bg-transparent {
@@ -1351,12 +1415,20 @@
     color: #2563eb;
   }
 
+  .text-\[\#222222\] {
+    color: #222;
+  }
+
   .text-\[\#343434\] {
     color: #343434;
   }
 
   .text-\[\#374151\] {
     color: #374151;
+  }
+
+  .text-\[\#555555\] {
+    color: #555;
   }
 
   .text-\[\#A1A1AA\] {
@@ -1427,6 +1499,10 @@
     color: var(--color-slate-300);
   }
 
+  .text-slate-700 {
+    color: var(--color-slate-700);
+  }
+
   .text-white {
     color: var(--color-white);
   }
@@ -1456,6 +1532,10 @@
     opacity: .75;
   }
 
+  .opacity-100 {
+    opacity: 1;
+  }
+
   .shadow-md {
     --tw-shadow: 0 4px 6px -1px var(--tw-shadow-color, rgba(0, 0, 0, .1)), 0 2px 4px -2px var(--tw-shadow-color, rgba(0, 0, 0, .1));
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
@@ -1464,6 +1544,12 @@
   .invert {
     --tw-invert: invert(100%);
     filter: var(--tw-blur, ) var(--tw-brightness, ) var(--tw-contrast, ) var(--tw-grayscale, ) var(--tw-hue-rotate, ) var(--tw-invert, ) var(--tw-saturate, ) var(--tw-sepia, ) var(--tw-drop-shadow, );
+  }
+
+  .transition-all {
+    transition-property: all;
+    transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
+    transition-duration: var(--tw-duration, var(--default-transition-duration));
   }
 
   .transition-colors {
