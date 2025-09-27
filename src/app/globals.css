@@ -30,14 +30,17 @@ body {
 }
 
 /* Custom scrollbar styles */
-body::-webkit-scrollbar {
-  width: 2px;
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 4px;             /* scrollbar thickness */
+  height: 2px;            /* horizontal scrollbar thickness */
 }
-body::-webkit-scrollbar-thumb {
-  background: #F5CB5C;
-  border-radius: 1px;
+
+::-webkit-scrollbar-thumb {
+  background-color: #F5CB5C;  /* scrollbar color */
+  border-radius: 10px;        /* smooth edges */
 }
-body {
-  scrollbar-width: thin;
-  scrollbar-color: #F5CB5C transparent;
+
+::-webkit-scrollbar-track {
+  background: transparent;    /* or #111111 to match bg */
 }

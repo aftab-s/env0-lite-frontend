@@ -24,7 +24,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`h-screen flex flex-col ${montserrat.variable} antialiased overflow-y-auto`}
+className={`min-h-screen flex flex-col ${montserrat.variable} antialiased bg-[#111111]`}
       >
         <DarkModeProvider>
           <Header />
