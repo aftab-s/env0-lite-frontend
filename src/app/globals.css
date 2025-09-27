@@ -9,8 +9,6 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -29,4 +27,17 @@ body {
 
 *, *::before, *::after {
   box-sizing: border-box;
+}
+
+/* Custom scrollbar styles */
+body::-webkit-scrollbar {
+  width: 2px;
+}
+body::-webkit-scrollbar-thumb {
+  background: #F5CB5C;
+  border-radius: 1px;
+}
+body {
+  scrollbar-width: thin;
+  scrollbar-color: #F5CB5C transparent;
 }

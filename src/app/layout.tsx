@@ -1,21 +1,17 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Inter } from "next/font/google";
+import { Montserrat } from "next/font/google";
 import "./globals.css";
 import Providers from "./providers";
 import { DarkModeProvider } from "@/context/DarkModeProvider";
 import Header from "@/components/header/page";
 
-const inter = Inter({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const montserrat = Montserrat({
+  variable: "--font-montserrat",
   subsets: ["latin"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"], // matches your import
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   title: "Env0 Lite",
@@ -28,7 +24,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`h-screen flex flex-col ${geistSans.variable} ${geistMono.variable} ${inter.className} antialiased overflow-hidden`}
+        className={`h-screen flex flex-col ${montserrat.variable} antialiased overflow-y-auto`}
       >
         <DarkModeProvider>
           <Header />

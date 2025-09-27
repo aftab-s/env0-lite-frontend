@@ -1,40 +1,54 @@
 
-import InputField from "../../components/ui/inputField";
-import PasswordField from "../../components/ui/passwordField";
-import Button from "../../components/ui/button";
+import InputField from '@/components/ui/inputField';
+import Button from '@/components/ui/button';
+
+function Step({ number, children }: { number: number; children: React.ReactNode }) {
+  return (
+    <div className="w-[97%] bg-[#09090B] flex items-start justify-start rounded-lg border gap-5 border-[#333333] p-4 mt-4">
+      <h1 className="text-[#ffffff] font-regular w-8 h-8 flex items-center justify-center border border-[#333333] text-[14px] rounded-md">
+        {number}
+      </h1>
+      <h1 className="text-[#ffffff] font-regular text-[14px] flex items-center h-8">
+        {children}
+      </h1>
+    </div>
+  );
+}
 
 export default function LoginUI() {
   return (
-    <div className="h-screen w-screen bg-[#f7f7f7] flex items-center justify-center">
-      <div className="h-[93%] w-[97%] flex items-center rounded border bg-[#ffffff] border-[#e4e4e4] justify-center">
-        <div className="h-full w-[60%] flex flex-col items-center justify-center">
-
-          <div className="flex flex-col items-start justify-start">
-            <h1 className="text-[24px] font-semibold text-[#000000] mt-10 mb-2">
-              Login to your account
-            </h1>
-            <h1 className="text-[14px] font-meidum text-[#71717A] mb-8">
-              Step Into Fig: Log In with Your Credentials
-            </h1>
-            <div className="h-[1px] w-full bg-[#e4e4e4] mb-4"></div>
-            <InputField
-              label="Email Address"
-              placeholder="Enter your Email ID"
-              width="w-80"
-            />
-              <PasswordField
-              label="Password"
-              placeholder="Enter your Password"
-              width="w-80"
-            />
-            <Button variant="primary">Sign In</Button>
-            <h3 className="text-sm font-medium text-[#71717A] mt-4">
-              Dont have an account? <a href="#" className="text-[#000000]">Sign up</a>
-            </h3>
-          </div>
+    <div className="h-screen w-screen bg-[#111111] flex flex-col items-center pt-10 overflow-x-hidden">
+      <h1 className="text-[#CD9C20] font-semibold text-[30px]">GitHub Personal Access Token</h1>
+      <h1 className="text-[#ffffff] font-regular text-[14px]">
+        We need a GitHub Personal Access Token to access your repositories and manage deployments.
+      </h1>
+      <div className="w-[60%] min-h-[200px] bg-[#18181B] mt-9 flex flex-col items-center justify-center rounded-lg border border-[#333333] p-4">
+        <h1 className="text-[#ffffff] font-semibold text-[16px]">GitHub Personal Access Token</h1>
+        <h1 className="text-[#A1A1AA] font-regular text-[14px] mb-5">
+          Your token is stored securely and encrypted. You will only be using it to access your
+          repositories
+        </h1>
+        <InputField placeholder="gph_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" width="w-120" />
+        <div className="w-[54%]">
+          <Button variant="primary">Verify Token</Button>
         </div>
-        <div className="h-full w-[40%] flex items-center justify-end text-white overflow-hidden p-3">
-        </div>
+      </div>
+      <div className="w-[60%] bg-[#09090B] mt-9 flex flex-col items-center justify-center rounded-lg mb-10 border border-[#333333] p-4">
+        <h1 className="text-[#ffffff] font-regular mb-2 text-[14px]">
+          How to generate a Personal Access Token?
+        </h1>
+        <Step number={1}>
+          Go to GitHub Settings → Developer settings → Personal access tokens → Tokens (classic)
+        </Step>
+        <Step number={2}>
+          Click &quot;Generate new token&quot; → &quot;Generate new token (classic)&quot; (classic)
+        </Step>
+          <Step number={3}>
+          Add a note (e.g., &quot;TerraForm Deploy&quot;) and select these scopes: (classic)
+        </Step>
+        <Step number={4}>
+          Click &quot;Generate token&quot; and copy the token
+        </Step>
       </div>
     </div>
   );
