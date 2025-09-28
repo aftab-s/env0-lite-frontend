@@ -1,6 +1,12 @@
 {
   "app": {
-    "[project]/src/app/github-connect/page": [
+    "[project]/src/app/create-project/page": [
+      "static/media/e8f2fbee2754df70-s.p.9b7a96b4.woff2"
+    ],
+    "[project]/src/app/dashboard/page": [
+      "static/media/e8f2fbee2754df70-s.p.9b7a96b4.woff2"
+    ],
+    "[project]/src/app/page": [
       "static/media/e8f2fbee2754df70-s.p.9b7a96b4.woff2"
     ]
   },
