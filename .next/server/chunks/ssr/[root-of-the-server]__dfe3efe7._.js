@@ -39,7 +39,7 @@ function CommonDropdown({ value, onChange, options, placeholder = "Select...", h
         ref: dropdownRef,
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: `w-full rounded-[5px] border px-3 py-2 text-[14px] cursor-pointer flex justify-between items-center ${bgColor} ${borderColor} ${textColor}`,
+                className: `w-full rounded-[5px] border px-3 py-2 text-[14px] cursor-pointer flex justify-between items-center ${bgColor} ${borderColor} ${textColor} transition-colors duration-500`,
                 onClick: ()=>setOpen(!open),
                 children: [
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -67,7 +67,7 @@ function CommonDropdown({ value, onChange, options, placeholder = "Select...", h
                 columnNumber: 7
             }, this),
             open && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: `absolute top-full left-0 w-full ${bgColor} border ${borderColor} rounded-[5px] z-10 max-h-60 overflow-y-auto mt-1`,
+                className: `absolute top-full left-0 w-full ${bgColor} border ${borderColor} rounded-[5px] z-10 max-h-60 overflow-y-auto mt-1 transition-colors duration-500`,
                 children: options.map((option)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: `px-3 py-2 text-[14px] cursor-pointer ${hoverBg}`,
                         onClick: ()=>{
@@ -117,23 +117,49 @@ __turbopack_context__.s([
 ]);
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react-jsx-dev-runtime.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$context$2f$DarkModeProvider$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/context/DarkModeProvider.tsx [app-ssr] (ecmascript)");
-"use client";
+'use client';
 ;
 ;
-function Button({ children, onClick, type = "button", className = "", disabled = false }) {
+function Button({ children, onClick, type = "button", className = "", disabled = false, variant = "primary" }) {
     const { darkMode } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$context$2f$DarkModeProvider$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useDarkMode"])();
-    const bgColor = darkMode ? "bg-white" : "bg-black";
-    const textColor = darkMode ? "text-black" : "text-white";
-    const hoverBg = darkMode ? "hover:bg-gray-200" : "hover:bg-gray-800";
+    let bgColor = "";
+    let textColor = "";
+    let border = "";
+    let hoverBg = "";
+    let widthClass = "w-full"; // default full width for primary
+    switch(variant){
+        case "primary":
+            bgColor = darkMode ? "bg-white" : "bg-black";
+            textColor = darkMode ? "text-black" : "text-white";
+            hoverBg = darkMode ? "hover:bg-gray-200" : "hover:bg-gray-800";
+            border = "border-none";
+            widthClass = "w-full"; // full width
+            break;
+        case "secondary":
+            bgColor = "bg-transparent";
+            textColor = darkMode ? "text-white" : "text-black";
+            border = "border border-[#4B5563]";
+            hoverBg = darkMode ? "hover:bg-gray-700" : "hover:bg-gray-200";
+            widthClass = "w-auto px-4"; // smaller width
+            break;
+        case "tertiary":
+            bgColor = "bg-[#0070F3]";
+            textColor = "text-white";
+            border = "border-none";
+            hoverBg = "hover:bg-[#0055c2]";
+            widthClass = "w-auto px-4"; // smaller width
+            break;
+    }
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
         type: type,
         onClick: onClick,
         disabled: disabled,
-        className: `w-full text-[14px] rounded-[5px] py-2 font-medium ${bgColor} ${textColor} ${hoverBg} disabled:opacity-50 disabled:cursor-not-allowed ${className}`,
+        className: `text-[14px] rounded-[5px] py-2 font-medium transition-colors duration-300
+        ${bgColor} ${textColor} ${border} ${hoverBg} ${widthClass} disabled:opacity-50 disabled:cursor-not-allowed ${className}`,
         children: children
     }, void 0, false, {
         fileName: "[project]/src/components/PrimaryButton/page.tsx",
-        lineNumber: 27,
+        lineNumber: 55,
         columnNumber: 5
     }, this);
 }
@@ -158,10 +184,11 @@ function Input({ label, helperText, error, className = "", ...props }) {
     const textColor = darkMode ? "text-white" : "text-black";
     const helperColor = darkMode ? "text-gray-400" : "text-gray-600";
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-        className: "flex flex-col gap-1",
+        className: `flex flex-col gap-1 ${className}`,
         children: [
+            " ",
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
-                className: `block text-[12px] font-normal ${labelColor}`,
+                className: `block text-[12px] font-normal ${labelColor} transition-colors duration-500`,
                 children: label
             }, void 0, false, {
                 fileName: "[project]/src/components/Input/page.tsx",
@@ -170,10 +197,10 @@ function Input({ label, helperText, error, className = "", ...props }) {
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                 ...props,
-                className: `w-full rounded-[5px] border px-3 py-2 text-[14px] focus:outline-none ${bgColor} ${borderColor} ${textColor} ${className}`
+                className: `w-full rounded-[5px] border px-3 py-2 text-[14px] focus:outline-none ${bgColor} ${borderColor} ${textColor} transition-colors duration-500`
             }, void 0, false, {
                 fileName: "[project]/src/components/Input/page.tsx",
-                lineNumber: 35,
+                lineNumber: 37,
                 columnNumber: 7
             }, this),
             error ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -181,14 +208,14 @@ function Input({ label, helperText, error, className = "", ...props }) {
                 children: error
             }, void 0, false, {
                 fileName: "[project]/src/components/Input/page.tsx",
-                lineNumber: 40,
+                lineNumber: 42,
                 columnNumber: 9
             }, this) : helperText ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                className: `${helperColor} text-xs`,
+                className: `${helperColor} text-xs transition-colors duration-500`,
                 children: helperText
             }, void 0, false, {
                 fileName: "[project]/src/components/Input/page.tsx",
-                lineNumber: 42,
+                lineNumber: 44,
                 columnNumber: 9
             }, this) : null
         ]
@@ -211,6 +238,10 @@ const apiEndpoints = {
         signUp: "/api/users/signup",
         login: "/api/users/login",
         byEmail: "/api/users/email"
+    },
+    github: {
+        getRepo: "/api/github-pat/repos/:email",
+        getTree: "/api/github-pat/repos"
     }
 };
 ;

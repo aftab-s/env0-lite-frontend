@@ -6,29 +6,26 @@ import Link from "next/link";
 
 export default function Header() {
   const { darkMode } = useDarkMode();
+  const headerBg = darkMode ? 'bg-[#000000]' : 'bg-[#FFFFFF]';
+  const borderColor = darkMode ? 'border-gray-700' : 'border-gray-200';
 
-  const bgColor = darkMode ? "bg-[#111111]" : "bg-[#EFEFEF]";
-  const textColor = darkMode ? "text-white" : "text-black";
 
   return (
     <header
-      className={`flex items-center justify-between w-full px-4 py-3 transition-colors duration-500 ${bgColor}`}
+      className={`${headerBg} ${borderColor} flex items-center justify-between px-4 py-3 transition-colors duration-500`}
     >
+
       <div className="flex items-center gap-2">
         <Link href="/" className="flex items-center gap-2">
-            <Image
-            src="/login/Logo.svg"
+          <Image
+            src="/login/logo-full.svg"
             alt="Logo"
-            width={30}
-            height={35}
+            width={130}
+            height={40}
             priority
-            />
-            <span className={`font-semibold text-lg ${textColor}`}>
-            TerraFuel
-            </span>
+          />
         </Link>
-        </div>
-
+      </div>
       <DarkModeToggle />
     </header>
   );

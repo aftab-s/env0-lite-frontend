@@ -1,12 +1,11 @@
 'use client';
-import Sidebar from "@/components/common/Sidebar";
+import Sidebar from "@/components/Sidebar/page";
 import { useDarkMode } from "@/context/DarkModeProvider";
 import InfrastructureBanner from "./_newProjectComponent/page";
+import { useSession } from "next-auth/react";
 
 export default function DashboardPage() {
   const { darkMode } = useDarkMode();
-
-  const bgColor = darkMode ? "#000000" : "#F3F4F6"; // dark black / light gray
 
   return (
       <div className="flex-1 p-10 pt-0 overflow-y-auto box-border">

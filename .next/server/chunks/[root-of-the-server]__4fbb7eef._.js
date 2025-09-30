@@ -141,6 +141,10 @@ const apiEndpoints = {
         signUp: "/api/users/signup",
         login: "/api/users/login",
         byEmail: "/api/users/email"
+    },
+    github: {
+        getRepo: "/api/github-pat/repos/:email",
+        getTree: "/api/github-pat/repos"
     }
 };
 ;

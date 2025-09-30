@@ -3,7 +3,6 @@
 
 import { ReactNode } from "react";
 import { useDarkMode } from "@/context/DarkModeProvider";
-import Sidebar from "@/components/common/Sidebar";
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -14,11 +13,10 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
   return (
     <div
-      className={`w-full flex box-border transition-colors duration-500 ${
+      className={`w-full h-full flex box-border transition-colors duration-500 ${
         darkMode ? "bg-[#111111]" : "bg-[#EFEFEF]"
       }`}
     >
-        <Sidebar />
         <div className={`flex flex-col flex-1 ${darkMode ? "bg-[#000000]" : "bg-[#F3F4F6]"} transition-colors duration-500`}>
             <header className="w-full mb-6">
                 <h1
