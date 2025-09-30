@@ -18,7 +18,7 @@ export default function CreateProjectPage() {
   const bgColor = darkMode ? 'bg-[#111111]' : 'bg-[#F2ECDD]';
   const subtitleColor = darkMode ? 'text-gray-300' : 'text-gray-600';
   const formBgColor = darkMode ? 'bg-[#18181B]' : 'bg-gray-50';
-  const titleColor = '#F5CB5C'; // Yellow/gold color from the design
+  const titleColor = '#CD9C20'; // Yellow/gold color from the design
 
   const validateForm = () => {
     const newErrors: { projectName?: string; projectDescription?: string } = {};
@@ -56,7 +56,7 @@ export default function CreateProjectPage() {
       <div className="w-full flex flex-col items-center gap-6">
         {/* Main Title */}
         <h1 
-          className="text-3xl font-bold text-center"
+          className="text-3xl font-bold text-center fontFamily: 'var(--font-montserrat) font-bold'"
           style={{ color: titleColor }}
         >
           Create New Project
@@ -97,7 +97,7 @@ export default function CreateProjectPage() {
               <button
                 onClick={handleSave}
                 className="px-4 py-2 rounded-[5px] text-black font-medium transition-colors duration-300 hover:opacity-80"
-                style={{ backgroundColor: titleColor }}
+                style={{ backgroundColor: '#CD9C20' }}
               >
                 Save
               </button>

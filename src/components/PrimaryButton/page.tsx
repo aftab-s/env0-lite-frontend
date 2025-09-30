@@ -8,7 +8,7 @@ interface ButtonProps {
   type?: "button" | "submit" | "reset";
   className?: string;
   disabled?: boolean;
-  variant?: "primary" | "secondary" | "tertiary" | "social";
+  variant?: "primary" | "secondary" | "tertiary" | "social" | "gold";
 }
 
 export default function Button({
@@ -47,6 +47,13 @@ export default function Button({
       textColor = "text-black font-bold";
       border = "border-none";
       hoverBg = "hover:bg-[#0055c2]";
+      widthClass = "w-auto px-4";
+      break;
+    case "gold":
+      bgColor = "bg-[#F1C453]";
+      textColor = "text-[#111111] font-medium";
+      border = "border-none";
+      hoverBg = "hover:brightness-95";
       widthClass = "w-auto px-4";
       break;
     case "social": // New variant for Google/GitHub/etc.

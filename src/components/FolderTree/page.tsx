@@ -48,7 +48,7 @@ export default function RepoTree({ nodes, darkMode = false, onSelect }: RepoTree
           {node.type === 'folder' ? (
             <Image src="/Folder.svg" alt="folder" width={16} height={16} />
           ) : (
-            <Image src="/File.svg" alt="file" width={16} height={16} />
+            <Image src="/file.svg" alt="file" width={16} height={16} />
           )}
           <span className={`${darkMode ? 'text-white' : 'text-black'} ml-1`}>
             {node.name}

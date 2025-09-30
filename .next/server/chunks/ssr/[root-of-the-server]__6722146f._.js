@@ -40,6 +40,13 @@ function Button({ children, onClick, type = "button", className = "", disabled =
             hoverBg = "hover:bg-[#0055c2]";
             widthClass = "w-auto px-4";
             break;
+        case "gold":
+            bgColor = "bg-[#F1C453]";
+            textColor = "text-[#111111] font-medium";
+            border = "border-none";
+            hoverBg = "hover:brightness-95";
+            widthClass = "w-auto px-4";
+            break;
         case "social":
             bgColor = "bg-transparent";
             textColor = darkMode ? "text-white" : "text-black";
@@ -57,7 +64,7 @@ function Button({ children, onClick, type = "button", className = "", disabled =
         children: children
     }, void 0, false, {
         fileName: "[project]/src/components/PrimaryButton/page.tsx",
-        lineNumber: 62,
+        lineNumber: 69,
         columnNumber: 5
     }, this);
 }
