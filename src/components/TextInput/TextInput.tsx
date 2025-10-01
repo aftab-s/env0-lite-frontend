@@ -1,10 +1,10 @@
 import { ChangeEvent } from 'react';
 
 interface TextInputProps {
-  label: string;
+  label?: string;
   placeholder?: string;
-  value: string;
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  value?: string;
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   type?: 'text' | 'email';
 }
 
