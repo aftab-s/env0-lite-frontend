@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///C:/Users/sures/Desktop/Env0/env0-lite-frontend/src/app/providers.tsx"],"sourcesContent":["\"use client\";\r\n\r\nimport { SessionProvider } from \"next-auth/react\";\r\nimport { ReactNode } from \"react\";\r\n\r\nexport default function Providers({ children }: { children: ReactNode }) {\r\n  return <SessionProvider>{children}</SessionProvider>;\r\n}\r\n"],"names":[],"mappings":";;;;;AAEA;AAFA;;;AAKe,SAAS,UAAU,KAAqC;QAArC,EAAE,QAAQ,EAA2B,GAArC;IAChC,qBAAO,6LAAC,oKAAe;kBAAE;;;;;;AAC3B;KAFwB","debugId":null}}]
-}
