@@ -1,16 +1,26 @@
-'use client';
+"use client";
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useDarkMode } from '@/context/DarkModeProvider';
+import { useDispatch, useSelector } from 'react-redux';
+import type { RootState, AppDispatch } from '@/redux/store';
+import { logout } from '@/redux/slice/Auth/loginSlice';
+import { useRouter } from 'next/navigation';
 
 const Sidebar = () => {
   const { darkMode } = useDarkMode();
+  const dispatch = useDispatch<AppDispatch>();
+  const router = useRouter();
+  const { username, email } = useSelector((state: RootState) => ({
+    username: state.auth.username,
+    email: state.auth.email,
+  }));
   const [isOpen, setIsOpen] = useState(true);
   const [isLogoHovered, setIsLogoHovered] = useState(false);
 
-  const sidebarBg = darkMode ? 'bg-[#1A1A1A]' : 'bg-white';
+  const sidebarBg = darkMode ? 'bg-[#000]' : 'bg-white';
   const logoText = darkMode ? 'text-white' : 'text-black';
-  const borderColor = darkMode ? 'border-gray-700' : 'border-gray-200';
+  const borderColor = darkMode ? 'border-[#333]' : 'border-gray-200';
   const inactiveMenuText = darkMode ? 'text-gray-400' : 'text-gray-600';
   const inactiveMenuHoverBg = darkMode ? 'hover:bg-[#2A2A2A]' : 'hover:bg-gray-100';
   const inactiveMenuHoverText = darkMode ? 'hover:text-white' : 'hover:text-black';
@@ -58,6 +68,14 @@ const activeIconFilter = darkMode
       />
     </svg>
   );
+
+  const handleLogout = useCallback(() => {
+    dispatch(logout());
+    router.push('/');
+  }, [dispatch, router]);
+
+  const displayName = username || 'User';
+  const displayEmail = email || 'user@gmail.com';
 
   return (
     <div
@@ -140,7 +158,16 @@ const activeIconFilter = darkMode
           className={`group flex items-center gap-3 px-2 py-2 rounded-md text-sm font-inter font-medium transition-colors duration-300 cursor-pointer ${inactiveMenuText} ${inactiveMenuHoverBg} ${inactiveMenuHoverText} ${
             !isOpen ? 'justify-center' : ''
           }`}
-          title={!isOpen ? 'John Doe' : ''}
+          title={!isOpen ? displayName : ''}
+          onClick={handleLogout}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              handleLogout();
+            }
+          }}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -155,9 +182,10 @@ const activeIconFilter = darkMode
             />
           </svg>
           {isOpen && (
-            <div className="flex flex-col">
-              <span className={`${logoText} font-semibold`}>User</span>
-              <span className={`text-xs ${inactiveMenuText}`}>user@gmail.com</span>
+            <div className="flex flex-col text-left">
+              <span className={`${logoText} font-semibold`}>{displayName}</span>
+              <span className={`text-xs ${inactiveMenuText}`}>{displayEmail}</span>
+              <span className="text-[10px] text-red-400 opacity-0 group-hover:opacity-100 transition-opacity tracking-wide">Logout</span>
             </div>
           )}
         </div>
