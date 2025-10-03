@@ -1,6 +1,5 @@
 'use client';
 import { useEffect, useMemo, useState } from 'react';
-import { useDarkMode } from '@/context/DarkModeProvider';
 import Button from '@/components/PrimaryButton/PrimaryButton';
 import RepoTree from '@/components/FolderTree/page';
 import { fetchRepoTree, fetchUserRepos, RepoTreeNode } from '@/services/query/useGithub';
@@ -15,7 +14,6 @@ type Repo = {
 };
 
 export default function GithubRepository() {
-  const { darkMode } = useDarkMode();
   const { data: session } = useSession();
 
   const [repos, setRepos] = useState<Repo[]>([]);
@@ -23,7 +21,6 @@ export default function GithubRepository() {
   const [selectedRepo, setSelectedRepo] = useState<Repo | null>(null);
   const [tree, setTree] = useState<RepoTreeNode[]>([]);
   const [loadingTree, setLoadingTree] = useState(false);
-
 
   const cardBg = 'bg-[#18181B]';
   const cardBorder = 'border-[#333333]';
@@ -133,7 +130,7 @@ export default function GithubRepository() {
             <p className={`text-[12px] ${subheading}`}>Select a repository to view branches</p>
           </div>
 
-          <div className={`relative rounded-md  p-3`} style={{height:'48vh', overflowY:'auto'}}>
+          <div className={`relative rounded-md p-3`} style={{height:'48vh', overflowY:'auto'}}>
             {loadingTree && (
               <div className="absolute inset-0 flex items-center justify-center">
                 <svg className="animate-spin h-10 w-10 text-gray-300" viewBox="0 0 24 24">
@@ -142,7 +139,7 @@ export default function GithubRepository() {
                 </svg>
               </div>
             )}
-            <RepoTree nodes={tree} darkMode={darkMode} />
+            <RepoTree nodes={tree} />
           </div>
         </div>
       </div>

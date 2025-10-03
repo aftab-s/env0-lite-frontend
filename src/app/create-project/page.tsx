@@ -1,11 +1,9 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useDarkMode } from '@/context/DarkModeProvider';
 import Input from '@/components/TextInput/TextInput';
 
 export default function CreateProjectPage() {
-  const { darkMode } = useDarkMode();
   const router = useRouter();
   
   const [projectName, setProjectName] = useState('');
@@ -14,11 +12,6 @@ export default function CreateProjectPage() {
     projectName?: string;
     projectDescription?: string;
   }>({});
-
-  const bgColor = darkMode ? 'bg-[#111111]' : 'bg-[#F2ECDD]';
-  const subtitleColor = darkMode ? 'text-gray-300' : 'text-gray-600';
-  const formBgColor = darkMode ? 'bg-[#18181B]' : 'bg-gray-50';
-  const titleColor = '#CD9C20'; // Yellow/gold color from the design
 
   const validateForm = () => {
     const newErrors: { projectName?: string; projectDescription?: string } = {};
@@ -52,25 +45,25 @@ export default function CreateProjectPage() {
   };
 
   return (
-    <div className={`min-h-screen ${bgColor} flex flex-col items-center justify-start px-4 py-20 transition-colors duration-500`}>
+    <div className="min-h-screen bg-[#111111] flex flex-col items-center justify-start px-4 py-20">
       <div className="w-full flex flex-col items-center gap-6">
         {/* Main Title */}
         <h1 
           className="text-3xl font-bold text-center fontFamily: 'var(--font-montserrat) font-bold'"
-          style={{ color: titleColor }}
+          style={{ color: '#CD9C20' }}
         >
           Create New Project
         </h1>
 
         {/* Subtitle */}
-        <p className={`text-center text-sm ${subtitleColor} max-w-xl`}>
+        <p className="text-center text-sm text-gray-300 max-w-xl">
           Give your infrastructure project a name and description to get started.
         </p>
 
         {/* Form Container */}
-        <div className={`w-full max-w-4xl p-6 prounded-lg ${formBgColor} transition-colors duration-500`}>
+        <div className="w-full max-w-4xl p-6 rounded-lg bg-[#18181B]">
           <div className="flex flex-col gap-4">
-            <h1 className="text-xl font-semibold" style={{ color: subtitleColor }}>Project Details</h1>
+            <h1 className="text-xl font-semibold text-gray-300">Project Details</h1>
             {/* Project Name Field */}
             <Input
               label="Project Name"
@@ -88,7 +81,7 @@ export default function CreateProjectPage() {
             />
 
             {/* Divider */}
-            <hr className="my-4 border-t border-gray-300 dark:border-gray-700" />
+            <hr className="my-4 border-t border-gray-700" />
 
             {/* Save Button */}
             <div className="flex justify-start">
@@ -107,7 +100,7 @@ export default function CreateProjectPage() {
         <button
           onClick={handleCreateProject}
           className="w-full max-w-md px-8 py-2 rounded-[3px] text-black font-medium transition-colors duration-300 hover:opacity-80"
-          style={{ backgroundColor: titleColor }}
+          style={{ backgroundColor: '#CD9C20' }}
         >
           Create Project
         </button>

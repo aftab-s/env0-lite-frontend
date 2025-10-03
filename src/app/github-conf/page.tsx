@@ -1,6 +1,5 @@
 'use client';
 import { useSearchParams } from 'next/navigation';
-import { useDarkMode } from '@/context/DarkModeProvider';
 import Input from '@/components/Input/page';
 import Button from '@/components/PrimaryButton/page';
 import RepoTree from '@/components/FolderTree/page';
@@ -15,7 +14,6 @@ interface TreeNode {
 }
 
 export default function GithubConfigPage() {
-  const { darkMode } = useDarkMode();
   const searchParams = useSearchParams();
   const repoName = searchParams.get('repo');
 
@@ -30,7 +28,6 @@ export default function GithubConfigPage() {
         setTree(repoTree);
       } catch (err) {
         console.error("Failed to load repo tree:", err);
-      } finally {
       }
     }
 
@@ -41,12 +38,12 @@ export default function GithubConfigPage() {
     <div className="w-full flex flex-col items-center p-4">
       {/* Breadcrumb */}
       <div className="w-full flex gap-2 mb-4 text-[14px] font-medium">
-        <span className={darkMode ? 'text-[#9CA3AF]' : 'text-gray-500'}>Repositories</span>
-        <span className={darkMode ? 'text-white' : 'text-black'}>{'>'} {repoName || ''}</span>
+        <span className="text-[#9CA3AF]">Repositories</span>
+        <span className="text-white">{'>'} {repoName || ''}</span>
       </div>
 
       {/* Header */}
-      <h2 className={`w-full text-3xl font-bold my-4 ${darkMode ? 'text-white' : 'text-black'}`}>
+      <h2 className="w-full text-3xl font-bold my-4 text-white">
         Repository Configuration
       </h2>
 
@@ -69,20 +66,22 @@ export default function GithubConfigPage() {
       </div>
 
       {/* Project Structure */}
-      <div className='w-full'>
-        <span className={`mb-2 ${darkMode ? 'text-white' : 'text-black'} text-[14px] font-medium`}>
+      <div className="w-full">
+        <span className="mb-2 text-white text-[14px] font-medium">
           Project Structure
         </span>
-        <div className={`w-full p-4 rounded-md my-4 ${darkMode ? 'bg-[#1A1A1A] border border-[#2A2A2A]' : 'bg-[#F3F4F6] border border-gray-300'}`}
-        style={{ maxHeight: '40vh', overflowY: 'auto' }}>
-          <RepoTree nodes={tree} darkMode={darkMode} />
+        <div
+          className="w-full p-4 rounded-md my-4 bg-[#1A1A1A] border border-[#2A2A2A]"
+          style={{ maxHeight: '40vh', overflowY: 'auto' }}
+        >
+          <RepoTree nodes={tree} />
         </div>
       </div>
 
       {/* Buttons */}
       <div className="w-full flex justify-between mt-4 gap-4">
-        <Button variant="secondary" >Back</Button>
-        <Button variant="tertiary" >Next</Button>
+        <Button variant="secondary">Back</Button>
+        <Button variant="tertiary">Next</Button>
       </div>
     </div>
   );

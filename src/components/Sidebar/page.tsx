@@ -1,35 +1,10 @@
 'use client';
 import Image from 'next/image';
 import { useState } from 'react';
-import { useDarkMode } from '@/context/DarkModeProvider';
 
 const Sidebar = () => {
-  const { darkMode } = useDarkMode();
   const [isOpen, setIsOpen] = useState(true);
   const [isLogoHovered, setIsLogoHovered] = useState(false);
-
-  const sidebarBg = darkMode ? 'bg-[#1A1A1A]' : 'bg-white';
-  const logoText = darkMode ? 'text-white' : 'text-black';
-  const borderColor = darkMode ? 'border-gray-700' : 'border-gray-200';
-  const inactiveMenuText = darkMode ? 'text-gray-400' : 'text-gray-600';
-  const inactiveMenuHoverBg = darkMode ? 'hover:bg-[#2A2A2A]' : 'hover:bg-gray-100';
-  const inactiveMenuHoverText = darkMode ? 'hover:text-white' : 'hover:text-black';
-  const activeMenuBg = darkMode ? 'bg-[#2A2A2A]' : 'bg-gray-100';
-  const activeMenuText = darkMode ? 'text-white' : 'text-black';
-  const iconColor = darkMode ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-black';
-
-  // SVG filter classes for different states
-  const inactiveIconFilter = darkMode
-    ? 'brightness-0 saturate-100 invert-[0.6]'
-    : 'brightness-0 saturate-100 invert-[0.37]';
-
-const activeIconFilter = darkMode
-  ? 'brightness-0 saturate-100 invert-[1]'
-  : 'brightness-0 saturate-100 invert-[0]';
-
-  const inactiveIconHoverFilter = darkMode
-    ? 'group-hover:brightness-0 group-hover:saturate-100 group-hover:invert-[1]'
-    : 'group-hover:brightness-0 group-hoclassName="rounded-full shrink-0"ver:saturate-100 group-hover:invert-[0]';
 
   const menuItems = [
     { icon: '/sidebar/projects.svg', name: 'Projects', active: true },
@@ -48,7 +23,7 @@ const activeIconFilter = darkMode
       width="24"
       height="24"
       viewBox="0 0 24 24"
-      className={`${iconColor} transition-colors duration-300`}
+      className="text-gray-400 hover:text-white"
     >
       <path
         fill="currentColor"
@@ -63,7 +38,7 @@ const activeIconFilter = darkMode
     <div
       className={`flex flex-col ${
         isOpen ? 'w-65' : 'w-16'
-      } h-screen ${sidebarBg} border-r ${borderColor} transition-all duration-300 ease-in-out`}
+      } h-screen bg-[#1A1A1A] border-r border-gray-700 transition-all duration-300 ease-in-out`}
     >
       {/* Logo Section */}
       <div className="flex items-center justify-between px-4 py-4">
@@ -109,10 +84,10 @@ const activeIconFilter = darkMode
           {menuItems.map((item, index) => (
             <li key={index}>
               <button
-                className={`group flex items-center gap-3 w-full text-left px-2 py-2 rounded-md text-sm font-inter font-medium transition-colors duration-300 cursor-pointer ${
+                className={`group flex items-center gap-3 w-full text-left px-2 py-2 rounded-md text-sm font-inter font-medium cursor-pointer ${
                   item.active
-                    ? `${activeMenuBg} ${activeMenuText}`
-                    : `${inactiveMenuText} ${inactiveMenuHoverBg} ${inactiveMenuHoverText}`
+                    ? 'bg-[#2A2A2A] text-white'
+                    : 'text-gray-400 hover:bg-[#2A2A2A] hover:text-white'
                 } ${!isOpen ? 'justify-center' : ''}`}
                 title={!isOpen ? item.name : ''}
               >
@@ -121,23 +96,23 @@ const activeIconFilter = darkMode
                   alt={item.name}
                   width={18}
                   height={18}
-                  className={`shrink-0 transition-all duration-300 ${
+                  className={`shrink-0 ${
                     item.active
-                      ? activeIconFilter
-                      : `${inactiveIconFilter} ${inactiveIconHoverFilter}`
+                      ? 'brightness-0 saturate-100 invert-[1]'
+                      : 'brightness-0 saturate-100 invert-[0.6] group-hover:brightness-0 group-hover:saturate-100 group-hover:invert-[1]'
                   }`}
                 />
                 {isOpen && item.name}
               </button>
             </li>
           ))}
-        </  ul>
+        </ul>
       </nav>
 
       {/* Profile Div */}
-      <div className={`border-t ${borderColor} mt-auto`}>
+      <div className="border-t border-gray-700 mt-auto">
         <div
-          className={`group flex items-center gap-3 px-2 py-2 rounded-md text-sm font-inter font-medium transition-colors duration-300 cursor-pointer ${inactiveMenuText} ${inactiveMenuHoverBg} ${inactiveMenuHoverText} ${
+          className={`group flex items-center gap-3 px-2 py-2 rounded-md text-sm font-inter font-medium cursor-pointer text-gray-400 hover:bg-[#2A2A2A] hover:text-white ${
             !isOpen ? 'justify-center' : ''
           }`}
           title={!isOpen ? 'John Doe' : ''}
@@ -147,7 +122,7 @@ const activeIconFilter = darkMode
             width="28"
             height="28"
             viewBox="0 0 24 24"
-            className={`${iconColor} rounded-full shrink-0 transition-colors duration-300`}
+            className="text-gray-400 hover:text-white rounded-full shrink-0"
           >
             <path
               fill="currentColor"
@@ -156,8 +131,8 @@ const activeIconFilter = darkMode
           </svg>
           {isOpen && (
             <div className="flex flex-col">
-              <span className={`${logoText} font-semibold`}>User</span>
-              <span className={`text-xs ${inactiveMenuText}`}>user@gmail.com</span>
+              <span className="text-white font-semibold">User</span>
+              <span className="text-xs text-gray-400">user@gmail.com</span>
             </div>
           )}
         </div>

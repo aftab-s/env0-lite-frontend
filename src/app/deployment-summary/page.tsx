@@ -1,7 +1,5 @@
 'use client';
 
-import { useDarkMode } from '@/context/DarkModeProvider';
-
 interface DeployedResource {
   type: string;
   name: string;
@@ -14,8 +12,6 @@ interface TerraformOutput {
 }
 
 export default function DeploymentSummaryLayout() {
-  const { darkMode } = useDarkMode();
-
   const deploymentData = {
     status: 'Successful',
     duration: '2m 34s',
@@ -37,27 +33,12 @@ export default function DeploymentSummaryLayout() {
     { key: 'security_group_id', value: 'sg-012345678abcdef0' }
   ];
 
-  const titleColor = darkMode ? 'text-white' : 'text-black';
-  const subtitleColor = darkMode ? 'text-gray-400' : 'text-gray-600';
-  const cardBg = darkMode ? 'bg-[#1A1A1A]' : 'bg-white';
-  const cardBorder = darkMode ? 'border-gray-700' : 'border-gray-300';
-  const outputBg = darkMode ? 'bg-[#1A1A1A]' : 'bg-gray-100';
-  const statusBg = darkMode ? 'bg-[#0e3120]' : 'bg-[#cef7e3]';
-
   return (
-    <div
-      className={`w-full transition-colors duration-500 ${
-        darkMode ? "bg-[#111111]" : "bg-[#EFEFEF]"
-      }`}
-    >
+    <div className="w-full bg-[#111111]">
       {/* Main Content */}
-      <div
-        className={`w-full transition-colors duration-500 p-10 ${
-          darkMode ? "bg-[#000000]" : "bg-[#F3F4F6]"
-        }`}
-      >
+      <div className="w-full p-10 bg-[#000000]">
         <header className="w-full mb-10">
-          <h1 className={`text-3xl font-bold transition-colors duration-500 ${titleColor}`}>
+          <h1 className="text-3xl font-bold text-white">
             Deployment Summary
           </h1>
         </header>
@@ -69,7 +50,7 @@ export default function DeploymentSummaryLayout() {
             <div className="space-y-8">
               {/* Status Section */}
               <div className="flex items-center gap-4">
-                <div className={`flex items-center gap-2 px-3 py-1 ${statusBg} rounded-full`}>
+                <div className="flex items-center gap-2 px-3 py-1 bg-[#0e3120] rounded-full">
                   <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                     <path
                       fillRule="evenodd"
@@ -83,52 +64,52 @@ export default function DeploymentSummaryLayout() {
 
               {/* Duration and Completion */}
               <div className="space-y-2">
-                <p className={`text-sm ${subtitleColor}`}>
+                <p className="text-sm text-gray-400">
                   Duration: {deploymentData.duration}
                 </p>
-                <p className={`text-sm ${subtitleColor}`}>
+                <p className="text-sm text-gray-400">
                   Completed: {deploymentData.completed}
                 </p>
               </div>
 
               {/* Overview Section */}
               <div className="space-y-6">
-                <h2 className={`text-xl font-semibold ${titleColor}`}>Overview</h2>
+                <h2 className="text-xl font-semibold text-white">Overview</h2>
                 
                 <div className="space-y-4">
                   <div className="flex justify-between">
-                    <span className={`text-sm ${subtitleColor}`}>Project Name:</span>
-                    <span className={`text-sm ${titleColor}`}>{deploymentData.projectName}</span>
+                    <span className="text-sm text-gray-400">Project Name:</span>
+                    <span className="text-sm text-white">{deploymentData.projectName}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className={`text-sm ${subtitleColor}`}>Platform:</span>
-                    <span className={`text-sm ${titleColor}`}>{deploymentData.platform}</span>
+                    <span className="text-sm text-gray-400">Platform:</span>
+                    <span className="text-sm text-white">{deploymentData.platform}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className={`text-sm ${subtitleColor}`}>Repository:</span>
-                    <span className={`text-sm ${titleColor}`}>{deploymentData.repository}</span>
+                    <span className="text-sm text-gray-400">Repository:</span>
+                    <span className="text-sm text-white">{deploymentData.repository}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className={`text-sm ${subtitleColor}`}>Branch:</span>
-                    <span className={`text-sm ${titleColor}`}>{deploymentData.branch}</span>
+                    <span className="text-sm text-gray-400">Branch:</span>
+                    <span className="text-sm text-white">{deploymentData.branch}</span>
                   </div>
                 </div>
               </div>
 
               {/* Terraform Outputs Section */}
               <div className="space-y-6">
-                <h2 className={`text-xl font-semibold ${titleColor}`}>Terraform Outputs</h2>
+                <h2 className="text-xl font-semibold text-white">Terraform Outputs</h2>
                 
                 <div className="space-y-4">
                   {terraformOutputs.map((output, index) => (
                     <div
                       key={index}
-                      className={`p-3 rounded-lg ${outputBg} border ${cardBorder}`}
+                      className="p-3 rounded-lg bg-[#1A1A1A] border border-gray-700"
                     >
-                      <div className={`text-sm font-medium ${titleColor} mb-1`}>
+                      <div className="text-sm font-medium text-white mb-1">
                         {output.key}
                       </div>
-                      <div className={`text-sm font-mono ${subtitleColor}`}>
+                      <div className="text-sm font-mono text-gray-400">
                         {output.value}
                       </div>
                     </div>
@@ -139,19 +120,19 @@ export default function DeploymentSummaryLayout() {
 
             {/* Deployed Resources */}
             <div className="space-y-6">
-              <h2 className={`text-xl font-semibold ${titleColor}`}>Deployed Resources</h2>
+              <h2 className="text-xl font-semibold text-white">Deployed Resources</h2>
               
-              <div className={`rounded-lg border ${cardBorder} overflow-hidden ${cardBg}`}>
+              <div className="rounded-lg border border-gray-700 overflow-hidden bg-[#1A1A1A]">
                 <table className="w-full">
-                  <thead className={`border-b ${cardBorder}`}>
+                  <thead className="border-b border-gray-700">
                     <tr>
-                      <th className={`px-6 py-3 text-left text-xs font-medium ${subtitleColor} uppercase tracking-wider`}>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                         Type
                       </th>
-                      <th className={`px-6 py-3 text-left text-xs font-medium ${subtitleColor} uppercase tracking-wider`}>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                         Name
                       </th>
-                      <th className={`px-6 py-3 text-left text-xs font-medium ${subtitleColor} uppercase tracking-wider`}>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                         Status
                       </th>
                     </tr>
@@ -159,10 +140,10 @@ export default function DeploymentSummaryLayout() {
                   <tbody className="divide-y divide-gray-700">
                     {deployedResources.map((resource, index) => (
                       <tr key={index}>
-                        <td className={`px-6 py-4 whitespace-nowrap text-sm ${titleColor}`}>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-white">
                           {resource.type}
                         </td>
-                        <td className={`px-6 py-4 whitespace-nowrap text-sm ${titleColor}`}>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-white">
                           {resource.name}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">

@@ -1,18 +1,14 @@
 'use client';
 
-import { useDarkMode } from '@/context/DarkModeProvider';
-
 interface DeploymentCard {
   name: string;
   branch: string;
   time: string;
   status: 'Deployed' | 'Deploying' | 'Failed';
-  description:string;
+  description: string;
 }
 
 export default function Spaces() {
-  const { darkMode } = useDarkMode();
-
   const deploymentCards: DeploymentCard[] = [
     { name: 'terraform-aws-vpc', branch: 'main branch', time: '2 hours ago', status: 'Deployed', description: ' Lorem ipsum dolor sit amet consectetur. Vulputate.' },
     { name: 'terraform-aws-vpc', branch: 'main branch', time: '2 hours ago', status: 'Deployed', description: ' Lorem ipsum dolor sit amet consectetur. Vulputate.' },
@@ -22,30 +18,12 @@ export default function Spaces() {
     { name: 'website-v2', branch: 'main branch', time: '2 hours ago', status: 'Deployed', description: ' Lorem ipsum dolor sit amet consectetur. Vulputate.' },
   ];
 
-  const titleColor = darkMode ? 'text-white' : 'text-black';
-  const subtitleColor = darkMode ? 'text-gray-400' : 'text-gray-600';
-  const cardBg = darkMode ? 'bg-[#09090B]' : 'bg-white';
-  const cardBorder = darkMode ? 'border-gray-700' : 'border-gray-300';
-  const descriptionBg = darkMode ? 'bg-[#111111]' : 'bg-white';
-
-  const deployedBg = darkMode ? 'bg-[#072a1b]' : 'bg-[#cef7e3]';
-  const deployingBg = darkMode ? 'bg-[#382810]' : 'bg-[#ffe6cc]';
-  const failedBg = darkMode ? 'bg-[#351518]' : 'bg-[#ffb3b3]';
-
-  const deployedFont = darkMode ? 'text-[#00b15c]' : 'text-[#00b15c]';
-  const deployingFont = darkMode ? 'text-[#f5a623]' : 'text-[#f5a623]';
-  const failedFont = darkMode ? 'text-[#e5484d]' : 'text-[#e5484d]';
-
   return (
-    <div
-      className={`w-full min-h-screen transition-colors duration-500 ${
-        darkMode ? 'bg-[#111111]' : 'bg-[#EFEFEF]'
-      }`}
-    >
+    <div className="w-full min-h-screen bg-[#111111]">
       {/* Header */}
       <header className="w-full p-6">
-        <h1 className={`text-3xl font-bold transition-colors duration-500 ${titleColor}`}>
-        Spaces
+        <h1 className="text-3xl font-bold text-white">
+          Spaces
         </h1>
       </header>
 
@@ -54,7 +32,7 @@ export default function Spaces() {
         <input
           type="text"
           placeholder="Search"
-          className={`w-full p-2 rounded-md border ${cardBorder} ${cardBg} text-sm ${subtitleColor} focus:outline-none focus:ring-1 focus:ring-[#CD9C20]`}
+          className="w-full p-2 rounded-md border border-gray-700 bg-[#09090B] text-sm text-gray-400 focus:outline-none focus:ring-1 focus:ring-[#CD9C20]"
         />
       </div>
 
@@ -64,34 +42,34 @@ export default function Spaces() {
           {deploymentCards.map((card, index) => (
             <div
               key={index}
-              className={`p-4 rounded-lg border ${cardBorder} ${cardBg} shadow-md`}
+              className="p-4 rounded-lg border border-gray-700 bg-[#09090B] shadow-md"
             >
               <div className="flex items-center justify-between mb-2">
-                <span className={`text-base font-medium ${titleColor}`}>{card.name}</span>
-                <div className={`flex items-center gap-2 `}>
+                <span className="text-base font-medium text-white">{card.name}</span>
+                <div className="flex items-center gap-2">
                   {card.status === 'Deployed' && (
-                    <div className={`${deployedBg} ${deployedFont} px-3 py-2 rounded-full flex items-center`}>
-                        <span className={`w-2 h-2 rounded-full mr-1 ${deployedFont} bg-current`} />
+                    <div className="bg-[#072a1b] text-[#00b15c] px-3 py-2 rounded-full flex items-center">
+                      <span className="w-2 h-2 rounded-full mr-1 bg-[#00b15c]" />
                       <span className="text-xs font-light ml-1">{card.status}</span>
                     </div>
                   )}
                   {card.status === 'Deploying' && (
-                    <div className={`${deployingBg} ${deployingFont} px-3 py-2 rounded-full flex items-center`}>
-                        <span className={`w-2 h-2 rounded-full mr-1 ${deployingFont} bg-current`} />
+                    <div className="bg-[#382810] text-[#f5a623] px-3 py-2 rounded-full flex items-center">
+                      <span className="w-2 h-2 rounded-full mr-1 bg-[#f5a623]" />
                       <span className="text-xs font-light ml-1">{card.status}</span>
                     </div>
                   )}
                   {card.status === 'Failed' && (
-                    <div className={`${failedBg} ${failedFont} px-3 py-2 rounded-full flex items-center`}>
-                        <span className={`w-2 h-2 rounded-full mr-1 ${failedFont} bg-current`} />
+                    <div className="bg-[#351518] text-[#e5484d] px-3 py-2 rounded-full flex items-center">
+                      <span className="w-2 h-2 rounded-full mr-1 bg-[#e5484d]" />
                       <span className="text-xs font-light ml-1">{card.status}</span>
                     </div>
                   )}
                 </div>
               </div>
-              <p className={`text-xs ${subtitleColor}`}>{card.branch}</p>
-              <p className={`text-xs ${subtitleColor}`}>{card.time}</p>
-              <p className={`text-xs ${subtitleColor} ${descriptionBg} mt-2px-2 py-2 rounded`}>
+              <p className="text-xs text-gray-400">{card.branch}</p>
+              <p className="text-xs text-gray-400">{card.time}</p>
+              <p className="text-xs text-gray-400 mt-2 px-2 py-2 rounded">
                 {card.description}
               </p>
             </div>

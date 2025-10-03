@@ -31,7 +31,7 @@ export default function AuthForm() {
 
       {/* Right Side - Login Form */}
       <div className="w-[45%] h-full bg-[#111111] flex items-center justify-center px-30 py-8">
-        <div className="w-full max-w-md bg-[#18181B] rounded-lg p-8  border-1 border-gray-800">
+        <div className="w-full max-w-md bg-[#18181B] rounded-lg p-8 border-1 border-gray-800">
           <h2 className="text-[#CD9C20] text-2xl font-semibold mb-2">Login</h2>
           <p className="text-gray-400 text-sm mb-6">
             Enter your email below to login to your account

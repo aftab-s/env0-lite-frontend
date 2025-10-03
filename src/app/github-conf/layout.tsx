@@ -1,8 +1,6 @@
-// app/dashboard/layout.tsx
 "use client";
 
 import { ReactNode } from "react";
-import { useDarkMode } from "@/context/DarkModeProvider";
 import Sidebar from "@/components/Sidebar/page";
 
 interface DashboardLayoutProps {
@@ -10,16 +8,13 @@ interface DashboardLayoutProps {
 }
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
-  const { darkMode } = useDarkMode();
-
-  const bgColor = darkMode ? "#000000" : "#F3F4F6"; // outer div background
+  const bgColor = "#000000";
 
   return (
     <div
-      className="w-full h-full flex box-border transition-colors duration-500 overflow-hidden"
+      className="w-full h-full flex box-border overflow-hidden"
       style={{ backgroundColor: bgColor }}
     >
-
       <main className="w-full flex-1 pt-8 overflow-y-auto scrollbar-custom">
         {children}
       </main>
@@ -29,17 +24,17 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           width: 6px;
         }
         .scrollbar-custom::-webkit-scrollbar-track {
-          background: ${bgColor}; /* track matches outer div */
+          background: #000000;
         }
         .scrollbar-custom::-webkit-scrollbar-thumb {
-          background-color: ${darkMode ? "#4B5563" : "#9CA3AF"};
+          background-color: #4B5563;
           border-radius: 10px;
         }
 
         /* Firefox */
         .scrollbar-custom {
           scrollbar-width: thin;
-          scrollbar-color: ${darkMode ? "#4B5563" : "#9CA3AF"} ${bgColor};
+          scrollbar-color: #4B5563 #000000;
         }
       `}</style>
     </div>
