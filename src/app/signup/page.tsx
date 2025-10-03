@@ -1,18 +1,64 @@
-'use client';
-import { useState } from 'react';
-import Link from 'next/link'
+"use client";
+import { useState, useCallback, useEffect } from 'react';
+import Link from 'next/link';
 import Image from 'next/image';
 import TextInput from '../../components/TextInput/TextInput';
 import PasswordInput from '../../components/PasswordInput/PasswordInput';
 import Button from '../../components/PrimaryButton/PrimaryButton';
+import { useDispatch, useSelector } from 'react-redux';
+import type { AppDispatch, RootState } from '@/redux/store';
+import { signupUser, resetSignupState } from '@/redux/slice/Auth/signUpSlice';
+import type { SignupCredentials } from '@/types/auth.types';
+import Swal from 'sweetalert2';
+import { useRouter } from 'next/navigation';
 
 export default function AuthForm() {
+  const dispatch = useDispatch<AppDispatch>();
+  const router = useRouter();
+  const { loading, error, success } = useSelector((s: RootState) => s.signup);
+
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = () => {
-    console.log('Create account clicked', { email, password });
-  };
+  const name = `${firstName.trim()} ${lastName.trim()}`.trim();
+  const canSubmit = !!firstName && !!lastName && !!email && !!password && !loading;
+
+  const handleSubmit = useCallback(async () => {
+    if (!canSubmit) return;
+    const payload: SignupCredentials = {
+      name,
+      email,
+      password,
+      role: 'user',
+    };
+    const action = await dispatch(signupUser(payload));
+    if (signupUser.fulfilled.match(action)) {
+      Swal.fire({
+        icon: 'success',
+        title: 'Account created',
+        text: 'You can now login',
+        confirmButtonColor: '#CD9C20'
+      }).then(() => {
+        router.push('/github-connect');
+        dispatch(resetSignupState());
+      });
+    } else {
+      const msg = action.payload as string | undefined;
+      Swal.fire({
+        icon: 'error',
+        title: 'Signup failed',
+        text: msg || 'Unable to create account',
+        confirmButtonColor: '#CD9C20'
+      });
+    }
+  }, [canSubmit, dispatch, email, password, name, router]);
+
+  // Prefetch login page for faster redirect
+  useEffect(() => {
+    router.prefetch('/github-connect');
+  }, [router]);
 
   return (
     <div className="w-screen h-screen flex overflow-hidden">
@@ -41,21 +87,18 @@ export default function AuthForm() {
 
 
             <div className="flex flex-row gap-5">
-            <TextInput
-                          label="First Name"
-                          placeholder="Max"
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          type="email"
-                        />
-            <TextInput
-                          label="Last Name"
-                          placeholder="Robinson"
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          type="email"
-                        />
-
+              <TextInput
+                label="First Name"
+                placeholder="Max"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+              />
+              <TextInput
+                label="Last Name"
+                placeholder="Robinson"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+              />
             </div>
 
             <TextInput
@@ -67,12 +110,17 @@ export default function AuthForm() {
                         />
 
             <PasswordInput
-                          label="Password"
-                          value={password}
-                          onChange={(e) => setPassword(e.target.value)}
-                        />
+              label="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
 
-             <Button onClick={handleSubmit}>Create an account</Button>
+            <Button onClick={handleSubmit}>
+              {loading ? 'Creating account...' : 'Create an account'}
+            </Button>
+            {error && !success && (
+              <p className="text-red-500 text-xs" role="alert">{error}</p>
+            )}
           </div>
 
           <p className="text-gray-400 text-sm mt-6 text-center">

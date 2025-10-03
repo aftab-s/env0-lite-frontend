@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import { DarkModeProvider } from "@/context/DarkModeProvider";
 import LayoutHandler from "./LayoutHandler";
+import Providers from "./providers";
 
 const inter = Inter({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
 
@@ -32,9 +33,11 @@ export default function RootLayout({
       <body
         className={`min-h-screen flex ${geistSans.variable} ${geistMono.variable} ${inter.className} antialiased`}
       >
-        <DarkModeProvider>
-          <LayoutHandler>{children}</LayoutHandler>
-        </DarkModeProvider>
+        <Providers>
+          <DarkModeProvider>
+            <LayoutHandler>{children}</LayoutHandler>
+          </DarkModeProvider>
+        </Providers>
       </body>
     </html>
   );

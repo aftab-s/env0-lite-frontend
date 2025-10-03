@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { useDarkMode } from '@/context/DarkModeProvider';
+import { useRouter } from 'next/navigation';
 
 interface CloudProvider {
   id: string;
@@ -13,6 +14,7 @@ interface CloudProvider {
 
 export default function CloudProviderPage() {
   const { darkMode } = useDarkMode();
+  const router = useRouter();
   const [selectedProvider, setSelectedProvider] = useState<string>('');
 
   const cloudProviders: CloudProvider[] = [
@@ -151,7 +153,7 @@ export default function CloudProviderPage() {
             </div>
 
             {/* Continue Button */}
-            <div className="flex justify-center">
+            <div className="flex flex-col items-center gap-4">
               <button
                 onClick={handleContinue}
                 disabled={!selectedProvider}
@@ -162,6 +164,12 @@ export default function CloudProviderPage() {
                 }`}
               >
                 Continue with the selection
+              </button>
+              <button
+                onClick={() => router.push('/dashboard')}
+                className="px-15 py-3 rounded-lg font-medium transition-all duration-200 text-sm bg-[#CD9C20] hover:bg-[#b5871c] text-black cursor-pointer"
+              >
+                Go to Dashboard
               </button>
             </div>
           </div>
