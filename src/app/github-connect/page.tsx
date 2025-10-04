@@ -3,7 +3,7 @@ import TextInput from "@/components/TextInput/TextInput";
 import Button from "@/components/PrimaryButton/PrimaryButton";
 import { useState, useCallback, useEffect } from 'react';
 import { saveGithubPAT } from '@/services/githubPAT/githubPat.service';
-import Swal from 'sweetalert2';
+import { showSuccessAlert, showErrorAlert } from '@/utils/swal';
 import { useRouter } from 'next/navigation';
 
 
@@ -40,12 +40,7 @@ export default function LoginUI() {
     try {
       setLoading(true);
       await saveGithubPAT(pat.trim());
-      await Swal.fire({
-        icon: 'success',
-        title: 'Token saved',
-        text: 'Your GitHub PAT has been stored securely.',
-        confirmButtonColor: '#CD9C20'
-      });
+      await showSuccessAlert('Token saved', 'Your GitHub PAT has been stored securely.', true);
       router.push('/dashboard');
     } catch (e: unknown) {
       let msg = 'Failed to save token';
@@ -58,12 +53,7 @@ export default function LoginUI() {
         // @ts-expect-error axios-like error shape
         msg = e.response.data.error as string;
       }
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: msg,
-        confirmButtonColor: '#CD9C20'
-      });
+      showErrorAlert('Error', msg, true);
     } finally {
       setLoading(false);
     }

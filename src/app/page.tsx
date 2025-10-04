@@ -10,7 +10,7 @@ import type { AppDispatch, RootState } from '@/redux/store';
 import { loginUser } from '@/redux/slice/Auth/loginSlice';
 import type { LoginCredentials } from '@/types/auth.types';
 import { useRouter } from 'next/navigation';
-import Swal from 'sweetalert2';
+import { showErrorAlert } from '@/utils/swal';
 
 export default function AuthForm() {
   const dispatch = useDispatch<AppDispatch>();
@@ -31,12 +31,7 @@ export default function AuthForm() {
       router.push(to);
     } else {
       const payload = resultAction.payload as string | undefined;
-      Swal.fire({
-        icon: 'error',
-        title: 'Login failed',
-        text: payload || 'Unable to login with provided credentials',
-        confirmButtonColor: '#CD9C20'
-      });
+      showErrorAlert('Login failed', payload || 'Unable to login with provided credentials', true);
     }
   }, [canSubmit, dispatch, email, password, router]);
 
