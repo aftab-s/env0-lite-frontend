@@ -2,7 +2,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import Sidebar from "@/components/common/Sidebar";
+import Sidebar from "@/components/Sidebar/page";
 import { useDarkMode } from "@/context/DarkModeProvider";
 import InfrastructureBanner from "./_newProjectComponent/page";
 

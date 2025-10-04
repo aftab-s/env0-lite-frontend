@@ -29,18 +29,24 @@ body {
   box-sizing: border-box;
 }
 
-/* Custom scrollbar styles */
-/* Scrollbar styling */
+/* Custom Scrollbar (WebKit Browsers) */
 ::-webkit-scrollbar {
-  width: 4px;             /* scrollbar thickness */
-  height: 2px;            /* horizontal scrollbar thickness */
+  width: 3px;
+  height: 3px;
 }
-
-::-webkit-scrollbar-thumb {
-  background-color: #F5CB5C;  /* scrollbar color */
-  border-radius: 10px;        /* smooth edges */
-}
-
 ::-webkit-scrollbar-track {
-  background: transparent;    /* or #111111 to match bg */
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #CD9C20;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #b5861a; /* slightly darker on hover */
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #CD9C20 transparent;
 }

@@ -1,8 +1,8 @@
 'use client';
 import { use } from 'react';
 import { useDarkMode } from '@/context/DarkModeProvider';
-import Input from '@/components/Input/page';
-import Button from '@/components/PrimaryButton/page';
+import TextInput from '@/components/TextInput/TextInput';
+import Button from '@/components/PrimaryButton/PrimaryButton';
 import RepoTree from '@/components/FolderTree/page';
 import CommonDropdown from '@/components/Dropdown/page';
 import { useEffect, useState } from 'react';
@@ -123,12 +123,11 @@ export default function GithubConfigPage({ params }: GithubConfPageProps) {
             helperText="Choose a branch to configure"
           />
 
-          <Input
+          <TextInput
             label="Directory Path"
             placeholder="Enter path"
             value={directory}
             onChange={(e: any) => setDirectory(e.target.value)}
-            className="flex-1 mt-3"
           />
         </div>
 
@@ -173,10 +172,10 @@ export default function GithubConfigPage({ params }: GithubConfPageProps) {
 
       {/* Buttons */}
       <div className="w-full flex mt-4 gap-4">
-        <Button variant="secondary" className="rounded-[10px] font-bold" onClick={()=>router.push("")}>
+        <Button className="rounded-[10px] font-bold" onClick={()=>router.push("")}>
           Back
         </Button>
-        <Button variant="tertiary" className="rounded-[10px] font-bold">
+        <Button className="rounded-[10px] font-bold">
           Next
         </Button>
       </div>

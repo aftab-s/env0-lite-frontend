@@ -1,5 +1,10 @@
-import InputField from '@/components/ui/inputField';
-import Button from '@/components/ui/button';
+"use client";
+import TextInput from "@/components/TextInput/TextInput"; 
+import Button from "@/components/PrimaryButton/PrimaryButton";
+import { useState, useCallback, useEffect } from 'react';
+import { saveGithubPAT } from '@/services/githubPAT/githubPat.service';
+import Swal from 'sweetalert2';
+import { useRouter } from 'next/navigation';
 
 function Step({
   number,
@@ -21,8 +26,54 @@ function Step({
 }
 
 export default function LoginUI() {
+  const [pat, setPat] = useState('');
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  // Basic PAT validation: must start with ghp_ or github_pat_
+  const PAT_REGEX = /^(ghp|github_pat)_[A-Za-z0-9_]+$/;
+  const isValidPat = pat.trim() === '' ? true : PAT_REGEX.test(pat.trim());
+  const canSubmit = pat.trim().length > 0 && isValidPat && !loading;
+
+  const handleVerify = useCallback(async () => {
+    if (!canSubmit) return;
+    try {
+      setLoading(true);
+      await saveGithubPAT(pat.trim());
+      await Swal.fire({
+        icon: 'success',
+        title: 'Token saved',
+        text: 'Your GitHub PAT has been stored securely.',
+        confirmButtonColor: '#CD9C20'
+      });
+      router.push('/dashboard');
+    } catch (e: unknown) {
+      let msg = 'Failed to save token';
+      if (
+        e &&
+        typeof e === 'object' &&
+        // @ts-expect-error axios-like error shape
+        e.response?.data?.error
+      ) {
+        // @ts-expect-error axios-like error shape
+        msg = e.response.data.error as string;
+      }
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: msg,
+        confirmButtonColor: '#CD9C20'
+      });
+    } finally {
+      setLoading(false);
+    }
+  }, [canSubmit, pat, router]);
+
+  useEffect(() => {
+    router.prefetch('/dashboard');
+  }, [router]);
+
   return (
-    <div className="min-h-screen w-full bg-[#111111] flex flex-col items-center pt-10">
+    <div className="min-h-screen w-full bg-[#000000] flex flex-col items-center pt-10">
       <h1 className="text-[#CD9C20] font-semibold text-[30px]">
         GitHub Personal Access Token
       </h1>
@@ -40,12 +91,20 @@ export default function LoginUI() {
           Your token is stored securely and encrypted. You will only be using it
           to access your repositories
         </h1>
-        <InputField
+        <TextInput
           placeholder="gph_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-          width="w-120"
+          value={pat}
+          onChange={(e) => setPat(e.target.value)}
         />
+        {pat && !isValidPat && (
+          <h4 className="text-red-500 text-[10px] w-full mt-1">
+            Invalid token format. It must start with <span className="font-mono">ghp_</span> or <span className="font-mono">github_pat_</span>.
+          </h4>
+        )}
         <div className="w-[54%]">
-          <Button variant="primary">Verify Token</Button>
+          <Button onClick={handleVerify} disabled={!canSubmit}>
+            {loading ? 'Saving...' : 'Verify Token'}
+          </Button>
         </div>
       </div>
 
