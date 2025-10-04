@@ -1,11 +1,13 @@
 'use client';
+
 import { useSearchParams } from 'next/navigation';
-import { useDarkMode } from '@/context/DarkModeProvider';
-import Input from '@/components/Input/page';
-import Button from '@/components/PrimaryButton/page';
+import Input from '@/components/TextInput/TextInput';
+import Button from '@/components/PrimaryButton/PrimaryButton';
 import RepoTree from '@/components/FolderTree/page';
 import { useEffect, useState } from 'react';
 import { fetchRepoTree } from '@/services/query/useGithub';
+import Sidebar from '@/components/Sidebar/page';
+import PrivateHeader from '@/components/PrivateHeader/page';
 
 interface TreeNode {
   id: string;
@@ -15,7 +17,6 @@ interface TreeNode {
 }
 
 export default function GithubConfigPage() {
-  const { darkMode } = useDarkMode();
   const searchParams = useSearchParams();
   const repoName = searchParams.get('repo');
 
@@ -26,11 +27,15 @@ export default function GithubConfigPage() {
   useEffect(() => {
     async function loadTree() {
       try {
-        const repoTree = await fetchRepoTree({email:'',owner:'',repo: '',branch: "main"});
+        const repoTree = await fetchRepoTree({
+          email: '',
+          owner: '',
+          repo: '',
+          branch: 'main',
+        });
         setTree(repoTree);
       } catch (err) {
-        console.error("Failed to load repo tree:", err);
-      } finally {
+        console.error('Failed to load repo tree:', err);
       }
     }
 
@@ -38,51 +43,83 @@ export default function GithubConfigPage() {
   }, []);
 
   return (
-    <div className="w-full flex flex-col items-center p-4">
-      {/* Breadcrumb */}
-      <div className="w-full flex gap-2 mb-4 text-[14px] font-medium">
-        <span className={darkMode ? 'text-[#9CA3AF]' : 'text-gray-500'}>Repositories</span>
-        <span className={darkMode ? 'text-white' : 'text-black'}>{'>'} {repoName || ''}</span>
-      </div>
+    <div className="flex h-screen w-screen">
+      <Sidebar />
+      <div className="flex flex-col flex-1 h-screen">
+        <PrivateHeader />
+        <div className="flex-1 overflow-y-auto">
+          <div className="w-full bg-[#000000]">
+            <main className="w-full flex-1 pt-8 scrollbar-custom">
+              <div className="w-full flex flex-col items-center p-4">
+                {/* Breadcrumb */}
+                <div className="w-full flex gap-2 mb-4 text-[14px] font-medium">
+                  <span className="text-[#9CA3AF]">Repositories</span>
+                  <span className="text-white">{'>'} {repoName || ''}</span>
+                </div>
 
-      {/* Header */}
-      <h2 className={`w-full text-3xl font-bold my-4 ${darkMode ? 'text-white' : 'text-black'}`}>
-        Repository Configuration
-      </h2>
+                {/* Header */}
+                <h2 className="w-full text-3xl font-bold my-4 text-white">
+                  Repository Configuration
+                </h2>
 
-      {/* Inputs */}
-      <div className="w-full flex gap-4 my-4">
-        <Input
-          label="Branch Selection"
-          placeholder="Enter branch"
-          value={branch}
-          onChange={(e: any) => setBranch(e.target.value)}
-          className="flex-1"
-        />
-        <Input
-          label="Directory Path"
-          placeholder="Enter path"
-          value={directory}
-          onChange={(e: any) => setDirectory(e.target.value)}
-          className="flex-1"
-        />
-      </div>
+                {/* Inputs */}
+                <div className="w-full flex gap-4 my-4">
+                  <Input
+                    label="Branch Selection"
+                    placeholder="Enter branch"
+                    value={branch}
+                    onChange={(e: any) => setBranch(e.target.value)}
+                  />
+                  <Input
+                    label="Directory Path"
+                    placeholder="Enter path"
+                    value={directory}
+                    onChange={(e: any) => setDirectory(e.target.value)}
+                  />
+                </div>
 
-      {/* Project Structure */}
-      <div className='w-full'>
-        <span className={`mb-2 ${darkMode ? 'text-white' : 'text-black'} text-[14px] font-medium`}>
-          Project Structure
-        </span>
-        <div className={`w-full p-4 rounded-md my-4 ${darkMode ? 'bg-[#1A1A1A] border border-[#2A2A2A]' : 'bg-[#F3F4F6] border border-gray-300'}`}
-        style={{ maxHeight: '40vh', overflowY: 'auto' }}>
-          <RepoTree nodes={tree} darkMode={darkMode} />
+                {/* Project Structure */}
+                <div className="w-full">
+                  <span className="mb-2 text-white text-[14px] font-medium">
+                    Project Structure
+                  </span>
+                  <div
+                    className="w-full p-4 rounded-md my-4 bg-[#1A1A1A] border border-[#2A2A2A]"
+                    style={{ maxHeight: '40vh', overflowY: 'auto' }}
+                  >
+                    <RepoTree nodes={tree} />
+                  </div>
+                </div>
+
+                {/* Buttons */}
+                <div className="w-full flex justify-between mt-4 gap-4">
+                  <Button variant="secondary">Back</Button>
+                  <Button variant="tertiary">Next</Button>
+                </div>
+              </div>
+            </main>
+
+            {/* Custom scrollbar styles */}
+            <style jsx>{`
+              .scrollbar-custom::-webkit-scrollbar {
+                width: 6px;
+              }
+              .scrollbar-custom::-webkit-scrollbar-track {
+                background: #000000;
+              }
+              .scrollbar-custom::-webkit-scrollbar-thumb {
+                background-color: #4B5563;
+                border-radius: 10px;
+              }
+
+              /* Firefox */
+              .scrollbar-custom {
+                scrollbar-width: thin;
+                scrollbar-color: #4B5563 #000000;
+              }
+            `}</style>
+          </div>
         </div>
-      </div>
-
-      {/* Buttons */}
-      <div className="w-full flex justify-between mt-4 gap-4">
-        <Button variant="secondary" >Back</Button>
-        <Button variant="tertiary" >Next</Button>
       </div>
     </div>
   );

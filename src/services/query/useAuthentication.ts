@@ -14,27 +14,22 @@ interface SignInParams {
 }
 
 interface AuthSignInParams {
+  name: string;
   email: string;
   role: string;
   password: string
 }
 
 interface SignInResponse {
-  token: string;
-  user: { id: string; name: string };
   email: string;
   role: string;
-  password: string
+  name: string
 }
 
-interface SignInByEmailResponse {
-    userId: string,
-    username: string,
+interface SignInByEmailResponse { 
     name: string,
     email: string,
     role: string,
-    createdAt: string,
-    updatedAt: string,
 }
 
 export async function logIn(params: LogInParams): Promise<SignInResponse> {
@@ -58,9 +53,18 @@ export async function authSignIn(params: AuthSignInParams): Promise<SignInRespon
   return response.data;
 }
 
-export async function checkUserByEmail(params: {email: string}): Promise<SignInByEmailResponse> {
+export const checkUserByEmail = async ({ email }: { email: string }) => {
   const apiBaseUrl = apiEndpoints.auth;
 
-  const response = await axiosPrivate.post(apiBaseUrl.byEmail, params);
-  return response.data;
+  try {
+    const response = await axiosPrivate.post(apiBaseUrl.byEmail, { email });
+    return response.data; // existing user
+  } catch (err: any) {
+    
+    if (err.response?.status === 404) {
+      return null;
+    }
+    throw err;
+  }
 }
+

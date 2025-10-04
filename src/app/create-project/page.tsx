@@ -1,25 +1,20 @@
-"use client";
+'use client';
+
 import { useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { useDarkMode } from '@/context/DarkModeProvider';
 import Input from '@/components/TextInput/TextInput';
 import { createProject } from '@/services/project/createProject';
 import type { CreateProjectPayload } from '@/types/project.types';
 import Swal from 'sweetalert2';
+import PublicHeader from '@/components/PublicHeader/page';
 
 export default function CreateProjectPage() {
-  const { darkMode } = useDarkMode();
   const router = useRouter();
   
   const [projectName, setProjectName] = useState('');
   const [projectDescription, setProjectDescription] = useState('');
   const [errors, setErrors] = useState<{ projectName?: string; projectDescription?: string }>({});
   const [submitting, setSubmitting] = useState(false);
-
-  const bgColor = darkMode ? 'bg-[#111111]' : 'bg-[#F2ECDD]';
-  const subtitleColor = darkMode ? 'text-gray-300' : 'text-gray-600';
-  const formBgColor = darkMode ? 'bg-[#18181B]' : 'bg-gray-50';
-  const titleColor = '#CD9C20'; // Yellow/gold color from the design
 
   const validateForm = useCallback(() => {
     const newErrors: { projectName?: string; projectDescription?: string } = {};
@@ -40,7 +35,7 @@ export default function CreateProjectPage() {
         title: 'Project created',
         text: 'Redirecting to dashboard...',
         timer: 1200,
-        showConfirmButton: false
+        showConfirmButton: false,
       });
       router.push('/dashboard');
     } catch (e: unknown) {
@@ -58,61 +53,66 @@ export default function CreateProjectPage() {
   }, [projectName, projectDescription, submitting, router, validateForm]);
 
   return (
-    <div className={`min-h-screen ${bgColor} flex flex-col items-center justify-start px-4 py-20 transition-colors duration-500`}>
-      <div className="w-full flex flex-col items-center gap-6">
-        {/* Main Title */}
-        <h1 
-          className="text-3xl font-bold text-center fontFamily: 'var(--font-montserrat) font-bold'"
-          style={{ color: titleColor }}
-        >
-          Create New Project
-        </h1>
+    <div className="flex flex-col w-full h-screen">
+      <PublicHeader />
+      <div className="flex-1 overflow-y-auto">
+        <div className="w-full bg-[#111111] flex flex-col items-center justify-start px-4 py-20">
+          <div className="w-full flex flex-col items-center gap-6">
+            {/* Main Title */}
+            <h1 
+              className="text-3xl font-bold text-center"
+              style={{ color: '#CD9C20', fontFamily: 'var(--font-montserrat)' }}
+            >
+              Create New Project
+            </h1>
 
-        {/* Subtitle */}
-        <p className={`text-center text-sm ${subtitleColor} max-w-xl`}>
-          Give your infrastructure project a name and description to get started.
-        </p>
+            {/* Subtitle */}
+            <p className="text-center text-sm text-gray-300 max-w-xl">
+              Give your infrastructure project a name and description to get started.
+            </p>
 
-        {/* Form Container */}
-        <div className={`w-full max-w-4xl p-6 prounded-lg ${formBgColor} transition-colors duration-500`}>
-          <div className="flex flex-col gap-4">
-            <h1 className="text-xl font-semibold" style={{ color: subtitleColor }}>Project Details</h1>
-            {/* Project Name Field */}
-            <Input
-              label="Project Name"
-              placeholder="e.g., Production Infrastructure, Dev Environment"
-              value={projectName}
-              onChange={(e) => setProjectName(e.target.value)}
-            />
-            {errors.projectName && (
-              <p className="text-red-500 text-xs -mt-2" role="alert">{errors.projectName}</p>
-            )}
+            {/* Form Container */}
+            <div className="w-full max-w-4xl p-6 rounded-lg bg-[#18181B]">
+              <div className="flex flex-col gap-4">
+                <h1 className="text-xl font-semibold text-gray-300">Project Details</h1>
+                {/* Project Name Field */}
+                <Input
+                  label="Project Name"
+                  placeholder="e.g., Production Infrastructure, Dev Environment"
+                  value={projectName}
+                  onChange={(e) => setProjectName(e.target.value)}
+                />
+                {errors.projectName && (
+                  <p className="text-red-500 text-xs -mt-2" role="alert">{errors.projectName}</p>
+                )}
 
-            {/* Project Description Field */}
-            <Input
-              label="Project Description"
-              placeholder="Describe what this project will develop and manage"
-              value={projectDescription}
-              onChange={(e) => setProjectDescription(e.target.value)}
-            />
-            {errors.projectDescription && (
-              <p className="text-red-500 text-xs -mt-2" role="alert">{errors.projectDescription}</p>
-            )}
+                {/* Project Description Field */}
+                <Input
+                  label="Project Description"
+                  placeholder="Describe what this project will develop and manage"
+                  value={projectDescription}
+                  onChange={(e) => setProjectDescription(e.target.value)}
+                />
+                {errors.projectDescription && (
+                  <p className="text-red-500 text-xs -mt-2" role="alert">{errors.projectDescription}</p>
+                )}
 
-            {/* Divider */}
-            <hr className="my-4 border-t border-gray-300 dark:border-gray-700" />
+                {/* Divider */}
+                <hr className="my-4 border-t border-gray-700" />
+              </div>
+            </div>
+
+            {/* Create Project Button */}
+            <button
+              onClick={handleCreateProject}
+              disabled={submitting}
+              className="w-full max-w-md px-8 py-2 rounded-[3px] text-black font-medium hover:opacity-80 disabled:opacity-60 disabled:cursor-not-allowed"
+              style={{ backgroundColor: '#CD9C20' }}
+            >
+              {submitting ? 'Working...' : 'Create Project'}
+            </button>
           </div>
         </div>
-
-        {/* Create Project Button */}
-        <button
-          onClick={handleCreateProject}
-          disabled={submitting}
-          className="w-full max-w-md px-8 py-2 rounded-[3px] text-black font-medium transition-colors duration-300 hover:opacity-80 disabled:opacity-60 disabled:cursor-not-allowed"
-          style={{ backgroundColor: titleColor }}
-        >
-          {submitting ? 'Working...' : 'Create Project'}
-        </button>
       </div>
     </div>
   );
