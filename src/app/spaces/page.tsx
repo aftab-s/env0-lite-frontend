@@ -19,7 +19,7 @@ export default function SpacesPage() {
       <Sidebar />
       <div className="flex flex-col flex-1 h-screen">
         <PrivateHeader />
-        <div className="bg-[#111111] min-h-screen w-full relative px-14 pt-8">
+        <div className="bg-[#0b0b0b] min-h-screen w-full relative px-14 pt-8">
           <h1 className="text-white text-4xl font-bold mb-6">Spaces</h1>
           <div className="flex items-center mb-7 gap-4">
             <input type="text" placeholder="terraform-aws-infrastructure • Main AWS infrastructure with VPC, EC2, and RDS • AWS • us-east-1"
@@ -32,7 +32,7 @@ export default function SpacesPage() {
           {/* Cards grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-6">
             {spaces.map((space, i) => (
-              <div key={i} className="bg-[#09090B] border border-[#232329] rounded-md px-6 py-5 shadow-lg">
+              <div key={i} className="bg-gradient-to-br from-[#cd9c20]/7 to-black/10 backdrop-blur-md border border-[#232329] rounded-md px-6 py-5 shadow-lg">
                 <div className="flex justify-between items-center pb-2">
                   <div className="text-white text-lg font-semibold">{space.name}</div>
                   <div className="rounded-full w-8 h-8 flex items-center justify-center">{space.status}</div>
