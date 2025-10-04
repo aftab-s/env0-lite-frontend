@@ -101,6 +101,15 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
   type __Unused = __Check
 }
 
+// Validate ../../src/app/github-conf/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/github-conf">> = Specific
+  const handler = {} as typeof import("../../src/app/github-conf/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
 // Validate ../../src/app/github-connect/page.tsx
 {
   type __IsExpected<Specific extends AppPageConfig<"/github-connect">> = Specific
@@ -128,19 +137,19 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
   type __Unused = __Check
 }
 
-// Validate ../../src/app/integration/page.tsx
+// Validate ../../src/app/page.tsx
 {
-  type __IsExpected<Specific extends AppPageConfig<"/integration">> = Specific
-  const handler = {} as typeof import("../../src/app/integration/page.js")
+  type __IsExpected<Specific extends AppPageConfig<"/">> = Specific
+  const handler = {} as typeof import("../../src/app/page.js")
   type __Check = __IsExpected<typeof handler>
   // @ts-ignore
   type __Unused = __Check
 }
 
-// Validate ../../src/app/page.tsx
+// Validate ../../src/app/projects/page.tsx
 {
-  type __IsExpected<Specific extends AppPageConfig<"/">> = Specific
-  const handler = {} as typeof import("../../src/app/page.js")
+  type __IsExpected<Specific extends AppPageConfig<"/projects">> = Specific
+  const handler = {} as typeof import("../../src/app/projects/page.js")
   type __Check = __IsExpected<typeof handler>
   // @ts-ignore
   type __Unused = __Check
@@ -186,28 +195,10 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
 
 
 
-// Validate ../../src/app/dashboard/layout.tsx
-{
-  type __IsExpected<Specific extends LayoutConfig<"/dashboard">> = Specific
-  const handler = {} as typeof import("../../src/app/dashboard/layout.js")
-  type __Check = __IsExpected<typeof handler>
-  // @ts-ignore
-  type __Unused = __Check
-}
-
 // Validate ../../src/app/github-conf/[owner]/[repo]/layout.tsx
 {
   type __IsExpected<Specific extends LayoutConfig<"/github-conf/[owner]/[repo]">> = Specific
   const handler = {} as typeof import("../../src/app/github-conf/[owner]/[repo]/layout.js")
-  type __Check = __IsExpected<typeof handler>
-  // @ts-ignore
-  type __Unused = __Check
-}
-
-// Validate ../../src/app/github-repo/layout.tsx
-{
-  type __IsExpected<Specific extends LayoutConfig<"/github-repo">> = Specific
-  const handler = {} as typeof import("../../src/app/github-repo/layout.js")
   type __Check = __IsExpected<typeof handler>
   // @ts-ignore
   type __Unused = __Check

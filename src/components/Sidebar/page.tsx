@@ -20,7 +20,7 @@ const Sidebar = () => {
   const menuItems = [
     { icon: '/sidebar/projects.svg', name: 'Projects', active: true },
     { icon: '/sidebar/deployments.svg', name: 'Deployments', active: false },
-    { icon: '/sidebar/team.svg', name: 'Team', active: false },
+    // { icon: '/sidebar/team.svg', name: 'Team', active: false },
     { icon: '/sidebar/settings.svg', name: 'Settings', active: false },
   ];
 
@@ -57,7 +57,7 @@ const Sidebar = () => {
     <div
       className={`flex flex-col ${
         isOpen ? 'w-65' : 'w-16'
-      } h-screen bg-[#1A1A1A] border-r border-gray-700 transition-all duration-300 ease-in-out`}
+      } h-screen bg-[#1A1A1A] border-r border-gray-800 transition-all duration-300 ease-in-out`}
     >
       {/* Logo Section */}
       <div className="flex items-center justify-between px-4 py-4">
@@ -129,7 +129,7 @@ const Sidebar = () => {
       </nav>
 
       {/* Profile Div */}
-      <div className="border-t border-gray-700 mt-auto">
+      <div className="mt-auto">
         <div
           className={`group flex items-center justify-between gap-3 px-2 py-2 text-sm font-inter font-medium text-gray-400 hover:bg-[#2A2A2A] hover:text-white ${
             !isOpen ? 'justify-center' : ''

@@ -1,6 +1,6 @@
 'use client';
 
-import Sidebar from '@/components/Sidebar/page';
+import Sidebar from '@/components/Sidebar/page'; 
 import PrivateHeader from '@/components/PrivateHeader/page';
 
 interface DeploymentCard {
@@ -31,7 +31,7 @@ export default function SpacesPage() {
             {/* Header */}
             <header className="w-full p-6">
               <h1 className="text-3xl font-bold text-white">
-                Spaces
+                Projects
               </h1>
             </header>
 
