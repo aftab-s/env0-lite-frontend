@@ -1,6 +1,5 @@
 'use client';
 import { use } from 'react';
-import { useDarkMode } from '@/context/DarkModeProvider';
 import TextInput from '@/components/TextInput/TextInput';
 import Button from '@/components/PrimaryButton/PrimaryButton';
 import RepoTree from '@/components/FolderTree/page';
@@ -11,6 +10,16 @@ import { useSelector } from 'react-redux';
 import type { RootState } from '@/redux/store';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+
+interface GithubSessionUser {
+  githubAccessToken?: string;
+  [key: string]: unknown;
+}
+
+interface GithubSession {
+  user?: GithubSessionUser;
+  [key: string]: unknown;
+}
 
 interface TreeNode {
   id: string;
@@ -25,12 +34,11 @@ interface GithubConfPageProps {
 }
 
 export default function GithubConfigPage({ params }: GithubConfPageProps) {
-  const { darkMode } = useDarkMode();
   const { data: session } = useSession();
   const { owner, repo } = use(params);
   const email = useSelector((state: RootState) => state.auth.email);
   const router = useRouter();
-
+  const pat = ((session as unknown) as GithubSession)?.user?.githubAccessToken;
   const [branches, setBranches] = useState<string[]>([]);
   const [selectedBranch, setSelectedBranch] = useState('');
   const [directory, setDirectory] = useState('/');
@@ -40,7 +48,7 @@ export default function GithubConfigPage({ params }: GithubConfPageProps) {
   // Load branches
   useEffect(() => {
     async function loadBranches() {
-      const pat = (session as any)?.user.githubAccessToken;
+      const pat = ((session as unknown) as GithubSession)?.user?.githubAccessToken;
       if (!owner || !repo || !pat) return;
       setTree([]);
       try {
@@ -50,14 +58,13 @@ export default function GithubConfigPage({ params }: GithubConfPageProps) {
         console.error('Failed to fetch branches:', err);
       }
     }
-
     loadBranches();
   }, [owner, repo, session]);
 
   // Load repo tree when branch is selected
   useEffect(() => {
     async function loadTree() {
-      const pat = (session as any)?.user.githubAccessToken;
+      const pat = ((session as unknown) as GithubSession)?.user?.githubAccessToken;
       if (!owner || !repo || !pat || !selectedBranch) return;
 
       setLoadingTree(true); // ✅ Start loader
@@ -70,7 +77,15 @@ export default function GithubConfigPage({ params }: GithubConfPageProps) {
           pat,
         });
 
-        const mapTree = (nodes: any[]): TreeNode[] =>
+        interface RawTreeNode {
+          id: string;
+          name: string;
+          type: 'file' | 'folder';
+          path: string;
+          children?: RawTreeNode[];
+        }
+
+        const mapTree = (nodes: RawTreeNode[]): TreeNode[] =>
           nodes.map((n) => ({
             id: n.id,
             name: n.name,
@@ -88,26 +103,22 @@ export default function GithubConfigPage({ params }: GithubConfPageProps) {
     }
 
     loadTree();
-  }, [selectedBranch]);
+  }, [owner, repo, session, selectedBranch]);
 
   return (
     <div className="w-full flex flex-col items-center px-4">
       {/* Breadcrumb */}
       <div className="w-full flex gap-2 mb-1 text-[14px] font-medium">
-        <span className={darkMode ? 'text-[#9CA3AF]' : 'text-gray-500'}>
+        <span className="text-[#9CA3AF]">
           Repositories
         </span>
-        <span className={darkMode ? 'text-white' : 'text-black'}>
+        <span className="text-white">
           {'>'} {repo || ''}
         </span>
       </div>
 
       {/* Header */}
-      <h2
-        className={`w-full text-xl font-medium my-2 ${
-          darkMode ? 'text-[#D8DFEE]' : 'text-black'
-        }`}
-      >
+      <h2 className="w-full text-xl font-medium my-2 text-[#D8DFEE]">
         Repository Configuration
       </h2>
 
@@ -127,17 +138,13 @@ export default function GithubConfigPage({ params }: GithubConfPageProps) {
             label="Directory Path"
             placeholder="Enter path"
             value={directory}
-            onChange={(e: any) => setDirectory(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDirectory(e.target.value)}
           />
         </div>
 
         {/* Repo Tree */}
         <div
-          className={`w-full p-4 rounded-md my-4 relative transition-colors duration-500 ${
-            darkMode
-              ? 'bg-[#1A1A1A] border border-[#2A2A2A]'
-              : 'bg-[#F3F4F6] border border-gray-300'
-          }`}
+          className="w-full p-4 rounded-md my-4 relative bg-[#1A1A1A] border border-[#2A2A2A]"
           style={{ height: '45vh', overflowY: 'auto' }}
         >
           {loadingTree && (
@@ -165,14 +172,13 @@ export default function GithubConfigPage({ params }: GithubConfPageProps) {
               </svg>
             </div>
           )}
-          <RepoTree nodes={tree} darkMode={darkMode} onSelect={(path) => setDirectory(path || '/')} />
+          <RepoTree nodes={tree} onSelect={(path) => setDirectory(path || '/')} />
         </div>
-
       </div>
 
       {/* Buttons */}
       <div className="w-full flex mt-4 gap-4">
-        <Button className="rounded-[10px] font-bold" onClick={()=>router.push("")}>
+        <Button className="rounded-[10px] font-bold" onClick={() => router.push("")}>
           Back
         </Button>
         <Button className="rounded-[10px] font-bold">

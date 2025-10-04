@@ -1,40 +1,35 @@
-"use client";
+'use client';
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+
+
 import Sidebar from "@/components/Sidebar/page";
-import { useDarkMode } from "@/context/DarkModeProvider";
+import PrivateHeader from "@/components/PrivateHeader/page";
 import InfrastructureBanner from "./_newProjectComponent/page";
 
 export default function DashboardPage() {
-  const { darkMode } = useDarkMode();
-  const { data: session, status } = useSession();
-  const router = useRouter();
-
-  // Redirect if not authenticated
-  useEffect(() => {
-    if (status === "unauthenticated") {
-      router.replace("/"); // prevents going back
-    }
-  }, [status, router]);
-
-  // Optional: prevent history back navigation
-  useEffect(() => {
-    window.history.pushState(null, '', window.location.href);
-    const handlePop = () => {
-      window.history.pushState(null, '', window.location.href);
-    };
-    window.addEventListener('popstate', handlePop);
-    return () => window.removeEventListener('popstate', handlePop);
-  }, []);
-
-  if (status !== "authenticated") {
-    return null; // or a loading spinner
-  }
-
   return (
-    <div className="flex-1 p-10 pt-0 overflow-y-auto box-border">
-      <InfrastructureBanner />
+    <div className="flex h-screen w-screen">
+      <Sidebar />
+      <div className="flex flex-col flex-1 h-screen">
+        <PrivateHeader />
+        <div className="flex-1 overflow-y-auto bg-[#111111]">
+          <div className="w-full">
+            {/* Header */}
+            <header className="w-full mb-6">
+              <h1 className="text-3xl font-bold pl-10 pt-10 text-white">
+                Infrastructure Dashboard
+              </h1>
+            </header>
+
+            {/* Main Content */}
+            <main className="w-full flex-1 pt-0 p-10 box-border">
+              <InfrastructureBanner />
+            </main>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
