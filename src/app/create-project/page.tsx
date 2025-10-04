@@ -5,7 +5,7 @@ import { useDarkMode } from '@/context/DarkModeProvider';
 import Input from '@/components/TextInput/TextInput';
 import { createProject } from '@/services/project/createProject';
 import type { CreateProjectPayload } from '@/types/project.types';
-import Swal from 'sweetalert2';
+import { showSuccessAlert, showErrorAlert } from '@/utils/swal';
 
 export default function CreateProjectPage() {
   const { darkMode } = useDarkMode();
@@ -35,10 +35,7 @@ export default function CreateProjectPage() {
     const payload: CreateProjectPayload = { projectName, projectDescription };
     try {
       await createProject(payload);
-      await Swal.fire({
-        icon: 'success',
-        title: 'Project created',
-        text: 'Redirecting to dashboard...',
+      await showSuccessAlert('Project created', 'Redirecting to dashboard...', darkMode, {
         timer: 1200,
         showConfirmButton: false
       });
@@ -51,11 +48,11 @@ export default function CreateProjectPage() {
         // @ts-expect-error axios shape
         msg = e.response.data.error as string;
       }
-      Swal.fire({ icon: 'error', title: 'Error', text: msg, confirmButtonColor: '#CD9C20' });
+      showErrorAlert('Error', msg, darkMode);
     } finally {
       setSubmitting(false);
     }
-  }, [projectName, projectDescription, submitting, router, validateForm]);
+  }, [projectName, projectDescription, submitting, router, validateForm, darkMode]);
 
   return (
     <div className={`min-h-screen ${bgColor} flex flex-col items-center justify-start px-4 py-20 transition-colors duration-500`}>

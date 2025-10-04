@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '@/redux/store';
 import { signupUser, resetSignupState } from '@/redux/slice/Auth/signUpSlice';
 import type { SignupCredentials } from '@/types/auth.types';
-import Swal from 'sweetalert2';
+import { showSuccessAlert, showErrorAlert } from '@/utils/swal';
 import { useRouter } from 'next/navigation';
 
 export default function AuthForm() {
@@ -35,23 +35,13 @@ export default function AuthForm() {
     };
     const action = await dispatch(signupUser(payload));
     if (signupUser.fulfilled.match(action)) {
-      Swal.fire({
-        icon: 'success',
-        title: 'Account created',
-        text: 'You can now login',
-        confirmButtonColor: '#CD9C20'
-      }).then(() => {
+      showSuccessAlert('Account created', 'You can now login', true).then(() => {
         router.push('/github-connect');
         dispatch(resetSignupState());
       });
     } else {
       const msg = action.payload as string | undefined;
-      Swal.fire({
-        icon: 'error',
-        title: 'Signup failed',
-        text: msg || 'Unable to create account',
-        confirmButtonColor: '#CD9C20'
-      });
+      showErrorAlert('Signup failed', msg || 'Unable to create account', true);
     }
   }, [canSubmit, dispatch, email, password, name, router]);
 
