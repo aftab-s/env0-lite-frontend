@@ -143,13 +143,14 @@ __turbopack_context__.s([
 const apiEndpoints = {
     auth: {
         signUp: "/api/users/signup",
-        login: "/api/users/login",
-        byEmail: "/api/users/users/email"
+        login: "/api/users/login"
     },
     github: {
-        getRepo: "/api/github-pat/repos",
-        getTree: "/api/github-pat/repos",
-        getBranch: "/api/github-pat/repos/get-branch"
+        savePat: "/api/github-pat/save-pat",
+        getRepo: "/api/github-pat/list-repos"
+    },
+    project: {
+        createProject: "/api/project/create-project"
     }
 };
 ;
@@ -192,11 +193,24 @@ __turbopack_context__.s([
     ()=>__TURBOPACK__default__export__
 ]);
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$axios$2f$lib$2f$axios$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/axios/lib/axios.js [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$js$2d$cookie$2f$dist$2f$js$2e$cookie$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/js-cookie/dist/js.cookie.mjs [app-route] (ecmascript)");
+;
 ;
 const axiosPrivate = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$axios$2f$lib$2f$axios$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["default"].create({
     baseURL: "http://localhost:5000",
     withCredentials: true
 });
+// Attach token from cookies if available
+axiosPrivate.interceptors.request.use((config)=>{
+    const token = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$js$2d$cookie$2f$dist$2f$js$2e$cookie$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["default"].get("token");
+    if (token && config.headers) {
+        // Only set if not already explicitly provided
+        if (!config.headers["Authorization"]) {
+            config.headers["Authorization"] = `Bearer ${token}`;
+        }
+    }
+    return config;
+}, (error)=>Promise.reject(error));
 const __TURBOPACK__default__export__ = axiosPrivate;
 }),
 "[project]/src/config/index.ts [app-route] (ecmascript) <locals>", ((__turbopack_context__) => {

@@ -1,103 +1,60 @@
 'use client';
 
-import { useDarkMode } from '@/context/DarkModeProvider';
+import { CheckCircleIcon, ClockIcon } from '@heroicons/react/24/outline';
+import { Cog6ToothIcon } from '@heroicons/react/24/outline';
 
-interface DeploymentCard {
-  name: string;
-  branch: string;
-  time: string;
-  status: 'Deployed' | 'Deploying' | 'Failed';
-  description:string;
-}
+const spaces = [
+  { name: 'VPC Networking', subtitle: 'Secure, high-performance object storage', assets: 25, last: 'Last Deployed', time: '2 days ago', status: <ClockIcon className="w-5 h-5 text-[#FFD600]" /> },
+  { name: 'RDS Database', subtitle: 'Managed relational database service', assets: 12, last: 'Last Updated', time: '3 hours ago', status: <CheckCircleIcon className="w-5 h-5 text-[#22C55E]" /> },
+  { name: 'S3 Storage', subtitle: 'Secure, high-performance object storage', assets: 25, last: 'Last Deployed', time: '2 days ago', status: <CheckCircleIcon className="w-5 h-5 text-[#22C55E]" /> },
+  { name: 'S3 Storage', subtitle: 'Secure, high-performance object storage', assets: 25, last: 'Last Deployed', time: '2 days ago', status: <CheckCircleIcon className="w-5 h-5 text-[#22C55E]" /> },
+  { name: 'GCP Storage', subtitle: 'Cloud object storage for GCP', assets: 10, last: 'Last Deployed', time: '5 days ago', status: <ClockIcon className="w-5 h-5 text-[#FFD600]" /> },
+  { name: 'Azure Blob', subtitle: 'Azure blob object storage', assets: 16, last: 'Last Deployed', time: '1 day ago', status: <CheckCircleIcon className="w-5 h-5 text-[#22C55E]" /> },
+];
 
-export default function Spaces() {
-  const { darkMode } = useDarkMode();
-
-  const deploymentCards: DeploymentCard[] = [
-    { name: 'terraform-aws-vpc', branch: 'main branch', time: '2 hours ago', status: 'Deployed', description: ' Lorem ipsum dolor sit amet consectetur. Vulputate.' },
-    { name: 'terraform-aws-vpc', branch: 'main branch', time: '2 hours ago', status: 'Deployed', description: ' Lorem ipsum dolor sit amet consectetur. Vulputate.' },
-    { name: 'azure-kubernetes-cluster', branch: 'develop branch', time: '2 hours ago', status: 'Failed', description: ' Lorem ipsum dolor sit amet consectetur. Vulputate.' },
-    { name: 'gcp-cloud-functions', branch: 'main branch', time: '2 hours ago', status: 'Deploying', description: ' Lorem ipsum dolor sit amet consectetur. Vulputate.' },
-    { name: 'docker-microservices', branch: 'main branch', time: '2 hours ago', status: 'Deployed', description: ' Lorem ipsum dolor sit amet consectetur. Vulputate.' },
-    { name: 'website-v2', branch: 'main branch', time: '2 hours ago', status: 'Deployed', description: ' Lorem ipsum dolor sit amet consectetur. Vulputate.' },
-  ];
-
-  const titleColor = darkMode ? 'text-white' : 'text-black';
-  const subtitleColor = darkMode ? 'text-gray-400' : 'text-gray-600';
-  const cardBg = darkMode ? 'bg-[#09090B]' : 'bg-white';
-  const cardBorder = darkMode ? 'border-gray-700' : 'border-gray-300';
-  const descriptionBg = darkMode ? 'bg-[#111111]' : 'bg-white';
-
-  const deployedBg = darkMode ? 'bg-[#072a1b]' : 'bg-[#cef7e3]';
-  const deployingBg = darkMode ? 'bg-[#382810]' : 'bg-[#ffe6cc]';
-  const failedBg = darkMode ? 'bg-[#351518]' : 'bg-[#ffb3b3]';
-
-  const deployedFont = darkMode ? 'text-[#00b15c]' : 'text-[#00b15c]';
-  const deployingFont = darkMode ? 'text-[#f5a623]' : 'text-[#f5a623]';
-  const failedFont = darkMode ? 'text-[#e5484d]' : 'text-[#e5484d]';
-
+export default function SpacesPage() {
   return (
-    <div
-      className={`w-full min-h-screen transition-colors duration-500 ${
-        darkMode ? 'bg-[#111111]' : 'bg-[#EFEFEF]'
-      }`}
-    >
-      {/* Header */}
-      <header className="w-full p-6">
-        <h1 className={`text-3xl font-bold transition-colors duration-500 ${titleColor}`}>
-        Spaces
-        </h1>
-      </header>
-
-      {/* Search Bar */}
-      <div className="w-full p-6">
-        <input
-          type="text"
-          placeholder="Search"
-          className={`w-full p-2 rounded-md border ${cardBorder} ${cardBg} text-sm ${subtitleColor} focus:outline-none focus:ring-1 focus:ring-[#CD9C20]`}
-        />
+    <div className="bg-[#111111] min-h-screen w-full relative px-14 pt-8">
+      <h1 className="text-white text-4xl font-bold mb-6">Spaces</h1>
+      <div className="flex items-center mb-7 gap-4">
+         <input type="text" placeholder="terraform-aws-infrastructure • Main AWS infrastructure with VPC, EC2, and RDS • AWS • us-east-1" 
+         className="w-full bg-[#09090B] border border-[#27272A] rounded-lg px-4 py-2 text-sm placeholder-gray-400 focus:outline-none"/>
+        <button className="ml-auto font-semibold bg-[#FFD600] text-[#232329] px-3 py-2 rounded-md text-sm whitespace-nowrap">View Deployment</button>
+        <button className="ml-auto p-2 rounded-md text-[#232329] bg-[#27272A]">
+        <Cog6ToothIcon className="w-5 h-5 text-white" />
+        </button>
       </div>
-
-      {/* Main Content Grid */}
-      <main className="w-full p-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {deploymentCards.map((card, index) => (
-            <div
-              key={index}
-              className={`p-4 rounded-lg border ${cardBorder} ${cardBg} shadow-md`}
-            >
-              <div className="flex items-center justify-between mb-2">
-                <span className={`text-base font-medium ${titleColor}`}>{card.name}</span>
-                <div className={`flex items-center gap-2 `}>
-                  {card.status === 'Deployed' && (
-                    <div className={`${deployedBg} ${deployedFont} px-3 py-2 rounded-full flex items-center`}>
-                        <span className={`w-2 h-2 rounded-full mr-1 ${deployedFont} bg-current`} />
-                      <span className="text-xs font-light ml-1">{card.status}</span>
-                    </div>
-                  )}
-                  {card.status === 'Deploying' && (
-                    <div className={`${deployingBg} ${deployingFont} px-3 py-2 rounded-full flex items-center`}>
-                        <span className={`w-2 h-2 rounded-full mr-1 ${deployingFont} bg-current`} />
-                      <span className="text-xs font-light ml-1">{card.status}</span>
-                    </div>
-                  )}
-                  {card.status === 'Failed' && (
-                    <div className={`${failedBg} ${failedFont} px-3 py-2 rounded-full flex items-center`}>
-                        <span className={`w-2 h-2 rounded-full mr-1 ${failedFont} bg-current`} />
-                      <span className="text-xs font-light ml-1">{card.status}</span>
-                    </div>
-                  )}
-                </div>
-              </div>
-              <p className={`text-xs ${subtitleColor}`}>{card.branch}</p>
-              <p className={`text-xs ${subtitleColor}`}>{card.time}</p>
-              <p className={`text-xs ${subtitleColor} ${descriptionBg} mt-2px-2 py-2 rounded`}>
-                {card.description}
-              </p>
+      {/* Cards grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-6">
+        {spaces.map((space, i) => (
+          <div key={i} className="bg-[#09090B] border border-[#232329] rounded-md px-6 py-5 shadow-lg">
+            <div className="flex justify-between items-center pb-2">
+              <div className="text-white text-lg font-semibold">{space.name}</div>
+              <div className="rounded-full w-8 h-8 flex items-center justify-center">{space.status}</div>
             </div>
-          ))}
-        </div>
-      </main>
+            <div className="text-[#A1A1AA] text-xs pb-3">{space.subtitle}</div>
+            <div className="flex justify-between w-full p-2 items-center bg-[#111111]">
+              <span className="text-[#FFFFFF] text-xs ">Assets</span>
+              <span className="text-[#9CA3AF] text-xs ">{space.assets}</span>
+            </div>
+            <div className="flex justify-between w-full p-2 items-center bg-[#111111]">
+              <span className="text-[#FFFFFF] text-xs">{space.last}</span>
+              <span className="text-[#9CA3AF] text-xs">{space.time}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+      {/* Floating Settings Modal */}
+      {/* <div className="absolute top-32 right-8 w-[370px] bg-[#18181B] border border-[#232329] rounded-xl shadow p-6">
+        <h2 className="text-[#F4F4F5] font-semibold text-lg mb-3">Settings</h2>
+        <div className="text-[#A1A1AA] mb-2">Edit AWS Credentials</div>
+        <label className="block text-[#A1A1AA] text-xs mb-1">Profile Name</label>
+        <input className="bg-[#232329] border border-[#232329] rounded px-3 py-2 mb-3 w-full text-[#F4F4F5] font-medium text-sm" defaultValue="100%" />
+        <label className="block text-[#A1A1AA] text-xs mb-1">AWS Access Key ID</label>
+        <input className="bg-[#232329] border border-[#232329] rounded px-3 py-2 mb-3 w-full text-[#F4F4F5] font-medium text-sm" defaultValue="AKIAIOSFODNN7EXAMPLE" />
+        <label className="block text-[#A1A1AA] text-xs mb-1">AWS Secret Access Key</label>
+        <input className="bg-[#232329] border border-[#232329] rounded px-3 py-2 mb-1 w-full text-[#F4F4F5] font-medium text-sm" defaultValue="wJa1XtUnFEM1/K7MDENG/bPxRfiCYEXAMPLEKEY" />
+      </div> */}
     </div>
   );
 }
