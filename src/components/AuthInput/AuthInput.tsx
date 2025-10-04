@@ -42,7 +42,7 @@ export default function AuthInput({
           placeholder={placeholder}
           value={value}
           onChange={onChange}
-          className={`w-full ${bgClass} border border-gray-700 rounded-lg px-10 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-[#D4A574] ${className}`}
+          className={`w-full ${bgClass} border bg-black border-gray-700 rounded-lg px-10 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-[#D4A574] ${className}`}
         />
         {showPassword !== undefined && onTogglePassword && (
           <button

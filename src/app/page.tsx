@@ -18,14 +18,10 @@ export default function AuthForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [agreedToTerms, setAgreedToTerms] = useState(false);
   const { loading, error, token } = useSelector((state: RootState) => state.auth);
-
-  const canSubmit = !!email && !!password && agreedToTerms && !loading;
 
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!canSubmit) return;
     const creds: LoginCredentials = { email, password };
     const resultAction = await dispatch(loginUser(creds));
     if (loginUser.fulfilled.match(resultAction)) {
@@ -41,7 +37,7 @@ export default function AuthForm() {
         confirmButtonColor: '#CD9C20'
       });
     }
-  }, [canSubmit, dispatch, email, password, router]);
+  }, [dispatch, email, password, router]);
 
   useEffect(() => {
     if (token) {
@@ -100,21 +96,8 @@ export default function AuthForm() {
               </p>
             )}
 
-            {/* Terms Checkbox and Forgot Password */}
-            <div className="flex justify-between mt-7">
-              <div className="flex items-start gap-2">
-                <input
-                  type="checkbox"
-                  id="terms"
-                  checked={agreedToTerms}
-                  onChange={(e) => setAgreedToTerms(e.target.checked)}
-                  className="mt-1 w-4 h-4 rounded border-gray-700 bg-[#1a1a2e] text-[#D4A574] focus:ring-[#D4A574] cursor-pointer"
-                />
-                <label htmlFor="terms" className="text-sm text-gray-400">
-                  Remember me for 30 days
-                </label>
-              </div>
-
+            {/* Forgot Password */}
+            <div className="mt-7">
               <p className="text-center text-gray-400 text-sm">
                 <Link href="/forgot-password" className="text-[#CD9C20] hover:underline">
                   Forgot Password ?
@@ -123,7 +106,7 @@ export default function AuthForm() {
             </div>
 
             {/* Submit Button */}
-            <Button disabled={!canSubmit} >
+            <Button type="submit">
               {loading ? 'Logging in...' : 'Sign In'}
             </Button>
 

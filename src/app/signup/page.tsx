@@ -77,7 +77,7 @@ export default function AuthForm() {
       </div>
 
       {/* Right Side - Signup Form */}
-      <div className="w-1/2 bg-[#0a0a1a] flex items-center justify-center p-16">
+      <div className="w-1/2 bg-[#000000] flex items-center justify-center p-16">
         <div className="w-full max-w-md mt-10">
           <h2 className="text-white text-3xl font-light mb-2">Create Account</h2>
           <p className="text-gray-400 mb-10">Start managing your infrastructure today</p>
@@ -147,7 +147,7 @@ export default function AuthForm() {
             </div>
 
             {/* Submit Button */}
-            <Button disabled={!canSubmit}>
+            <Button disabled={!canSubmit} type="submit">
               {loading ? 'Creating account...' : 'Create Account'}
             </Button>
 
