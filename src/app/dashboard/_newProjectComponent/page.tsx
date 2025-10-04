@@ -1,6 +1,6 @@
 'use client';
 import Image from 'next/image';
-import Button from '@/components/PrimaryButton/page';
+import Button from '@/components/PrimaryButton/PrimaryButton';
 import { useRouter } from 'next/navigation';
 
 export default function InfrastructureBanner() {

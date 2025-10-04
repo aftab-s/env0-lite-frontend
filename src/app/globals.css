@@ -30,3 +30,25 @@ body {
 *, *::before, *::after {
   box-sizing: border-box;
 }
+
+/* Custom Scrollbar (WebKit Browsers) */
+::-webkit-scrollbar {
+  width: 3px;
+  height: 3px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #CD9C20;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #b5861a; /* slightly darker on hover */
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #CD9C20 transparent;
+}

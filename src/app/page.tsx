@@ -1,18 +1,52 @@
-'use client';
-import { useState } from 'react';
+"use client";
+import { useState, useCallback, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import TextInput from '../components/TextInput/TextInput';
 import PasswordInput from '../components/PasswordInput/PasswordInput';
 import Button from '../components/PrimaryButton/PrimaryButton';
+import { useDispatch, useSelector } from 'react-redux';
+import type { AppDispatch, RootState } from '@/redux/store';
+import { loginUser } from '@/redux/slice/Auth/loginSlice';
+import type { LoginCredentials } from '@/types/auth.types';
+import { useRouter } from 'next/navigation';
+import Swal from 'sweetalert2';
 
 export default function AuthForm() {
+  const dispatch = useDispatch<AppDispatch>();
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const { loading, error, token } = useSelector((state: RootState) => state.auth);
 
-  const handleSubmit = () => {
-    console.log('Login submitted', { email, password });
-  };
+  const canSubmit = email.trim() !== '' && password.trim() !== '' && !loading;
+
+  const handleSubmit = useCallback(async () => {
+    if (!canSubmit) return;
+    const creds: LoginCredentials = { email, password };
+    const resultAction = await dispatch(loginUser(creds));
+    if (loginUser.fulfilled.match(resultAction)) {
+      const payload = resultAction.payload;
+      const to = payload.onboardingCompleted ? '/dashboard' : '/github-connect';
+      router.push(to);
+    } else {
+      const payload = resultAction.payload as string | undefined;
+      Swal.fire({
+        icon: 'error',
+        title: 'Login failed',
+        text: payload || 'Unable to login with provided credentials',
+        confirmButtonColor: '#CD9C20'
+      });
+    }
+  }, [canSubmit, dispatch, email, password, router]);
+
+  // Optional: if already logged in navigate away
+  useEffect(() => {
+    if (token) {
+      router.prefetch('/dashboard');
+      router.prefetch('/github-connect');
+    }
+  }, [token, router]);
 
   return (
     <div className="w-screen h-screen flex overflow-hidden">
@@ -52,7 +86,14 @@ export default function AuthForm() {
               onChange={(e) => setPassword(e.target.value)}
             />
 
-            <Button onClick={handleSubmit}>Login</Button>
+            <Button onClick={handleSubmit}>
+              {loading ? 'Logging in...' : 'Login'}
+            </Button>
+            {error && (
+              <p className="text-red-500 text-xs mt-1" role="alert">
+                {error}
+              </p>
+            )}
           </div>
 
           <div className="text-center">

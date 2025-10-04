@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
-import LayoutHandler from "./LayoutHandler";
+import Providers from "./providers";
 
 const inter = Inter({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
 
@@ -31,7 +31,9 @@ export default function RootLayout({
       <body
         className={`min-h-screen flex ${geistSans.variable} ${geistMono.variable} ${inter.className} antialiased bg-[#111111]`}
       >
-        <LayoutHandler>{children}</LayoutHandler>
+        <Providers>
+          {children}
+        </Providers>
       </body>
     </html>
   );
