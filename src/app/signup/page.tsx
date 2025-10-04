@@ -1,10 +1,10 @@
-"use client";
+'use client';
 import { useState, useCallback, useEffect } from 'react';
-import Link from 'next/link';
 import Image from 'next/image';
-import TextInput from '../../components/TextInput/TextInput';
-import PasswordInput from '../../components/PasswordInput/PasswordInput';
-import Button from '../../components/PrimaryButton/PrimaryButton';
+import Link from 'next/link';
+import { User, Mail, Lock } from 'lucide-react';
+import AuthInput from '@/components/AuthInput/AuthInput';
+import Button from '@/components/PrimaryButton/PrimaryButton';
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '@/redux/store';
 import { signupUser, resetSignupState } from '@/redux/slice/Auth/signUpSlice';
@@ -12,7 +12,7 @@ import type { SignupCredentials } from '@/types/auth.types';
 import Swal from 'sweetalert2';
 import { useRouter } from 'next/navigation';
 
-export default function SignupPage() {
+export default function AuthForm() {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const { loading, error, success } = useSelector((s: RootState) => s.signup);
@@ -21,11 +21,14 @@ export default function SignupPage() {
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
 
   const name = `${firstName.trim()} ${lastName.trim()}`.trim();
-  const canSubmit = !!firstName && !!lastName && !!email && !!password && !loading;
+  const canSubmit = !!firstName && !!lastName && !!email && !!password && agreedToTerms && !loading;
 
-  const handleSubmit = useCallback(async () => {
+  const handleSubmit = useCallback(async (e: React.FormEvent) => {
+    e.preventDefault();
     if (!canSubmit) return;
     const payload: SignupCredentials = {
       name,
@@ -59,77 +62,113 @@ export default function SignupPage() {
     router.prefetch('/github-connect');
   }, [router]);
 
+  const togglePassword = () => setShowPassword(!showPassword);
+
   return (
-    <div className="flex flex-col w-full h-screen">
-      <div className="flex-1 overflow-y-auto">
-        <div className="w-screen h-screen flex overflow-hidden">
-          {/* Left Side - Logo */}
-          <div className="w-[55%] h-full bg-[#18181B] flex items-center justify-center">
-            <div className="flex items-center gap-4">
-              <Image
-                src="/login/logo-full.svg"
-                alt="Bagel Logo"
-                width={500}
-                height={120}
-                priority
+    <div className="flex h-screen w-screen">
+      {/* Left Side - Branding */}
+      <div className="w-1/2 relative">
+        <Image
+          src="authPages/signupBanner.svg"
+          alt="Signup Banner"
+          fill
+          className="object-cover"
+        />
+      </div>
+
+      {/* Right Side - Signup Form */}
+      <div className="w-1/2 bg-[#0a0a1a] flex items-center justify-center p-16">
+        <div className="w-full max-w-md mt-10">
+          <h2 className="text-white text-3xl font-light mb-2">Create Account</h2>
+          <p className="text-gray-400 mb-10">Start managing your infrastructure today</p>
+
+          <form onSubmit={handleSubmit} className="space-y-5">
+            {/* First Name and Last Name */}
+            <div className="grid grid-cols-2 gap-4">
+              <AuthInput
+                label="First Name"
+                placeholder="John"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                icon={<User />}
+                bgClass="bg-[#1a1a2e]"
+              />
+              <AuthInput
+                label="Last Name"
+                placeholder="Doe"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                icon={<User />}
+                bgClass="bg-[#1a1a2e]"
               />
             </div>
-          </div>
 
-          {/* Right Side - Signup Form */}
-          <div className="w-[45%] h-full bg-[#111111] flex items-center justify-center px-30 py-8">
-            <div className="w-full max-w-md bg-[#18181B] rounded-lg p-8 border border-gray-800">
-              <h2 className="text-[#CD9C20] text-2xl font-semibold mb-2">Sign Up</h2>
-              <p className="text-gray-400 text-sm mb-6">
-                Enter your information to create an account
-              </p>
+            {/* Email */}
+            <AuthInput
+              label="Email"
+              type="email"
+              placeholder="you@company.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              icon={<Mail />}
+              bgClass="bg-[#1a1a2e]"
+            />
 
-              <div className="flex flex-col gap-4 mb-4">
-                <div className="flex flex-row gap-5">
-                  <TextInput
-                    label="First Name"
-                    placeholder="Max"
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
-                  />
-                  <TextInput
-                    label="Last Name"
-                    placeholder="Robinson"
-                    value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
-                  />
-                </div>
+            {/* Password */}
+            <AuthInput
+              label="Password"
+              type="password"
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              icon={<Lock />}
+              showPassword={showPassword}
+              onTogglePassword={togglePassword}
+              bgClass="bg-[#1a1a2e]"
+            />
+            <p className="text-xs text-gray-500 mt-1">
+              Must be at least 8 characters with a mix of letters and numbers
+            </p>
 
-                <TextInput
-                  label="Email"
-                  placeholder="m@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  type="email"
-                />
-
-                <PasswordInput
-                  label="Password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-
-                <Button onClick={handleSubmit}>
-                  {loading ? 'Creating account...' : 'Create an account'}
-                </Button>
-                {error && !success && (
-                  <p className="text-red-500 text-xs" role="alert">{error}</p>
-                )}
-              </div>
-
-              <p className="text-gray-400 text-sm mt-6 text-center">
-                Already have an account?{" "}
-                <Link href="/" className="text-white underline hover:text-[#D4A253]">
-                  Sign in
-                </Link>
-              </p>
+            {/* Terms Checkbox */}
+            <div className="flex items-start gap-2 mt-7">
+              <input
+                type="checkbox"
+                id="terms"
+                checked={agreedToTerms}
+                onChange={(e) => setAgreedToTerms(e.target.checked)}
+                className="mt-1 w-4 h-4 rounded border-gray-700 bg-[#1a1a2e] text-[#D4A574] focus:ring-[#D4A574] cursor-pointer"
+              />
+              <label htmlFor="terms" className="text-sm text-gray-400">
+                I agree to the{' '}
+                <span className="text-[#CD9C20]">Terms of Service</span> and{' '}
+                <span className="text-[#CD9C20]">Privacy Policy</span>
+              </label>
             </div>
-          </div>
+
+            {/* Submit Button */}
+            <Button disabled={!canSubmit}>
+              {loading ? 'Creating account...' : 'Create Account'}
+            </Button>
+
+            {/* Error Message */}
+            {error && !success && (
+              <p className="text-red-500 text-xs text-center" role="alert">{error}</p>
+            )}
+
+            {/* Sign In Link */}
+            <p className="text-center text-gray-400 text-sm">
+              Already have an account?{' '}
+              <Link href="/" className="text-[#CD9C20] hover:underline">
+                Sign in
+              </Link>
+            </p>
+          </form>
+
+          {/* Footer */}
+          <p className="text-center text-gray-600 text-xs mt-4">
+            © 2025 Bagel. All Rights Reserved
+          </p>
         </div>
       </div>
     </div>
