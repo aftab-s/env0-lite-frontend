@@ -20,7 +20,6 @@ const Sidebar = () => {
   const menuItems = [
     { icon: '/sidebar/projects.svg', name: 'Projects', active: true },
     { icon: '/sidebar/deployments.svg', name: 'Deployments', active: false },
-    { icon: '/sidebar/team.svg', name: 'Team', active: false },
     { icon: '/sidebar/settings.svg', name: 'Settings', active: false },
   ];
 
@@ -57,7 +56,7 @@ const Sidebar = () => {
     <div
       className={`flex flex-col ${
         isOpen ? 'w-65' : 'w-16'
-      } h-screen bg-[#1A1A1A] border-r border-gray-700 transition-all duration-300 ease-in-out`}
+      } h-screen bg-[#000000] border-r border-gray-700 transition-all duration-300 ease-in-out`}
     >
       {/* Logo Section */}
       <div className="flex items-center justify-between px-4 py-4">
