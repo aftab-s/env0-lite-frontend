@@ -23,6 +23,7 @@ export interface LoginResponse {
 	email: string;
 	githubPAT: string | null;
 	onboardingCompleted: boolean;
+	isProjectThere: string;
 }
 
 // Response returned by backend after successful signup (no token here)
@@ -54,6 +55,7 @@ export interface AuthState {
 	email: string | null;
 	githubPAT: string | null;
 	onboardingCompleted: boolean;
+	isProjectThere: string | null;
 	loading: boolean;
 	error: string | null;
 }

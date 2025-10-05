@@ -2,34 +2,73 @@
 
 import Sidebar from '@/components/Sidebar/page'; 
 import PrivateHeader from '@/components/PrivateHeader/page';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import type { AppDispatch, RootState } from '@/redux/store';
+import { getProjectsByOwner } from '@/redux/slice/Projects/projectListByOwnerSlice';
+import type { ProjectWithTime } from '@/types/project.types';
 
 interface DeploymentCard {
   name: string;
   branch: string;
   time: string;
-  status: 'Deployed' | 'Deploying' | 'Failed';
+  status: string;
   description: string;
 }
 
 export default function SpacesPage() {
-  const deploymentCards: DeploymentCard[] = [
-    { name: 'terraform-aws-vpc', branch: 'main branch', time: '2 hours ago', status: 'Deployed', description: ' Lorem ipsum dolor sit amet consectetur. Vulputate.' },
-    { name: 'terraform-aws-vpc', branch: 'main branch', time: '2 hours ago', status: 'Deployed', description: ' Lorem ipsum dolor sit amet consectetur. Vulputate.' },
-    { name: 'azure-kubernetes-cluster', branch: 'develop branch', time: '2 hours ago', status: 'Failed', description: ' Lorem ipsum dolor sit amet consectetur. Vulputate.' },
-    { name: 'gcp-cloud-functions', branch: 'main branch', time: '2 hours ago', status: 'Deploying', description: ' Lorem ipsum dolor sit amet consectetur. Vulputate.' },
-    { name: 'docker-microservices', branch: 'main branch', time: '2 hours ago', status: 'Deployed', description: ' Lorem ipsum dolor sit amet consectetur. Vulputate.' },
-    { name: 'website-v2', branch: 'main branch', time: '2 hours ago', status: 'Deployed', description: ' Lorem ipsum dolor sit amet consectetur. Vulputate.' },
-  ];
+  const dispatch = useDispatch<AppDispatch>();
+  const { projects, loading, error } = useSelector((state: RootState) => state.projectList);
+
+  useEffect(() => {
+    dispatch(getProjectsByOwner());
+  }, [dispatch]);
+
+  const deploymentCards: DeploymentCard[] = projects.map((project: ProjectWithTime) => ({
+    name: project.projectName,
+    branch: 'main branch', // Default since not in API
+    time: project.tillnowtime,
+    status: project.steps || 'Unknown', // Use steps from API
+    description: project.projectDescription || 'No description',
+  }));
+
+  if (loading) {
+    return (
+      <div className="flex h-screen w-screen">
+        <Sidebar />
+        <div className="flex flex-col flex-1 h-screen">
+          <PrivateHeader />
+          <div className="flex-1 flex items-center justify-center bg-black">
+            <div className="text-white">Loading projects...</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex h-screen w-screen">
+        <Sidebar />
+        <div className="flex flex-col flex-1 h-screen">
+          <PrivateHeader />
+          <div className="flex-1 flex items-center justify-center bg-black">
+            <div className="text-red-500">Error: {error}</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-screen w-screen">
       <Sidebar />
       <div className="flex flex-col flex-1 h-screen">
         <PrivateHeader />
-        <div className="flex-1 overflow-y-auto bg-[#111111]">
+        <div className="flex-1 overflow-y-auto bg-black">
           <div className="w-full">
             {/* Header */}
-            <header className="w-full p-6">
+            <header className="w-full p-6 bg-black">
               <h1 className="text-3xl font-bold text-white">
                 Projects
               </h1>
@@ -40,7 +79,7 @@ export default function SpacesPage() {
               <input
                 type="text"
                 placeholder="Search"
-                className="w-full p-2 rounded-md border border-gray-700 bg-[#09090B] text-sm text-gray-400 focus:outline-none focus:ring-1 focus:ring-[#CD9C20]"
+                className="w-full p-2 rounded-md border border-[#232329] bg-black text-sm text-gray-400 focus:outline-none focus:ring-1 focus:ring-[#CD9C20]"
               />
             </div>
 
@@ -50,29 +89,15 @@ export default function SpacesPage() {
                 {deploymentCards.map((card, index) => (
                   <div
                     key={index}
-                    className="p-4 rounded-lg border border-gray-700 bg-[#09090B] shadow-md"
+                    className="bg-gradient-to-br from-[#cd9c20]/7 to-black/10 backdrop-blur-md border border-[#232329] rounded-md px-6 py-5 shadow-lg cursor-pointer"
                   >
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-base font-medium text-white">{card.name}</span>
                       <div className="flex items-center gap-2">
-                        {card.status === 'Deployed' && (
-                          <div className="bg-[#072a1b] text-[#00b15c] px-3 py-2 rounded-full flex items-center">
-                            <span className="w-2 h-2 rounded-full mr-1 bg-[#00b15c]" />
-                            <span className="text-xs font-light ml-1">{card.status}</span>
-                          </div>
-                        )}
-                        {card.status === 'Deploying' && (
-                          <div className="bg-[#382810] text-[#f5a623] px-3 py-2 rounded-full flex items-center">
-                            <span className="w-2 h-2 rounded-full mr-1 bg-[#f5a623]" />
-                            <span className="text-xs font-light ml-1">{card.status}</span>
-                          </div>
-                        )}
-                        {card.status === 'Failed' && (
-                          <div className="bg-[#351518] text-[#e5484d] px-3 py-2 rounded-full flex items-center">
-                            <span className="w-2 h-2 rounded-full mr-1 bg-[#e5484d]" />
-                            <span className="text-xs font-light ml-1">{card.status}</span>
-                          </div>
-                        )}
+                        <div className="bg-[#072a1b] text-[#00b15c] px-3 py-2 rounded-full flex items-center">
+                          <span className="w-2 h-2 rounded-full mr-1 bg-[#00b15c]" />
+                          <span className="text-xs font-light ml-1">{card.status}</span>
+                        </div>
                       </div>
                     </div>
                     <p className="text-xs text-gray-400">{card.branch}</p>

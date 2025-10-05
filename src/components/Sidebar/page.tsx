@@ -20,7 +20,6 @@ const Sidebar = () => {
   const menuItems = [
     { icon: '/sidebar/projects.svg', name: 'Projects', active: true },
     { icon: '/sidebar/deployments.svg', name: 'Deployments', active: false },
-    // { icon: '/sidebar/team.svg', name: 'Team', active: false },
     { icon: '/sidebar/settings.svg', name: 'Settings', active: false },
   ];
 
@@ -57,7 +56,7 @@ const Sidebar = () => {
     <div
       className={`flex flex-col ${
         isOpen ? 'w-65' : 'w-16'
-      } h-screen bg-[#1A1A1A] border-r border-gray-800 transition-all duration-300 ease-in-out`}
+      } h-screen bg-[#000000] border-r border-[#232329] transition-all duration-300 ease-in-out`}
     >
       {/* Logo Section */}
       <div className="flex items-center justify-between px-4 py-4">
@@ -105,8 +104,8 @@ const Sidebar = () => {
               <button
                 className={`group flex items-center gap-3 w-full text-left px-2 py-2 rounded-md text-sm font-inter font-medium cursor-pointer ${
                   item.active
-                    ? 'bg-[#2A2A2A] text-white'
-                    : 'text-gray-400 hover:bg-[#2A2A2A] hover:text-white'
+                    ? 'bg-[#2A2A2A] text-yellow-500'
+                    : 'text-gray-400 hover:bg-[#1A1A1A] hover:text-white'
                 } ${!isOpen ? 'justify-center' : ''}`}
                 title={!isOpen ? item.name : ''}
               >
@@ -117,7 +116,7 @@ const Sidebar = () => {
                   height={18}
                   className={`shrink-0 ${
                     item.active
-                      ? 'brightness-0 saturate-100 invert-[1]'
+                      ? 'brightness-0 saturate-100 invert-[0.5] sepia hue-rotate-[25deg]'
                       : 'brightness-0 saturate-100 invert-[0.6] group-hover:brightness-0 group-hover:saturate-100 group-hover:invert-[1]'
                   }`}
                 />

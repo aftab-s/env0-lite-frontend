@@ -1,10 +1,10 @@
-"use client";
+'use client';
 import { useState, useCallback, useEffect } from 'react';
-import Link from 'next/link';
 import Image from 'next/image';
-import TextInput from '../components/TextInput/TextInput';
-import PasswordInput from '../components/PasswordInput/PasswordInput';
-import Button from '../components/PrimaryButton/PrimaryButton';
+import Link from 'next/link';
+import { Mail, Lock } from 'lucide-react';
+import AuthInput from '@/components/AuthInput/AuthInput';
+import Button from '@/components/PrimaryButton/PrimaryButton';
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '@/redux/store';
 import { loginUser } from '@/redux/slice/Auth/loginSlice';
@@ -17,17 +17,27 @@ export default function AuthForm() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [navigating, setNavigating] = useState(false);
   const { loading, error, token } = useSelector((state: RootState) => state.auth);
 
-  const canSubmit = email.trim() !== '' && password.trim() !== '' && !loading;
-
-  const handleSubmit = useCallback(async () => {
-    if (!canSubmit) return;
+  const handleSubmit = useCallback(async (e: React.FormEvent) => {
+    e.preventDefault();
     const creds: LoginCredentials = { email, password };
     const resultAction = await dispatch(loginUser(creds));
     if (loginUser.fulfilled.match(resultAction)) {
       const payload = resultAction.payload;
-      const to = payload.onboardingCompleted ? '/dashboard' : '/github-connect';
+      setNavigating(true);
+      let to = '/github-connect'; // default
+      if (payload.githubPAT) {
+        if (payload.isProjectThere === 'yes') {
+          to = '/projects';
+        } else {
+          to = '/dashboard';
+        }
+      } else if (payload.onboardingCompleted) {
+        to = '/dashboard';
+      }
       router.push(to);
     } else {
       const payload = resultAction.payload as string | undefined;
@@ -38,78 +48,95 @@ export default function AuthForm() {
         confirmButtonColor: '#CD9C20'
       });
     }
-  }, [canSubmit, dispatch, email, password, router]);
+  }, [dispatch, email, password, router]);
 
-  // Optional: if already logged in navigate away
   useEffect(() => {
     if (token) {
       router.prefetch('/dashboard');
       router.prefetch('/github-connect');
+      router.prefetch('/projects');
     }
   }, [token, router]);
 
+  const togglePassword = () => setShowPassword(!showPassword);
+
   return (
-    <div className="w-screen h-screen flex overflow-hidden">
-      {/* Left Side - Logo */}
-      <div className="w-[55%] h-full bg-[#18181B] flex items-center justify-center">
-        <div className="flex items-center gap-4">
-          <Image
-            src="/login/logo-full.svg"
-            alt="Bagel Logo"
-            width={500}
-            height={120}
-            priority
-          />
-        </div>
+    <div className="flex h-screen w-screen">
+      {/* Left Side - Branding */}
+      <div className="w-1/2 relative">
+        <Image
+          src="authPages/loginBanner.svg"
+          alt="Login Banner"
+          fill
+          className="object-cover"
+        />
       </div>
 
-      {/* Right Side - Login Form */}
-      <div className="w-[45%] h-full bg-[#111111] flex items-center justify-center px-30 py-8">
-        <div className="w-full max-w-md bg-[#18181B] rounded-lg p-8 border-1 border-gray-800">
-          <h2 className="text-[#CD9C20] text-2xl font-semibold mb-2">Login</h2>
-          <p className="text-gray-400 text-sm mb-6">
-            Enter your email below to login to your account
-          </p>
+      {/* Right Side - Signup Form */}
+      <div className="w-1/2 bg-[#0a0a0b] flex items-center justify-center p-16">
+        <div className="w-full max-w-md mt-10">
+          <h2 className="text-[#CD9C20] text-3xl font-light mb-2">Welcome Back</h2>
+          <p className="text-gray-400 mb-10">Sign in to manage your infrastructure</p>
 
-          <div className="flex flex-col gap-4 mb-4">
-            <TextInput
+          <form onSubmit={handleSubmit} className="space-y-5">
+            {/* Email */}
+            <AuthInput
               label="Email"
-              placeholder="m@example.com"
+              type="email"
+              placeholder="you@company.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              type="email"
+              icon={<Mail />}
+              bgClass="bg-[#1a1a1a]"
             />
 
-            <PasswordInput
+            {/* Password */}
+            <AuthInput
               label="Password"
+              type="password"
+              placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              icon={<Lock />}
+              showPassword={showPassword}
+              onTogglePassword={togglePassword}
+              bgClass="bg-[#1a1a1a]"
             />
-
-            <Button onClick={handleSubmit}>
-              {loading ? 'Logging in...' : 'Login'}
-            </Button>
             {error && (
               <p className="text-red-500 text-xs mt-1" role="alert">
                 {error}
               </p>
             )}
-          </div>
 
-          <div className="text-center">
-            <Link
-              href="/forgot-password"
-              className="text-white text-xs font-thin underline hover:text-[#CD9C20]"
-            >
-              Forgot your password?
-            </Link>
-          </div>
+            {/* Forgot Password */}
+            <div className="mt-7">
+              <p className="text-right text-gray-400 text-sm">
+                <Link href="/forgot-password" className="text-[#CD9C20] hover:underline">
+                  Forgot Password ?
+                </Link>
+              </p>
+            </div>
 
-          <p className="text-gray-400 text-sm mt-6 text-center">
-            {"Don't have an account? "}
-            <Link href="/signup" className="text-white underline hover:text-[#D4A253]">
-              Sign up
-            </Link>
+            {/* Submit Button */}
+            <Button type="submit" disabled={loading || navigating}>
+              {loading || navigating ? 'Logging in...' : 'Sign In'}
+            </Button>
+
+
+            
+
+            {/* Sign In Link */}
+            <p className="text-center text-gray-400 text-sm">
+              {"Don't have an account ?"} {" "}
+              <Link href="/signup" className="text-[#CD9C20] hover:underline">
+                Sign up
+              </Link>
+            </p>
+          </form>
+
+          {/* Footer */}
+          <p className="text-center text-gray-600 text-xs mt-4">
+            © 2025 Bagel. All Rights Reserved
           </p>
         </div>
       </div>

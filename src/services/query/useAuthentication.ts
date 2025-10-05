@@ -57,8 +57,6 @@ export const checkUserByEmail = async ({ email }: { email: string }) => {
   const apiBaseUrl = apiEndpoints.auth;
 
   try {
-    const response = await axiosPrivate.post(apiBaseUrl.byEmail, { email });
-    return response.data; // existing user
   } catch (err: any) {
     
     if (err.response?.status === 404) {
