@@ -1,22 +1,20 @@
 "use client";
 
 import { ReactNode } from "react";
-import Sidebar from "@/components/common/Sidebar";
-import { useDarkMode } from "@/context/DarkModeProvider";
+import Sidebar from "@/components/Sidebar/page";
 
 interface TerraformAwsLayoutProps {
   children: ReactNode;
 }
 
 export default function TerraformAwsLayout({ children }: TerraformAwsLayoutProps) {
-  const { darkMode } = useDarkMode();
-
-  const bgColor = darkMode ? "#000000" : "#F3F4F6";
+  const bgColor = "#000000ff";
+  const darkMode = false;
 
   return (
     <div
       className="w-full flex box-border transition-colors duration-500 overflow-hidden"
-      style={{ backgroundColor: bgColor }}
+      style={{ backgroundColor: "#F3F4F6" }}
     >
       <Sidebar />
 

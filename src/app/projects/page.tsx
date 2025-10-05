@@ -1,12 +1,15 @@
 'use client';
 
 import Sidebar from '@/components/Sidebar/page'; 
+import Button from '@/components/ui/button';
 import PrivateHeader from '@/components/PrivateHeader/page';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '@/redux/store';
 import { getProjectsByOwner } from '@/redux/slice/Projects/projectListByOwnerSlice';
 import type { ProjectWithTime } from '@/types/project.types';
+import { Loader } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 interface DeploymentCard {
   name: string;
@@ -18,6 +21,7 @@ interface DeploymentCard {
 
 export default function SpacesPage() {
   const dispatch = useDispatch<AppDispatch>();
+  const router = useRouter();
   const { projects, loading, error } = useSelector((state: RootState) => state.projectList);
 
   useEffect(() => {
@@ -38,7 +42,8 @@ export default function SpacesPage() {
         <Sidebar />
         <div className="flex flex-col flex-1 h-screen">
           <PrivateHeader />
-          <div className="flex-1 flex items-center justify-center bg-black">
+          <div className="flex-1 flex flex-col items-center justify-center bg-black">
+            <Loader className="animate-spin text-white mb-4" size={48} />
             <div className="text-white">Loading projects...</div>
           </div>
         </div>
@@ -68,10 +73,11 @@ export default function SpacesPage() {
         <div className="flex-1 overflow-y-auto bg-black">
           <div className="w-full">
             {/* Header */}
-            <header className="w-full p-6 bg-black">
-              <h1 className="text-3xl font-bold text-white">
+            <header className="w-full p-6 bg-black flex items-center justify-between">
+              <h1 className="text-3xl font-bold text-white ">
                 Projects
               </h1>
+              <Button variant="primary" width='w-45' onClick={() => router.push('/create-project')}>New Project</Button>
             </header>
 
             {/* Search Bar */}

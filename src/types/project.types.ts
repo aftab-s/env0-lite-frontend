@@ -5,6 +5,8 @@ export interface CreateProjectPayload {
 
 export interface ProjectEntity {
 	id: string;
+	_id?: string;
+	projectId: string;
 	projectName: string;
 	projectDescription?: string;
 	ownerId: string;

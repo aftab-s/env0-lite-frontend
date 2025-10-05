@@ -21,8 +21,12 @@ export const fetchDeployments = createAsyncThunk(
     try {
       const response = await getDeployments();
       return response; // Deployment[]
-    } catch (err: any) {
-      return rejectWithValue(err.message || "Failed to fetch deployments");
+    } catch (err: unknown) {
+      let errorMessage = "Failed to fetch deployments";
+      if (err && typeof err === "object" && "message" in err) {
+        errorMessage = (err as { message?: string }).message || errorMessage;
+      }
+      return rejectWithValue(errorMessage);
     }
   }
 );

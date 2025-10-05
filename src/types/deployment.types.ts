@@ -32,7 +32,7 @@ export interface TerraformCommandResponse {
 export interface TerraformPlanResponse {
   stepName: string;            
   rawFormat: string;          
-  data: any | null;         
+  data: unknown | null;         
   exitCode: number;            
   stderr: string;              
 }

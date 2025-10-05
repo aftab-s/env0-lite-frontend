@@ -4,12 +4,13 @@ import { useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState, AppDispatch } from '@/redux/store';
 import { logout } from '@/redux/slice/Auth/loginSlice';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { LogOut } from 'lucide-react';
 
 const Sidebar = () => {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
+  const pathname = usePathname();
   const { username, email } = useSelector((state: RootState) => ({
     username: state.auth.username,
     email: state.auth.email,
@@ -18,10 +19,17 @@ const Sidebar = () => {
   const [isLogoHovered, setIsLogoHovered] = useState(false);
 
   const menuItems = [
-    { icon: '/sidebar/projects.svg', name: 'Projects', active: true },
-    { icon: '/sidebar/deployments.svg', name: 'Deployments', active: false },
-    { icon: '/sidebar/settings.svg', name: 'Settings', active: false },
+    { icon: '/sidebar/projects.svg', name: 'Projects', route: '/projects' },
+    { icon: '/sidebar/deployments.svg', name: 'Deployments', route: '/past-deployments' },
+    { icon: '/sidebar/settings.svg', name: 'Settings', route: '/settings' },
   ];
+
+  const getActiveItem = () => {
+    const item = menuItems.find(item => item.route === pathname);
+    return item ? item.name : 'Projects'; // default to Projects
+  };
+
+  const activeItem = getActiveItem();
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -103,11 +111,12 @@ const Sidebar = () => {
             <li key={index}>
               <button
                 className={`group flex items-center gap-3 w-full text-left px-2 py-2 rounded-md text-sm font-inter font-medium cursor-pointer ${
-                  item.active
+                  activeItem === item.name
                     ? 'bg-[#2A2A2A] text-yellow-500'
                     : 'text-gray-400 hover:bg-[#1A1A1A] hover:text-white'
                 } ${!isOpen ? 'justify-center' : ''}`}
                 title={!isOpen ? item.name : ''}
+                onClick={() => router.push(item.route)}
               >
                 <Image
                   src={item.icon}
@@ -115,7 +124,7 @@ const Sidebar = () => {
                   width={18}
                   height={18}
                   className={`shrink-0 ${
-                    item.active
+                    activeItem === item.name
                       ? 'brightness-0 saturate-100 invert-[0.5] sepia hue-rotate-[25deg]'
                       : 'brightness-0 saturate-100 invert-[0.6] group-hover:brightness-0 group-hover:saturate-100 group-hover:invert-[1]'
                   }`}

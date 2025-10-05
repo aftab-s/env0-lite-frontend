@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
-import { Search } from "lucide-react";
+import { Search, Loader } from "lucide-react";
 
 import { fetchDeployments } from "@/redux/slice/Deployements/deploymentSlice";
 import { RootState, AppDispatch } from "@/redux/store";
@@ -41,7 +41,12 @@ const DeploymentsPage: React.FC = () => {
     router.push(`/terraform-progress/${id}`); // navigate to [id] page
   };
 
-  if (loading) return <div className="text-white p-6">Loading...</div>;
+  if (loading) return (
+    <div className="flex flex-col items-center justify-center h-full text-white p-6">
+      <Loader className="animate-spin mb-4" size={48} />
+      <div>Loading deployments...</div>
+    </div>
+  );
   if (error) return <div className="text-red-500 p-6">{error}</div>;
 
   return (
