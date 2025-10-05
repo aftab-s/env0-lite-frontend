@@ -14,7 +14,7 @@ const Header = ({ darkMode }: HeaderProps) => {
 
   return (
     <header
-      className={`${headerBg} ${borderColor} border-b border-b-[#e4e4e4] px-6 py-4 transition-colors duration-500`}
+      className={`${headerBg} ${borderColor} border-b border-b-yellow-500/30 px-6 py-4 transition-colors duration-500`}
     >
       <div className="flex items-center justify-end">
         {/* Notification Bell */}

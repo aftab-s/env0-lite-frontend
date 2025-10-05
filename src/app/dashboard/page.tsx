@@ -1,8 +1,4 @@
 'use client';
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
-
 
 import Sidebar from "@/components/Sidebar/page";
 import PrivateHeader from "@/components/PrivateHeader/page";

@@ -11,6 +11,7 @@ const apiEndpoints = {
     },
        project: {
         createProject: "/api/project/create-project",
+        getProjectByOwner: "/api/project/get-projects-by-owner",
         // getTree: "/api/github-pat/repos"
     }
 }

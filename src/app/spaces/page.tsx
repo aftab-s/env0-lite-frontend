@@ -49,17 +49,7 @@ export default function SpacesPage() {
               </div>
             ))}
           </div>
-          {/* Floating Settings Modal */}
-          {/* <div className="absolute top-32 right-8 w-[370px] bg-[#18181B] border border-[#232329] rounded-xl shadow p-6">
-            <h2 className="text-[#F4F4F5] font-semibold text-lg mb-3">Settings</h2>
-            <div className="text-[#A1A1AA] mb-2">Edit AWS Credentials</div>
-            <label className="block text-[#A1A1AA] text-xs mb-1">Profile Name</label>
-            <input className="bg-[#232329] border border-[#232329] rounded px-3 py-2 mb-3 w-full text-[#F4F4F5] font-medium text-sm" defaultValue="100%" />
-            <label className="block text-[#A1A1AA] text-xs mb-1">AWS Access Key ID</label>
-            <input className="bg-[#232329] border border-[#232329] rounded px-3 py-2 mb-3 w-full text-[#F4F4F5] font-medium text-sm" defaultValue="AKIAIOSFODNN7EXAMPLE" />
-            <label className="block text-[#A1A1AA] text-xs mb-1">AWS Secret Access Key</label>
-            <input className="bg-[#232329] border border-[#232329] rounded px-3 py-2 mb-1 w-full text-[#F4F4F5] font-medium text-sm" defaultValue="wJa1XtUnFEM1/K7MDENG/bPxRfiCYEXAMPLEKEY" />
-          </div> */}
+
         </div>
       </div>
     </div>

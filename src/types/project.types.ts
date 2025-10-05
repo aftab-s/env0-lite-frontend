@@ -12,12 +12,26 @@ export interface ProjectEntity {
 	updatedAt?: string;
 }
 
+export interface ProjectWithTime extends ProjectEntity {
+	tillnowtime: string;
+}
+
 export interface CreateProjectResponse {
 	success: boolean;
 	project: ProjectEntity;
 }
 
 export interface CreateProjectErrorResponse {
+	success: false;
+	error: string;
+}
+
+export interface GetProjectsByOwnerResponse {
+	success: boolean;
+	projects: ProjectWithTime[];
+}
+
+export interface GetProjectsByOwnerErrorResponse {
 	success: false;
 	error: string;
 }

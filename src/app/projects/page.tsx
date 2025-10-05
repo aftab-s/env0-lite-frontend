@@ -26,10 +26,10 @@ export default function SpacesPage() {
       <Sidebar />
       <div className="flex flex-col flex-1 h-screen">
         <PrivateHeader />
-        <div className="flex-1 overflow-y-auto bg-[#111111]">
+        <div className="flex-1 overflow-y-auto bg-black">
           <div className="w-full">
             {/* Header */}
-            <header className="w-full p-6">
+            <header className="w-full p-6 bg-black">
               <h1 className="text-3xl font-bold text-white">
                 Projects
               </h1>
@@ -40,7 +40,7 @@ export default function SpacesPage() {
               <input
                 type="text"
                 placeholder="Search"
-                className="w-full p-2 rounded-md border border-gray-700 bg-[#09090B] text-sm text-gray-400 focus:outline-none focus:ring-1 focus:ring-[#CD9C20]"
+                className="w-full p-2 rounded-md border border-[#232329] bg-black text-sm text-gray-400 focus:outline-none focus:ring-1 focus:ring-[#CD9C20]"
               />
             </div>
 
@@ -50,7 +50,7 @@ export default function SpacesPage() {
                 {deploymentCards.map((card, index) => (
                   <div
                     key={index}
-                    className="p-4 rounded-lg border border-gray-700 bg-[#09090B] shadow-md"
+                    className="bg-gradient-to-br from-[#cd9c20]/7 to-black/10 backdrop-blur-md border border-[#232329] rounded-md px-6 py-5 shadow-lg"
                   >
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-base font-medium text-white">{card.name}</span>
