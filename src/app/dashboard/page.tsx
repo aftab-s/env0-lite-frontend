@@ -10,12 +10,12 @@ export default function DashboardPage() {
       <Sidebar />
       <div className="flex flex-col flex-1 h-screen">
         <PrivateHeader />
-        <div className="flex-1 overflow-y-auto bg-[#111111]">
+        <div className="flex-1 overflow-y-auto bg-black">
           <div className="w-full">
             {/* Header */}
             <header className="w-full mb-6">
               <h1 className="text-3xl font-bold pl-10 pt-10 text-white">
-                Infrastructure Dashboard
+                Projects
               </h1>
             </header>
 

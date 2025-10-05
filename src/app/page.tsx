@@ -28,7 +28,16 @@ export default function AuthForm() {
     if (loginUser.fulfilled.match(resultAction)) {
       const payload = resultAction.payload;
       setNavigating(true);
-      const to = payload.onboardingCompleted ? '/dashboard' : '/github-connect';
+      let to = '/github-connect'; // default
+      if (payload.githubPAT) {
+        if (payload.isProjectThere === 'yes') {
+          to = '/projects';
+        } else {
+          to = '/dashboard';
+        }
+      } else if (payload.onboardingCompleted) {
+        to = '/dashboard';
+      }
       router.push(to);
     } else {
       const payload = resultAction.payload as string | undefined;
@@ -45,6 +54,7 @@ export default function AuthForm() {
     if (token) {
       router.prefetch('/dashboard');
       router.prefetch('/github-connect');
+      router.prefetch('/projects');
     }
   }, [token, router]);
 

@@ -18,6 +18,7 @@ const initialState: AuthState = {
   email: null,
   githubPAT: null,
   onboardingCompleted: false,
+  isProjectThere: null,
   loading: false,
   error: null,
 };
@@ -66,6 +67,7 @@ const authSlice = createSlice({
       state.email = null;
       state.githubPAT = null;
       state.onboardingCompleted = false;
+      state.isProjectThere = null;
       Cookies.remove("token"); // clear cookie
     },
   },
@@ -84,6 +86,7 @@ const authSlice = createSlice({
         state.email = action.payload.email;
         state.githubPAT = action.payload.githubPAT;
         state.onboardingCompleted = action.payload.onboardingCompleted;
+        state.isProjectThere = action.payload.isProjectThere;
       })
       .addCase(loginUser.rejected, (state, action: PayloadAction<AuthRejectValue | undefined>) => {
         state.loading = false;

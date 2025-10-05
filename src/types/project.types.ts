@@ -14,6 +14,7 @@ export interface ProjectEntity {
 
 export interface ProjectWithTime extends ProjectEntity {
 	tillnowtime: string;
+	steps: string;
 }
 
 export interface CreateProjectResponse {
