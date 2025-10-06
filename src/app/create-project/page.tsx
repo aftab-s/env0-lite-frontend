@@ -6,6 +6,7 @@ import Input from '@/components/TextInput/TextInput';
 import { createProject } from '@/services/project/createProject';
 import type { CreateProjectPayload } from '@/types/project.types';
 import Swal from 'sweetalert2';
+import Button from '@/components/ui/button';
 import PublicHeader from '@/components/PublicHeader/page';
 
 export default function CreateProjectPage() {
@@ -33,11 +34,10 @@ export default function CreateProjectPage() {
       await Swal.fire({
         icon: 'success',
         title: 'Project created',
-        text: 'Redirecting to dashboard...',
-        timer: 1200,
+        timer: 1000,
         showConfirmButton: false,
       });
-      router.push('/dashboard');
+      router.push('/cloud-provider');
     } catch (e: unknown) {
       let msg = 'Failed to create project';
       if (e && typeof e === 'object' &&
@@ -53,11 +53,11 @@ export default function CreateProjectPage() {
   }, [projectName, projectDescription, submitting, router, validateForm]);
 
   return (
-    <div className="flex flex-col w-full h-screen">
+    <div className="flex flex-col w-full h-full">
       <PublicHeader />
-      <div className="flex-1 overflow-y-auto">
-        <div className="w-full bg-[#111111] flex flex-col items-center justify-start px-4 py-20">
-          <div className="w-full flex flex-col items-center gap-6">
+      <div className="flex-1 bg-black overflow-y-auto">
+        <div className="w-full bg-black flex flex-col h-[91vh] items-center justify-start px-4 py-20">
+          <div className="w-full flex flex-col bg-black items-center gap-6">
             {/* Main Title */}
             <h1 
               className="text-3xl font-bold text-center"
@@ -72,7 +72,7 @@ export default function CreateProjectPage() {
             </p>
 
             {/* Form Container */}
-            <div className="w-full max-w-4xl p-6 rounded-lg bg-[#18181B]">
+            <div className="w-full max-w-4xl p-6 rounded-lg bg-gradient-to-br from-[#cd9c20]/7 to-black/10 backdrop-blur-md border border-[#232329] rounded-md px-6 py-5 shadow-lg">
               <div className="flex flex-col gap-4">
                 <h1 className="text-xl font-semibold text-gray-300">Project Details</h1>
                 {/* Project Name Field */}
@@ -97,20 +97,26 @@ export default function CreateProjectPage() {
                   <p className="text-red-500 text-xs -mt-2" role="alert">{errors.projectDescription}</p>
                 )}
 
-                {/* Divider */}
-                <hr className="my-4 border-t border-gray-700" />
-              </div>
+                  </div>
             </div>
 
             {/* Create Project Button */}
-            <button
-              onClick={handleCreateProject}
+            <Button
+              variant="primary"
               disabled={submitting}
-              className="w-full max-w-md px-8 py-2 rounded-[3px] text-black font-medium hover:opacity-80 disabled:opacity-60 disabled:cursor-not-allowed"
-              style={{ backgroundColor: '#CD9C20' }}
+              onClick={handleCreateProject}
+              className="w-full max-w-md px-8 py-2 rounded-[3px]"
             >
               {submitting ? 'Working...' : 'Create Project'}
-            </button>
+            </Button>
+            <Button
+              variant="secondary"
+              disabled={submitting}
+              onClick={() => router.push('/projects')}  // Assuming "Back to Dashboard" should navigate back
+              className="w-full max-w-md px-8 py-2 rounded-[3px] pointer-cursor"
+            >
+              {submitting ? 'Working...' : 'Back to Projects'}
+            </Button>
           </div>
         </div>
       </div>

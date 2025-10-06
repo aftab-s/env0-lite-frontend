@@ -1,17 +1,14 @@
 "use client";
 
-import { useDarkMode } from "@/context/DarkModeProvider";
 import Button from "@/components/ui/button";
 
 export default function TerraformAwsPage() {
-  const { darkMode } = useDarkMode();
 
-  const headingColor = darkMode ? "text-white" : "text-gray-900";
-  const subHeadingColor = darkMode ? "text-gray-300" : "text-gray-600";
-  const cardBg = darkMode ? "bg-[#1F2228]" : "bg-white";
-  const mutedText = darkMode ? "text-gray-400" : "text-gray-500";
-  const borderColor = darkMode ? "border-[#2F343C]" : "border-gray-200";
-  const codeBg = darkMode ? "bg-black" : "bg-[#0B1221]";
+  const headingColor = "text-gray-900";
+  const cardBg = "bg-white";
+  const mutedText = "text-gray-500";
+  const borderColor = "border-gray-200";
+  const codeBg = "bg-[#0B1221]";
 
   const handleApprove = () => {
     // placeholder for future integration

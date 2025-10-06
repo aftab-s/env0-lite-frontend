@@ -33,32 +33,4 @@ export async function fetchUserRepos(pat:string): Promise<Repo[]> {
   return response.data;
 }
 
-export async function fetchRepoTree({
-  owner,
-  repo,
-  branch = "main",
-  pat
-}: FetchRepoTreeParams): Promise<RepoTreeNode[]> {
-  const apiBaseUrl = apiEndpoints.github;
 
-  const url = `${apiBaseUrl.getTree}/${owner}/${repo}/${pat}/tree`;
-  
-  const response = await axiosPrivate.get(url, {
-    params: { ref: branch }, 
-  });
-
-
-  return response.data;
-}
-
-export async function fetchBranch({
-  owner,
-  repo,
-  pat
-}: FetchRepoTreeParams): Promise<RepoTreeNode[]> {
-  const apiBaseUrl = apiEndpoints.github;
-
-  
-  const response = await axiosPrivate.post(apiBaseUrl.getBranch, {owner, repo, pat });
-  return response.data;
-}

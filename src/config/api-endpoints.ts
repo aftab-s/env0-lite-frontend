@@ -2,16 +2,20 @@ const apiEndpoints = {
     auth : {
         signUp: "/api/users/signup",
         login: "/api/users/login",
-        // byEmail: "/api/users/email"
     },
     github: {
         savePat: "/api/github-pat/save-pat",
         getRepo: "/api/github-pat/list-repos",
-        // getTree: "/api/github-pat/repos"
     },
        project: {
         createProject: "/api/project/create-project",
-        // getTree: "/api/github-pat/repos"
+        getProjectByOwner: "/api/project/get-projects-by-owner",
+        getTree: "/api/github-pat/repos",
+        selectCsp:"/api/project/:projectId/csp",
+    },
+    deployment: {
+        getDeployments: "/api/deployment/",
+        terraform: "/api/terraform",
     }
 }
 

@@ -3,12 +3,16 @@ import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./slice/Auth/loginSlice";
 import signupReducer from "./slice/Auth/signUpSlice";
 import repoListReducer from "./slice/Github/repoListSlice";
+import projectListReducer from "./slice/Projects/projectListByOwnerSlice";
+import deploymentsReducer from "./slice/Deployements/deploymentSlice";
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
     signup: signupReducer,
     repoList: repoListReducer,
+    projectList: projectListReducer,
+    deployments: deploymentsReducer,
   },
 });
 

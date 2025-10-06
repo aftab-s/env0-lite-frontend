@@ -32,6 +32,7 @@ export default function InfrastructureBanner() {
           alt="Deploy Illustration"
           width={40}
           height={40}
+          className="hue-rotate-[25deg] invert-[0.5] sepia saturate-[5]"
         />
 
         <div className="mt-6 flex flex-col items-center gap-2">
