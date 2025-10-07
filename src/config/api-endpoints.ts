@@ -12,6 +12,7 @@ const apiEndpoints = {
         getProjectByOwner: "/api/project/get-projects-by-owner",
         getTree: "/api/github-pat/repos",
         selectCsp:"/api/project/:projectId/csp",
+        spaceList:"/api/project/:projectId/spaces",
     },
     deployment: {
         getDeployments: "/api/deployment/",

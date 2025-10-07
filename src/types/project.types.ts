@@ -15,8 +15,14 @@ export interface ProjectEntity {
 }
 
 export interface ProjectWithTime extends ProjectEntity {
-	tillnowtime: string;
-	steps: string;
+
+	  projectName: string;
+  tillnowtime: string;
+  steps?: string;
+  projectDescription?: string;
+  csp?: string;
+  repoUrl?: string;
+  profile?: string;
 }
 
 export interface CreateProjectResponse {

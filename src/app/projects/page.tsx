@@ -17,6 +17,7 @@ interface DeploymentCard {
   time: string;
   status: string;
   description: string;
+  project: ProjectWithTime;
 }
 
 export default function SpacesPage() {
@@ -28,12 +29,30 @@ export default function SpacesPage() {
     dispatch(getProjectsByOwner());
   }, [dispatch]);
 
+  const handleCardClick = (card: DeploymentCard) => {
+    const project = card.project;
+    if (project.csp && project.profile && project.repoUrl) {
+      // Github connected
+      router.push(`/spaces/${project.projectId}`);
+    } else if (project.csp && project.profile && !project.repoUrl) {
+      // Pending Repo Connection
+      router.push('/github-repo');
+    } else if (project.csp && !project.profile) {
+      // Pending Creds
+      router.push('/aws-credentials');
+    } else {
+      // Pending CSP
+      router.push('/cloud-provider');
+    }
+  };
+
   const deploymentCards: DeploymentCard[] = projects.map((project: ProjectWithTime) => ({
     name: project.projectName,
     branch: 'main branch', // Default since not in API
     time: project.tillnowtime,
     status: project.steps || 'Unknown', // Use steps from API
     description: project.projectDescription || 'No description',
+    project,
   }));
 
   if (loading) {
@@ -96,6 +115,7 @@ export default function SpacesPage() {
                   <div
                     key={index}
                     className="bg-gradient-to-br from-[#cd9c20]/7 to-black/10 backdrop-blur-md border border-[#232329] rounded-md px-6 py-5 shadow-lg cursor-pointer"
+                    onClick={() => handleCardClick(card)}
                   >
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-base font-medium text-white">{card.name}</span>
