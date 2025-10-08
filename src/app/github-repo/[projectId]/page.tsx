@@ -1,13 +1,13 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import Button from '@/components/PrimaryButton/PrimaryButton';
 import { useParams} from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState, AppDispatch } from '@/redux/store';
 import { fetchRepositories } from '@/redux/slice/Github/repoListSlice';
 import Sidebar from '@/components/Sidebar/page';
 import PrivateHeader from '@/components/PrivateHeader/page';
+import ConfirmationModal from '@/components/ConfirmationModal/ConfirmationModal';
 
 interface UIRepository {
   key: string; // composite key (owner/name) for rendering
@@ -23,6 +23,7 @@ export default function GithubRepositoryPage() {
   const [search, setSearch] = useState('');
   const [selectedRepo, setSelectedRepo] = useState<UIRepository | null>(null);
   const [selectedBranch, setSelectedBranch] = useState<string>('');
+  const [showModal, setShowModal] = useState(false);
 
   const cardBg = 'bg-[#18181B]';
   const cardBorder = 'border-[#333333]';
@@ -56,25 +57,27 @@ export default function GithubRepositoryPage() {
 
   const branchList = selectedRepo?.branches || [];
 
-
   const handleContinue = () => {
-  if (!selectedRepo || !selectedBranch) return;
+    if (!selectedRepo || !selectedBranch) return;
 
-  console.log('Selected:', {
-    projectId,
-    repo: selectedRepo.name,
-    branch: selectedBranch,
-  });
-};
+    console.log('Selected:', {
+      projectId,
+      repo: selectedRepo.name,
+      branch: selectedBranch,
+    });
+    
+    setShowModal(false);
+   
+  };
 
   return (
     <div className="flex h-screen w-screen">
       <Sidebar />
-      <div className="flex flex-col flex-1 h-screen">
+      <div className="flex flex-col flex-1 h-full">
         <PrivateHeader />
         <div className="flex-1 overflow-y-auto">
-        <div className="w-full bg-[#000000]">
-          <main className="w-full max-w-6xl mx-auto px-6 py-10 h-screen">
+        <div className="w-full bg-[#000000]  h-full">
+          <main className="w-full max-w-6xl mx-auto px-6 py-10">
             {/* Page header */}
             <div className="w-full text-center mb-6 flex-none">
               <h1
@@ -92,7 +95,7 @@ export default function GithubRepositoryPage() {
             <div className="bg-black w-full max-w-[1040px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 min-h-0 overflow-hidden">
               {/* Left: Repository list */}
               <div
-                className={`rounded-lg border ${cardBorder} ${cardBg} p-5 flex flex-col h-[530px] min-h-0`}
+                className={`rounded-lg border ${cardBorder} ${cardBg} p-5 flex flex-col h-[450px] min-h-0`}
               >
                 <div className="mb-4">
                   <h3 className={`text-[18px] font-semibold ${heading}`}>
@@ -194,7 +197,7 @@ export default function GithubRepositoryPage() {
 
               {/* Right: Repo tree */}
               <div
-                className={`rounded-lg border ${cardBorder} ${cardBg} p-5 h-[530px] flex flex-col min-h-0`}
+                className={`rounded-lg border ${cardBorder} ${cardBg} p-5 h-[450px] flex flex-col min-h-0`}
               >
                 <div className="mb-4">
                   <h3 className={`text-[18px] font-semibold ${heading}`}>
@@ -216,7 +219,10 @@ export default function GithubRepositoryPage() {
                     branchList.map((br) => (
                       <button
                         key={br}
-                        onClick={() => setSelectedBranch(br)}
+                        onClick={() => {
+                          setSelectedBranch(br);
+                          setShowModal(true);
+                        }}
                         className={`w-full text-left px-3 py-2 text-sm border-b border-[#444] ${
                           selectedBranch === br
                             ? 'bg-[#1F2228] border border-[#444]'
@@ -229,21 +235,20 @@ export default function GithubRepositoryPage() {
                 </div>
               </div>
             </div>
-
-            {/* Action bar */}
-            <div className="w-full flex items-center justify-center mt-6 flex-none pb-4">
-              <div className="w-[360px]">
-                <Button disabled={!selectedRepo || !selectedBranch} onClick={handleContinue} >
-                  {selectedRepo && selectedBranch
-                    ? 'Continue to Dashboard'
-                    : 'Select repo & branch'}
-                </Button>
-              </div>
-            </div>
           </main>
         </div>
       </div>
       </div>
+
+      {/* Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        onConfirm={handleContinue}
+        repositoryName={selectedRepo?.name || ''}
+        branchName={selectedBranch}
+        ownerName={selectedRepo?.owner || undefined}
+      />
     </div>
   );
 }
