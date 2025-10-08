@@ -45,3 +45,12 @@ coverage/
 
 # TypeScript cache
 *.tsbuildinfo
+
+# Docker
+docker-compose.dev.yml
+docker-compose.yml
+DOCKER.md
+Dockerfile.dev
+
+# Github Actions
+ACTIONS.md
