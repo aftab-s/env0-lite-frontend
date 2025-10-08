@@ -1,7 +1,6 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
-import { useDarkMode } from "@/context/DarkModeProvider";
 
 interface DropdownOption {
   label: string;
@@ -27,20 +26,15 @@ export default function CommonDropdown({
   helperText,
   error,
 }: CommonDropdownProps) {
-  const { darkMode } = useDarkMode();
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const bgColor = darkMode ? "bg-[#111111]" : "bg-white";
-  const borderColor = error
-    ? "border-red-500"
-    : darkMode
-    ? "border-[#2A2A2A]"
-    : "border-gray-300";
-  const labelColor = darkMode ? "text-[#EDEDED]" : "text-gray-700";
-  const textColor = darkMode ? "text-white" : "text-black";
-  const helperColor = darkMode ? "text-gray-400" : "text-gray-600";
-  const hoverBg = darkMode ? "hover:bg-[#2A2A2A]" : "hover:bg-gray-100";
+  const bgColor = "bg-[#111111]";
+  const borderColor = error ? "border-red-500" : "border-[#2A2A2A]";
+  const labelColor = "text-[#EDEDED]";
+  const textColor = "text-white";
+  const helperColor = "text-gray-400";
+  const hoverBg = "hover:bg-[#2A2A2A]";
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -76,7 +70,7 @@ export default function CommonDropdown({
           height={10}
           className={`ml-2 transition-transform ${
             open ? "rotate-180" : ""
-          } ${darkMode ? "invert" : ""}`}
+          }`}
         />
       </div>
 

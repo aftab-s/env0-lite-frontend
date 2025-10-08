@@ -6,7 +6,10 @@ import {
   GetProjectsByOwnerResponse,
   GetProjectsByOwnerErrorResponse,
   ProjectWithTime,
+  UpdateProjectRepoPayload,
+  UpdateProjectRepoResponse,
 } from "@/types/project.types";
+import { updateProjectRepo } from "@/services/project/addRepo";
 
 interface ProjectListState {
   projects: ProjectWithTime[];
@@ -46,6 +49,30 @@ export const getProjectsByOwner = createAsyncThunk<
   }
 });
 
+// Async thunk for updating project repo
+export const updateProjectRepoThunk = createAsyncThunk<
+  UpdateProjectRepoResponse,
+  { projectId: string; payload: UpdateProjectRepoPayload },
+  { rejectValue: { success: false; error: string } }
+>("projects/updateProjectRepo", async ({ projectId, payload }, { rejectWithValue }) => {
+  try {
+    const response = await updateProjectRepo(projectId, payload);
+    return response;
+  } catch (error: unknown) {
+    let message = "Failed to update project repo";
+    if (
+      error &&
+      typeof error === "object" &&
+      // @ts-expect-error: axios error shape
+      error.response?.data?.error
+    ) {
+      // @ts-expect-error: axios error shape
+      message = error.response.data.error as string;
+    }
+    return rejectWithValue({ success: false, error: message });
+  }
+});
+
 const projectListSlice = createSlice({
   name: "projectList",
   initialState,
@@ -63,6 +90,23 @@ const projectListSlice = createSlice({
       .addCase(getProjectsByOwner.rejected, (state, action: PayloadAction<GetProjectsByOwnerErrorResponse | undefined>) => {
         state.loading = false;
         state.error = action.payload?.error || "Failed to fetch projects";
+      })
+      .addCase(updateProjectRepoThunk.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateProjectRepoThunk.fulfilled, (state, action: PayloadAction<UpdateProjectRepoResponse>) => {
+        state.loading = false;
+        if (action.payload.project) {
+          const index = state.projects.findIndex(p => p.projectId === action.payload.project!.projectId);
+          if (index !== -1) {
+            state.projects[index] = action.payload.project;
+          }
+        }
+      })
+      .addCase(updateProjectRepoThunk.rejected, (state, action: PayloadAction<{ success: false; error: string } | undefined>) => {
+        state.loading = false;
+        state.error = action.payload?.error || "Failed to update project repo";
       });
   },
 });

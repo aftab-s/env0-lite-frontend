@@ -17,6 +17,7 @@ export type RepoTreeNode = {
   children?: RepoTreeNode[];
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface FetchRepoTreeParams {
   owner: string;
   repo: string;

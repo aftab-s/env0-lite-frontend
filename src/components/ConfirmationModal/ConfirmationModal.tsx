@@ -1,5 +1,6 @@
 import React from 'react';
-
+import type { ProjectWithTime } from '@/types/project.types';
+import { Loader } from 'lucide-react';
 
 interface ConfirmationModalProps {
   isOpen: boolean;
@@ -8,6 +9,9 @@ interface ConfirmationModalProps {
   repositoryName: string;
   branchName: string;
   ownerName?: string;
+  isLoading: boolean;
+  isCloning?: boolean;
+  project?: ProjectWithTime | null;
 }
 
 const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
@@ -17,6 +21,9 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
   repositoryName,
   branchName,
   ownerName,
+  isLoading,
+  isCloning = false,
+  project,
 }) => {
   if (!isOpen) return null;
 
@@ -51,10 +58,10 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
                 </div>
                 <div>
                   <h3 className="text-xl font-bold text-white">
-                    Confirm Selection
+                    {isCloning ? 'Cloning Repository' : isLoading ? 'Connecting Repository' : 'Repository Connected'}
                   </h3>
                   <p className="text-xs text-[#A1A1AA] mt-0.5">
-                    Review your repository and branch
+                    {isCloning ? 'Please wait while we clone your repository into the container...' : isLoading ? 'Please wait while we connect your repository...' : 'Review your repository connection details'}
                   </p>
                 </div>
               </div>
@@ -153,24 +160,73 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
                 />
               </svg>
               <p className="text-xs text-[#CD9C20]">
-                After confirmation your repository will be cloned to Terraform container.
+                {isCloning ? 'Cloning your repository into the Terraform container...' : isLoading ? 'Connecting your repository to the Terraform container...' : 'Your repository has been successfully connected to the Terraform container.'}
               </p>
             </div>
+
+            {/* Status Section */}
+            {isCloning ? (
+              <div className="bg-black/40 border border-[#292929] rounded-lg p-4 flex items-center justify-center">
+                <div className="flex items-center gap-3">
+                  <Loader className="animate-spin h-6 w-6 text-[#CD9C20]" />
+                  <p className="text-sm text-white">Cloning repository...</p>
+                </div>
+              </div>
+            ) : isLoading ? (
+              <div className="bg-black/40 border border-[#292929] rounded-lg p-4 flex items-center justify-center">
+                <div className="flex items-center gap-3">
+                  <Loader className="animate-spin h-6 w-6 text-[#CD9C20]" />
+                  <p className="text-sm text-white">Connecting...</p>
+                </div>
+              </div>
+            ) : project ? (
+              <div className="bg-black/40 border border-[#292929] rounded-lg p-4 space-y-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center">
+                    <svg
+                      className="w-5 h-5 text-green-500"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                  </div>
+                  <div>
+                    <div className="text-sm font-semibold text-white">Connection Successful</div>
+                    <div className="text-xs text-[#A1A1AA]">Project Status: Ready for Injection to Container</div>
+                  </div>
+                </div>
+              </div>
+            ) : null}
           </div>
 
           {/* Footer Actions */}
           <div className="bg-black/20 border-t border-[#333333] p-6 flex gap-3">
             <button
               onClick={onClose}
-              className="flex-1 px-4 py-2.5 text-sm font-medium text-white bg-[#18181B] border border-[#333333] rounded-lg hover:bg-[#1F2228] transition-colors duration-200 cursor-pointer"
+              disabled={isLoading || isCloning}
+              className={`flex-1 px-4 py-2.5 text-sm font-medium text-white bg-[#18181B] border border-[#333333] rounded-lg transition-colors duration-200 cursor-pointer ${
+                isLoading || isCloning ? 'opacity-50 cursor-not-allowed' : 'hover:bg-[#1F2228]'
+              }`}
             >
-              Cancel
+              {isLoading || isCloning ? 'Please wait...' : 'Cancel'}
             </button>
             <button
               onClick={onConfirm}
-              className="flex-1 px-4 py-2.5 text-sm font-medium text-black bg-[#CD9C20] rounded-lg hover:bg-[#E5B040] transition-all duration-200 shadow-lg shadow-[#CD9C20]/20 hover:shadow-[#CD9C20]/40 cursor-pointer"
+              disabled={isLoading || isCloning || !project}
+              className={`flex-1 px-4 py-2.5 text-sm font-medium text-black rounded-lg transition-all duration-200 shadow-lg cursor-pointer ${
+                isLoading || isCloning || !project
+                  ? 'bg-gray-500 cursor-not-allowed opacity-50'
+                  : 'bg-[#CD9C20] hover:bg-[#E5B040] shadow-[#CD9C20]/20 hover:shadow-[#CD9C20]/40'
+              }`}
             >
-              Confirm
+              {isCloning ? 'Cloning...' : isLoading ? 'Connecting...' : 'Clone'}
             </button>
           </div>
         </div>

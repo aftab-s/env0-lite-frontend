@@ -6,6 +6,7 @@ import repoListReducer from "./slice/Github/repoListSlice";
 import projectListReducer from "./slice/Projects/projectListByOwnerSlice";
 import deploymentsReducer from "./slice/Deployements/deploymentSlice";
 import spaceListReducer from "./slice/Projects/SpaceListSlice";
+import credsReducer from "./slice/Creds/credsSlice";
 
 export const store = configureStore({
   reducer: {
@@ -15,6 +16,7 @@ export const store = configureStore({
     projectList: projectListReducer,
     deployments: deploymentsReducer,
     spaceList: spaceListReducer,
+    creds: credsReducer,
   },
 });
 

@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import { useState, useEffect } from "react";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, RotateCcw } from "lucide-react";
 import {
   Deployment,
   DeploymentStep,
@@ -148,6 +149,9 @@ const TerraformAccordions: React.FC<TerraformAccordionsProps> = ({ deployment, p
         // Store deploymentId for later plan/apply
         if (response && typeof response === "object" && "deploymentId" in response) {
           setInitDeploymentId(response.deploymentId);
+        } else {
+          // Fallback to spaceId if deploymentId not in response
+          setInitDeploymentId((deployment?.spaceId ?? spaceId) || "");
         }
         if (response && typeof response === "object" && "deploymentName" in response) {
           setInitDeploymentName(response.deploymentName);
@@ -232,7 +236,18 @@ const TerraformAccordions: React.FC<TerraformAccordionsProps> = ({ deployment, p
     alert("Deployment denied");
   };
 
-  const allSuccessful = steps.length === 3 && steps.every((s) => s.stepStatus === "successful");
+  const handleReload = () => {
+    setSteps([]);
+    setInitDeploymentId(null);
+    setInitDeploymentName(null);
+    runStep("init");
+  };
+
+  // Determine if all steps are successful
+  const allSuccessful = stepNames.every((stepName) => {
+    const step = steps.find((s) => s.step === stepName);
+    return step && step.stepStatus === "successful";
+  });
 
   return (
     <div className="w-full h-full max-h-screen mx-auto p-6 overflow-hidden flex flex-col">
@@ -250,12 +265,21 @@ const TerraformAccordions: React.FC<TerraformAccordionsProps> = ({ deployment, p
         )}
       </div>
 
-      <div className="flex items-center justify-start gap-2 bg-[#09090B] border border-[#27272A] rounded-md px-4 py-2 mb-5 text-gray-300 text-sm">
-        <span>{projectId}</span>
-        <span>•</span>
-        <span>Deployment ID: {deployment?.deploymentId || initDeploymentId}</span>
-        <span>•</span>
-        <span>Started: {deployment?.startedAt ? new Date(deployment.startedAt).toLocaleString() : "N/A"}</span>
+      <div className="flex items-center gap-4 mb-5">
+        <div className="flex items-center justify-start gap-2 bg-[#09090B] border border-[#27272A] rounded-md px-4 py-2 text-gray-300 text-sm">
+          <span>{projectId}</span>
+          <span>•</span>
+          <span>Deployment ID: {deployment?.deploymentId || initDeploymentId}</span>
+          <span>•</span>
+          <span>Started: {deployment?.startedAt ? new Date(deployment.startedAt).toLocaleString() : "N/A"}</span>
+        </div>
+        <button
+          onClick={handleReload}
+          className="w-8 h-8 bg-[#CD9C20] hover:bg-[#E5B040] rounded-md flex items-center justify-center transition-colors"
+          title="Reload Deployment"
+        >
+          <RotateCcw size={16} color="black" />
+        </button>
       </div>
 
       <div className="w-full mx-auto p-4 rounded-md bg-[#18181B] flex-1 overflow-auto">

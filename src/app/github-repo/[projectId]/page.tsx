@@ -1,13 +1,19 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { useParams} from 'next/navigation';
+import { Loader } from 'lucide-react';
+import { useParams, useRouter } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState, AppDispatch } from '@/redux/store';
 import { fetchRepositories } from '@/redux/slice/Github/repoListSlice';
+import { updateProjectRepoThunk } from '@/redux/slice/Projects/projectListByOwnerSlice';
+import { cloneRepoAndCreateSpaces } from '@/services/project/cloneRepo';
 import Sidebar from '@/components/Sidebar/page';
 import PrivateHeader from '@/components/PrivateHeader/page';
 import ConfirmationModal from '@/components/ConfirmationModal/ConfirmationModal';
+import Swal from 'sweetalert2';
+import '@/components/customSwal/customGlass.css';
+import type { ProjectWithTime } from '@/types/project.types';
 
 interface UIRepository {
   key: string; // composite key (owner/name) for rendering
@@ -18,12 +24,16 @@ interface UIRepository {
 
 export default function GithubRepositoryPage() {
   const { projectId } = useParams<{ projectId: string }>();
+  const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
   const { items, loading, error } = useSelector((s: RootState) => s.repoList);
   const [search, setSearch] = useState('');
   const [selectedRepo, setSelectedRepo] = useState<UIRepository | null>(null);
   const [selectedBranch, setSelectedBranch] = useState<string>('');
   const [showModal, setShowModal] = useState(false);
+  const [connecting, setConnecting] = useState(false);
+  const [connectedProject, setConnectedProject] = useState<ProjectWithTime | null>(null);
+  const [cloning, setCloning] = useState(false);
 
   const cardBg = 'bg-[#18181B]';
   const cardBorder = 'border-[#333333]';
@@ -57,17 +67,39 @@ export default function GithubRepositoryPage() {
 
   const branchList = selectedRepo?.branches || [];
 
-  const handleContinue = () => {
+  const handleContinue = async () => {
     if (!selectedRepo || !selectedBranch) return;
 
-    console.log('Selected:', {
-      projectId,
-      repo: selectedRepo.name,
-      branch: selectedBranch,
-    });
-    
-    setShowModal(false);
-   
+    setConnecting(true);
+    setShowModal(true);
+
+    try {
+      const result = await dispatch(updateProjectRepoThunk({
+        projectId: projectId!,
+        payload: {
+          repoUrl: `https://github.com/${selectedRepo.owner}/${selectedRepo.name}`,
+          ownerName: selectedRepo.owner || '',
+          branch: selectedBranch,
+        },
+      })).unwrap();
+
+      setConnectedProject(result.project || null);
+      setConnecting(false);
+    } catch {
+      setConnecting(false);
+      setShowModal(false);
+      Swal.fire({
+        title: 'Error',
+        text: 'Failed to connect repository.',
+        customClass: {
+          popup: 'customBagelGlass',
+          title: 'customBagelTitle',
+          htmlContainer: 'customBagelContent',
+          confirmButton: 'customBagelButton',
+          icon: 'customBagelIcon',
+        },
+      });
+    }
   };
 
   return (
@@ -142,8 +174,9 @@ export default function GithubRepositoryPage() {
                 </div>
                 <div className="flex-1 rounded-md overflow-y-auto min-h-0">
                   {loading && (
-                    <div className={`text-sm p-4 ${subheading}`}>
-                      Loading repositories...
+                    <div className={`text-sm p-4 ${subheading} flex items-center gap-2`}>
+                      <Loader className="animate-spin h-4 w-4 text-[#A1A1AA]" />
+                      Loading repositories
                     </div>
                   )}
                   {error && !loading && (
@@ -219,17 +252,25 @@ export default function GithubRepositoryPage() {
                     branchList.map((br) => (
                       <button
                         key={br}
+                        disabled={connecting}
                         onClick={() => {
                           setSelectedBranch(br);
-                          setShowModal(true);
+                          handleContinue();
                         }}
                         className={`w-full text-left px-3 py-2 text-sm border-b border-[#444] ${
                           selectedBranch === br
                             ? 'bg-[#1F2228] border border-[#444]'
                             : 'hover:bg-[#1F2228]'
-                        } ${heading}`}
+                        } ${heading} ${connecting ? 'opacity-50 cursor-not-allowed' : ''}`}
                       >
-                        {br}
+                        {connecting && selectedBranch === br ? (
+                          <div className="flex items-center gap-2">
+                            <Loader className="animate-spin h-4 w-4 text-[#CD9C20]" />
+                            Connecting...
+                          </div>
+                        ) : (
+                          br
+                        )}
                       </button>
                     ))}
                 </div>
@@ -244,10 +285,34 @@ export default function GithubRepositoryPage() {
       <ConfirmationModal
         isOpen={showModal}
         onClose={() => setShowModal(false)}
-        onConfirm={handleContinue}
+        onConfirm={async () => {
+          if (!connectedProject) return;
+          setCloning(true);
+          try {
+            await cloneRepoAndCreateSpaces(projectId!);
+            router.push(`/spaces/${projectId}`);
+          } catch {
+            Swal.fire({
+              title: 'Error',
+              text: 'Failed to clone repository into container.',
+              customClass: {
+                popup: 'customBagelGlass',
+                title: 'customBagelTitle',
+                htmlContainer: 'customBagelContent',
+                confirmButton: 'customBagelButton',
+                icon: 'customBagelIcon',
+              },
+            });
+          } finally {
+            setCloning(false);
+          }
+        }}
         repositoryName={selectedRepo?.name || ''}
         branchName={selectedBranch}
         ownerName={selectedRepo?.owner || undefined}
+        isLoading={connecting}
+        isCloning={cloning}
+        project={connectedProject}
       />
     </div>
   );

@@ -9,6 +9,7 @@ import Swal from 'sweetalert2';
 import Button from '@/components/ui/button';
 import Sidebar from '@/components/Sidebar/page'; 
 import PrivateHeader from '@/components/PrivateHeader/page';
+import '@/components/customSwal/customGlass.css';
 
 export default function CreateProjectPage() {
   const router = useRouter();
@@ -31,14 +32,21 @@ export default function CreateProjectPage() {
     setSubmitting(true);
     const payload: CreateProjectPayload = { projectName, projectDescription };
     try {
-      await createProject(payload);
+      const response = await createProject(payload);
       await Swal.fire({
         icon: 'success',
         title: 'Project created',
         timer: 1000,
         showConfirmButton: false,
+        customClass: {
+          popup: 'customBagelGlass',
+          title: 'customBagelTitle',
+          htmlContainer: 'customBagelContent',
+          confirmButton: 'customBagelButton',
+          icon: 'customBagelIcon',
+        },
       });
-      router.push('/cloud-provider');
+      router.push(`/cloud-provider/${response.project.projectId}`); // Navigate to cloud provider setup after creation
     } catch (e: unknown) {
       let msg = 'Failed to create project';
       if (e && typeof e === 'object' &&
@@ -47,7 +55,19 @@ export default function CreateProjectPage() {
         // @ts-expect-error axios shape
         msg = e.response.data.error as string;
       }
-      Swal.fire({ icon: 'error', title: 'Error', text: msg, confirmButtonColor: '#CD9C20' });
+      Swal.fire({ 
+        icon: 'error', 
+        title: 'Error', 
+        text: msg, 
+        confirmButtonColor: '#CD9C20',
+        customClass: {
+          popup: 'customBagelGlass',
+          title: 'customBagelTitle',
+          htmlContainer: 'customBagelContent',
+          confirmButton: 'customBagelButton',
+          icon: 'customBagelIcon',
+        },
+      });
     } finally {
       setSubmitting(false);
     }

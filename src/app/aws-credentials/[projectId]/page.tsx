@@ -6,18 +6,78 @@ import TextInput from '@/components/TextInput/TextInput';
 import PasswordInput from '@/components/PasswordInput/PasswordInput';
 import Sidebar from '@/components/Sidebar/page'; 
 import PrivateHeader from '@/components/PrivateHeader/page';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
+import { useDispatch, useSelector } from 'react-redux';
+import type { AppDispatch, RootState } from '@/redux/store';
+import { configureAwsProfileThunk } from '@/redux/slice/Creds/credsSlice';
+import Swal from 'sweetalert2';
+import '@/components/customSwal/customGlass.css';
 
 export default function AWSCredentialsPage() {
   const { projectId } = useParams<{ projectId: string }>();
+  const router = useRouter();
+  const dispatch = useDispatch<AppDispatch>();
+  const { loading, error } = useSelector((state: RootState) => state.creds);
   const [profileName, setProfileName] = useState('');
   const [accessKeyId, setAccessKeyId] = useState('');
   const [secretAccessKey, setSecretAccessKey] = useState('');
   const [defaultRegion, setDefaultRegion] = useState('');
 
-  const handleSaveCredentials = () => {
-    console.log('Saving credentials...');
-    console.log('Project Id:', projectId);
+  const handleSaveCredentials = async () => {
+    if (!profileName || !accessKeyId || !secretAccessKey) {
+      Swal.fire({
+        title: 'Validation Error',
+        text: 'Please fill in all required fields.',
+        customClass: {
+          popup: 'customBagelGlass',
+          title: 'customBagelTitle',
+          htmlContainer: 'customBagelContent',
+          confirmButton: 'customBagelButton',
+          icon: 'customBagelIcon',
+        },
+      });
+      return;
+    }
+
+    try {
+      await dispatch(configureAwsProfileThunk({
+        projectId: projectId!,
+        data: {
+          profileName,
+          accessKeyId,
+          secretAccessKey,
+          region: defaultRegion || 'us-east-1',
+        },
+      })).unwrap();
+
+      await Swal.fire({
+        title: 'Success',
+        text: 'AWS credentials configured successfully!',
+        timer: 2000,
+        showConfirmButton: false,
+        customClass: {
+          popup: 'customBagelGlass',
+          title: 'customBagelTitle',
+          htmlContainer: 'customBagelContent',
+          confirmButton: 'customBagelButton',
+          icon: 'customBagelIcon',
+        },
+      });
+
+      router.push(`/github-repo/${projectId}`);
+    } catch {
+      Swal.fire({
+        title: 'Error',
+        text: error || 'Failed to configure AWS credentials.',
+        customClass: {
+          popup: 'customBagelGlass',
+          title: 'customBagelTitle',
+          htmlContainer: 'customBagelContent',
+          confirmButton: 'customBagelButton',
+          icon: 'customBagelIcon',
+        },
+      });
+    }
   };
 
   return (
@@ -141,9 +201,14 @@ export default function AWSCredentialsPage() {
             <div className="mt-6 text-center">
               <button
                 onClick={handleSaveCredentials}
-                className="w-100 bg-[#F5CB5C] hover:bg-yellow-500 text-black font-semibold py-3 px-6 rounded-lg transition-colors duration-200 cursor-pointer"
+                disabled={loading}
+                className={`w-100 font-semibold py-3 px-6 rounded-lg transition-colors duration-200 ${
+                  loading
+                    ? 'bg-gray-500 text-gray-300 cursor-not-allowed'
+                    : 'bg-[#F5CB5C] hover:bg-yellow-500 text-black cursor-pointer'
+                }`}
               >
-                Save Credentials
+                {loading ? 'Saving...' : 'Save Credentials'}
               </button>
             </div>
           </div>

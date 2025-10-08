@@ -13,11 +13,16 @@ const apiEndpoints = {
         getTree: "/api/github-pat/repos",
         selectCsp:"/api/project/:projectId/csp",
         spaceList:"/api/project/:projectId/spaces",
-    },
+        repoInsert:"/api/project/:projectId/repo",
+        clonetoContainer:"/api/project/:projectId/inject-to-container"
+    },  
     deployment: {
         getDeployments: "/api/deployment/",
         terraform: "/api/terraform",
-    }
+    },
+      credsInjector: {
+        configureAwsProfile: "/api/project/:projectId/configure-aws-profile",
+    },
 }
 
 export {apiEndpoints}

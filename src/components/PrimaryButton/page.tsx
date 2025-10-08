@@ -1,6 +1,5 @@
 'use client';
 import React, { ReactNode } from "react";
-import { useDarkMode } from "@/context/DarkModeProvider";
 
 interface ButtonProps {
   children: ReactNode;
@@ -19,7 +18,6 @@ export default function Button({
   disabled = false,
   variant = "primary",
 }: ButtonProps) {
-  const { darkMode } = useDarkMode();
 
   let bgColor = "";
   let textColor = "";
@@ -29,17 +27,17 @@ export default function Button({
 
   switch (variant) {
     case "primary":
-      bgColor = darkMode ? "bg-white" : "bg-black";
-      textColor = darkMode ? "text-black" : "text-white";
-      hoverBg = darkMode ? "hover:bg-gray-200" : "hover:bg-gray-800";
+      bgColor = "bg-black";
+      textColor = "text-white";
+      hoverBg = "hover:bg-gray-800";
       border = "border-none";
       widthClass = "w-full font-medium";
       break;
     case "secondary":
       bgColor = "bg-transparent font-bold ";
-      textColor = darkMode ? "text-[#374151]" : "text-black";
+      textColor = "text-[#374151]";
       border = "border border-[#2F343C]";
-      hoverBg = darkMode ? "hover:bg-gray-700" : "hover:bg-gray-200";
+      hoverBg = "hover:bg-gray-700";
       widthClass = "w-auto px-4";
       break;
     case "tertiary":
@@ -58,9 +56,9 @@ export default function Button({
       break;
     case "social": // New variant for Google/GitHub/etc.
       bgColor = "bg-transparent";
-      textColor = darkMode ? "text-white" : "text-black";
+      textColor = "text-white";
       border = "border border-[#2F343C]";
-      hoverBg = darkMode ? "hover:bg-[#3A3F46]" : "hover:bg-[#F3F4F6]";
+      hoverBg = "hover:bg-[#3A3F46]";
       widthClass = "w-fit px-4 flex items-center gap-2";
       break;
   }

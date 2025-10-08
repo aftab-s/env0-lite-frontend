@@ -44,3 +44,28 @@ export interface GetProjectsByOwnerErrorResponse {
 	success: false;
 	error: string;
 }
+
+export interface UpdateProjectRepoPayload {
+  repoUrl: string;
+  ownerName: string;
+  branch: string;
+}
+
+export interface UpdateProjectRepoResponse {
+  success: boolean;
+  project?: ProjectWithTime;
+  error?: string;
+}
+
+export interface Space {
+  spaceId: string;
+  spaceName: string;
+  spaceDescription: string;
+}
+
+export interface CloneRepoResponse {
+  success: boolean;
+  spaces?: Space[];
+  logs?: string;
+  error?: string;
+}
