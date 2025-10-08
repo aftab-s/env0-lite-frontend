@@ -24,7 +24,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
     <div className="fixed inset-0 z-50 flex items-center justify-center">
 
       <div
-        className="absolute inset-0 bg-black/70 backdrop-blur-[2px]"
+        className="absolute inset-0 bg-black/75 backdrop-blur-[3px]"
         onClick={onClose}
       />
       
@@ -153,7 +153,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
                 />
               </svg>
               <p className="text-xs text-[#CD9C20]">
-                After confirmation your repository will be cloned to terraform container.
+                After confirmation your repository will be cloned to Terraform container.
               </p>
             </div>
           </div>
