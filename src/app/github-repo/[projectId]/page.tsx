@@ -92,7 +92,7 @@ export default function GithubRepositoryPage() {
             <div className="bg-black w-full max-w-[1040px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 min-h-0 overflow-hidden">
               {/* Left: Repository list */}
               <div
-                className={`rounded-lg border ${cardBorder} ${cardBg} p-5 flex flex-col h-full min-h-0`}
+                className={`rounded-lg border ${cardBorder} ${cardBg} p-5 flex flex-col h-[530px] min-h-0`}
               >
                 <div className="mb-4">
                   <h3 className={`text-[18px] font-semibold ${heading}`}>
@@ -194,7 +194,7 @@ export default function GithubRepositoryPage() {
 
               {/* Right: Repo tree */}
               <div
-                className={`rounded-lg border ${cardBorder} ${cardBg} p-5 h-full flex flex-col min-h-0`}
+                className={`rounded-lg border ${cardBorder} ${cardBg} p-5 h-[530px] flex flex-col min-h-0`}
               >
                 <div className="mb-4">
                   <h3 className={`text-[18px] font-semibold ${heading}`}>
