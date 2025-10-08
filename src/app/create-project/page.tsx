@@ -7,7 +7,8 @@ import { createProject } from '@/services/project/createProject';
 import type { CreateProjectPayload } from '@/types/project.types';
 import Swal from 'sweetalert2';
 import Button from '@/components/ui/button';
-import PublicHeader from '@/components/PublicHeader/page';
+import Sidebar from '@/components/Sidebar/page'; 
+import PrivateHeader from '@/components/PrivateHeader/page';
 
 export default function CreateProjectPage() {
   const router = useRouter();
@@ -53,9 +54,11 @@ export default function CreateProjectPage() {
   }, [projectName, projectDescription, submitting, router, validateForm]);
 
   return (
-    <div className="flex flex-col w-full h-full">
-      <PublicHeader />
-      <div className="flex-1 bg-black overflow-y-auto">
+<div className="flex h-screen w-screen">
+      <Sidebar />
+      <div className="flex flex-col flex-1 h-screen">
+        <PrivateHeader />
+        <div className="flex-1 bg-black overflow-y-auto">
         <div className="w-full bg-black flex flex-col h-[91vh] items-center justify-start px-4 py-20">
           <div className="w-full flex flex-col bg-black items-center gap-6">
             {/* Main Title */}
@@ -119,6 +122,7 @@ export default function CreateProjectPage() {
             </Button>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );

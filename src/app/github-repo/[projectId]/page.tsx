@@ -2,10 +2,12 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import Button from '@/components/PrimaryButton/PrimaryButton';
+import { useParams} from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState, AppDispatch } from '@/redux/store';
 import { fetchRepositories } from '@/redux/slice/Github/repoListSlice';
-import PublicHeader from '@/components/PublicHeader/page';
+import Sidebar from '@/components/Sidebar/page';
+import PrivateHeader from '@/components/PrivateHeader/page';
 
 interface UIRepository {
   key: string; // composite key (owner/name) for rendering
@@ -15,6 +17,7 @@ interface UIRepository {
 }
 
 export default function GithubRepositoryPage() {
+  const { projectId } = useParams<{ projectId: string }>();
   const dispatch = useDispatch<AppDispatch>();
   const { items, loading, error } = useSelector((s: RootState) => s.repoList);
   const [search, setSearch] = useState('');
@@ -53,10 +56,23 @@ export default function GithubRepositoryPage() {
 
   const branchList = selectedRepo?.branches || [];
 
+
+  const handleContinue = () => {
+  if (!selectedRepo || !selectedBranch) return;
+
+  console.log('Selected:', {
+    projectId,
+    repo: selectedRepo.name,
+    branch: selectedBranch,
+  });
+};
+
   return (
-    <div className="flex flex-col w-full h-screen">
-      <PublicHeader />
-      <div className="flex-1 overflow-y-auto">
+    <div className="flex h-screen w-screen">
+      <Sidebar />
+      <div className="flex flex-col flex-1 h-screen">
+        <PrivateHeader />
+        <div className="flex-1 overflow-y-auto">
         <div className="w-full bg-[#000000]">
           <main className="w-full max-w-6xl mx-auto px-6 py-10 h-screen">
             {/* Page header */}
@@ -217,7 +233,7 @@ export default function GithubRepositoryPage() {
             {/* Action bar */}
             <div className="w-full flex items-center justify-center mt-6 flex-none pb-4">
               <div className="w-[360px]">
-                <Button disabled={!selectedRepo || !selectedBranch}>
+                <Button disabled={!selectedRepo || !selectedBranch} onClick={handleContinue} >
                   {selectedRepo && selectedBranch
                     ? 'Continue to Dashboard'
                     : 'Select repo & branch'}
@@ -226,6 +242,7 @@ export default function GithubRepositoryPage() {
             </div>
           </main>
         </div>
+      </div>
       </div>
     </div>
   );

@@ -36,13 +36,13 @@ export default function SpacesPage() {
       router.push(`/spaces/${project.projectId}`);
     } else if (project.csp && project.profile && !project.repoUrl) {
       // Pending Repo Connection
-      router.push('/github-repo');
+      router.push(`/github-repo/${project.projectId}`);
     } else if (project.csp && !project.profile) {
       // Pending Creds
-      router.push('/aws-credentials');
+      router.push(`/aws-credentials/${project.projectId}`);
     } else {
       // Pending CSP
-      router.push('/cloud-provider');
+      router.push(`/cloud-provider/${project.projectId}`);
     }
   };
 

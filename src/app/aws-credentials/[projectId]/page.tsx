@@ -4,9 +4,12 @@ import { useState } from 'react';
 import { Info } from 'lucide-react';
 import TextInput from '@/components/TextInput/TextInput';
 import PasswordInput from '@/components/PasswordInput/PasswordInput';
-import PublicHeader from '@/components/PublicHeader/page';
+import Sidebar from '@/components/Sidebar/page'; 
+import PrivateHeader from '@/components/PrivateHeader/page';
+import { useParams } from 'next/navigation';
 
 export default function AWSCredentialsPage() {
+  const { projectId } = useParams<{ projectId: string }>();
   const [profileName, setProfileName] = useState('');
   const [accessKeyId, setAccessKeyId] = useState('');
   const [secretAccessKey, setSecretAccessKey] = useState('');
@@ -14,12 +17,15 @@ export default function AWSCredentialsPage() {
 
   const handleSaveCredentials = () => {
     console.log('Saving credentials...');
+    console.log('Project Id:', projectId);
   };
 
   return (
-    <div className="flex flex-col w-full h-screen">
-      <PublicHeader />
-      <div className="flex-1 overflow-y-auto">
+<div className="flex h-screen w-screen">
+      <Sidebar />
+      <div className="flex flex-col flex-1 h-screen">
+        <PrivateHeader />
+        <div className="flex-1 overflow-y-auto">
         <div className="w-full pt-15 pb-15 bg-[#000000]">
           {/* Header */}
           <div className="text-center mb-12">
@@ -142,6 +148,7 @@ export default function AWSCredentialsPage() {
             </div>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );

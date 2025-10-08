@@ -2,8 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import PublicHeader from '@/components/PublicHeader/page';
+import { useRouter, useParams } from 'next/navigation';
 import { useSelector } from 'react-redux';
 import type { RootState } from '@/redux/store';
 import { updateProjectCsp } from '@/services/csp/selectCsp';
@@ -12,6 +11,8 @@ import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { getProjectsByOwner } from '@/redux/slice/Projects/projectListByOwnerSlice';
 import type { AppDispatch } from '@/redux/store';
+import Sidebar from '@/components/Sidebar/page';
+import PrivateHeader from '@/components/PrivateHeader/page';
 
 interface CloudProvider {
   id: string;
@@ -23,6 +24,7 @@ interface CloudProvider {
 
 export default function CloudProviderPage() {
   const router = useRouter();
+  const { projectId } = useParams<{ projectId: string }>();
   const dispatch = useDispatch<AppDispatch>();
   const { projects } = useSelector((state: RootState) => state.projectList);
   const [selectedProvider, setSelectedProvider] = useState<string>('');
@@ -63,14 +65,14 @@ export default function CloudProviderPage() {
       if (providerId === 'aws' && newSelected === 'aws') {
         // For AWS, directly proceed
         if (projects.length > 0) {
-          const projectId = projects[0].projectId;
+          // const projectId = projects[0].projectId;
           setLoading(true);
           setError(null);
           try {
             console.log('Calling updateProjectCsp with projectId:', projectId, 'csp:', providerId);
             await updateProjectCsp(projectId, providerId);
             console.log('API call successful, redirecting to /aws-credentials');
-            router.push('/aws-credentials');
+            router.push(`/aws-credentials/${projectId}`);
           } catch (err: unknown) {
             let message = 'Failed to update CSP';
             if (err && typeof err === 'object' && 'response' in err && (err as { response?: { data?: { error?: string } } }).response?.data?.error) {
@@ -91,7 +93,7 @@ export default function CloudProviderPage() {
   const handleContinue = async () => {
     console.log('handleContinue called, selectedProvider:', selectedProvider, 'projects.length:', projects.length);
     if (selectedProvider && projects.length > 0) {
-      const projectId = projects[0].projectId;
+      // const projectId = projects[0].projectId;
       console.log('Proceeding with projectId:', projectId, 'csp:', selectedProvider);
       setLoading(true);
       setError(null);
@@ -99,7 +101,7 @@ export default function CloudProviderPage() {
         console.log('Calling updateProjectCsp');
         await updateProjectCsp(projectId, selectedProvider);
         console.log('Success, redirecting');
-        router.push('/aws-credentials');
+        router.push(`/aws-credentials/${projectId}`);
       } catch (err: unknown) {
         let message = 'Failed to update CSP';
         if (err && typeof err === 'object' && 'response' in err && (err as { response?: { data?: { error?: string } } }).response?.data?.error) {
@@ -116,9 +118,11 @@ export default function CloudProviderPage() {
   };
 
   return (
-    <div className="flex flex-col w-full h-screen">
-      <PublicHeader />
-      <div className="flex-1 overflow-y-auto">
+    <div className="flex h-screen w-screen">
+      <Sidebar />
+      <div className="flex flex-col flex-1 h-screen">
+        <PrivateHeader />
+        <div className="flex-1 overflow-y-auto">
         <div className="w-full h-full flex flex-col p-10 bg-[#000000]">
           <header className="w-full mt-5 mb-15 text-center">
             <h1 className="text-4xl font-bold text-[#CD9C20] mb-5">
@@ -221,6 +225,7 @@ export default function CloudProviderPage() {
             </div>
           </main>
         </div>
+      </div>
       </div>
     </div>
   );
