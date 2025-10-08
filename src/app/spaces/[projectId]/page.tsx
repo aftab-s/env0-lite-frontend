@@ -4,7 +4,7 @@ import PrivateHeader from '@/components/PrivateHeader/page';
 import { CheckCircleIcon, ClockIcon } from '@heroicons/react/24/outline';
 import { Cog6ToothIcon } from '@heroicons/react/24/outline';
 import { useEffect } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '@/redux/store';
 import { getSpacesByProjectIdThunk } from '@/redux/slice/Projects/SpaceListSlice';
@@ -13,6 +13,8 @@ import { Loader } from 'lucide-react';
 export default function SpacesPage() {
   const params = useParams();
   const projectId = params.projectId as string;
+  const id = params.projectId as string;
+  const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
   const { spaces, loading, error } = useSelector((state: RootState) => state.spaceList);
 
@@ -69,7 +71,11 @@ export default function SpacesPage() {
           {/* Cards grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-6">
             {spaces.map((space) => (
-              <div key={space.spaceId} className="bg-gradient-to-br from-[#cd9c20]/7 to-black/10 backdrop-blur-md border border-[#232329] rounded-md px-6 py-5 shadow-lg">
+              <div
+                key={space.spaceId}
+                className="bg-gradient-to-br from-[#cd9c20]/7 to-black/10 backdrop-blur-md border border-[#232329] rounded-md px-6 py-5 shadow-lg cursor-pointer hover:bg-[#232329]/30 transition"
+                onClick={() => router.push(`/terraform-progress/${id}?spaceId=${space.spaceName}`)}
+              >
                 <div className="flex justify-between items-center pb-2">
                   <div className="text-white text-lg font-semibold">{space.spaceName}</div>
                   <div className="rounded-full w-8 h-8 flex items-center justify-center">

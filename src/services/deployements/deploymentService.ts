@@ -10,7 +10,7 @@ export async function getDeployments(): Promise<DeploymentsResponse> {
 	return response.data;
 }
 
-export async function terraformInit(projectId: string, spaceName: string, deploymentId: string): Promise<TerraformCommandResponse> {
+export async function terraformInit(projectId: string, spaceName: string, deploymentId: string | null = null): Promise<TerraformCommandResponse> {
 	const response = await axiosPrivate.post(`${apiBaseUrl.terraform}/${projectId}/init`, {spaceName, deploymentId});
 	return response.data;
 }

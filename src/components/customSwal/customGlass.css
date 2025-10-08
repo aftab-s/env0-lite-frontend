@@ -1,0 +1,52 @@
+/* components/customSwal/customGlass.css */
+.customBagelGlass {
+  background: rgba(245, 222, 179, 0.8);   /* warm dough */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 2px solid #D2A679;              /* dough edge */
+  border-radius: 1.25rem;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+  padding: 1.5rem;
+  color: #5C3A21;                          /* toasted brown text */
+  animation: popIn 0.3s ease-out;
+}
+
+.customBagelTitle {
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: #7B4F2A;                          /* golden crust */
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+.customBagelContent {
+  font-size: 1rem;
+  color: #5C3A21;
+  line-height: 1.5;
+}
+
+.customBagelButton {
+  background: linear-gradient(145deg, #D2A679, #C18F5B);
+  color: #FFF5E1;
+  font-weight: 600;
+  border-radius: 0.75rem;
+  padding: 0.5rem 1.25rem;
+  border: none;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  transition: all 0.2s ease-in-out;
+}
+
+.customBagelButton:hover {
+  background: linear-gradient(145deg, #C18F5B, #D2A679);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.2);
+}
+
+.customBagelIcon {
+  color: #A0522D !important; /* deep brown bagel center */
+}
+
+/* optional pop animation */
+@keyframes popIn {
+  0% { transform: scale(0.9); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
