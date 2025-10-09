@@ -1,7 +1,7 @@
 'use client';
 
-import Sidebar from "@/components/Sidebar";
-import PrivateHeader from "@/components/PrivateHeader/page";
+import Sidebar from "@/components/common/Sidebar";
+import PrivateHeader from "@/components/common/PrivateHeader";
 import InfrastructureBanner from "./_newProjectComponent/page";
 
 export default function DashboardPage() {

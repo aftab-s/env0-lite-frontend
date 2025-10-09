@@ -1,8 +1,8 @@
 'use client';
 
-import Sidebar from '@/components/Sidebar'; 
+import Sidebar from '@/components/common/Sidebar'; 
 import Button from '@/components/ui/button';
-import PrivateHeader from '@/components/PrivateHeader/page';
+import PrivateHeader from '@/components/common/PrivateHeader';
 import { useEffect, useState } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -10,7 +10,7 @@ import type { AppDispatch, RootState } from '@/redux/store';
 import { getProjectsByOwner } from '@/redux/slice/Projects/projectListByOwnerSlice';
 import type { ProjectWithTime } from '@/types/project.types';
 import { Loader } from 'lucide-react';
-import AnimatedLogo from '@/components/logoAnimation';
+import AnimatedLogo from '@/components/Template/logoAnimation';
 import { useRouter } from 'next/navigation';
 import { Trash2, X } from 'lucide-react';
 

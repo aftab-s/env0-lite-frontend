@@ -2,13 +2,13 @@
 
 import { useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import Input from '@/components/TextInput';
+import Input from '@/components/ui/TextInput';
 import { createProject } from '@/services/project/createProject';
 import type { CreateProjectPayload } from '@/types/project.types';
 import Swal from 'sweetalert2';
 import Button from '@/components/ui/button';
-import Sidebar from '@/components/Sidebar'; 
-import PrivateHeader from '@/components/PrivateHeader/page';
+import Sidebar from '@/components/common/Sidebar'; 
+import PrivateHeader from '@/components/common/PrivateHeader';
 import '@/components/customSwal/customGlass.css';
 
 export default function CreateProjectPage() {

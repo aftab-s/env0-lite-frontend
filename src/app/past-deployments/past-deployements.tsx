@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import { Search } from "lucide-react";
-import AnimatedLogo from "@/components/logoAnimation";
+import AnimatedLogo from "@/components/Template/logoAnimation";
 
 import { fetchDeployments } from "@/redux/slice/Deployements/deploymentSlice";
 import { RootState, AppDispatch } from "@/redux/store";

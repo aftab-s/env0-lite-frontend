@@ -11,8 +11,8 @@ import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { getProjectsByOwner } from '@/redux/slice/Projects/projectListByOwnerSlice';
 import type { AppDispatch } from '@/redux/store';
-import Sidebar from '@/components/Sidebar';
-import PrivateHeader from '@/components/PrivateHeader/page';
+import Sidebar from '@/components/common/Sidebar';
+import PrivateHeader from '@/components/common/PrivateHeader';
 
 interface CloudProvider {
   id: string;

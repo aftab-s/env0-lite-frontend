@@ -1,6 +1,6 @@
 'use client';
-import Sidebar from '@/components/Sidebar';
-import PrivateHeader from '@/components/PrivateHeader/page';
+import Sidebar from '@/components/common/Sidebar';
+import PrivateHeader from '@/components/common/PrivateHeader';
 import { CheckCircleIcon, ClockIcon } from '@heroicons/react/24/outline';
 import { Cog6ToothIcon } from '@heroicons/react/24/outline';
 import { useEffect } from 'react';
