@@ -54,22 +54,32 @@ export default function SpacesPage() {
   }
 
   return (
-    <div className="flex h-screen w-screen">
+    <div className="flex h-screen w-screen overflow-hidden">
       <Sidebar />
-      <div className="flex flex-col flex-1 h-screen">
+      <div className="flex flex-col flex-1 h-screen overflow-hidden">
         <PrivateHeader />
-        <div className="bg-[#0b0b0b] min-h-screen w-full relative px-14 pt-8">
+        
+        {/* Fixed header section */}
+        <div className="bg-[#0b0b0b] px-14 pt-8 pb-4">
           <h1 className="text-white text-4xl font-bold mb-6">Spaces</h1>
-          <div className="flex items-center mb-7 gap-4">
-            <input type="text" placeholder="terraform-aws-infrastructure • Main AWS infrastructure with VPC, EC2, and RDS • AWS • us-east-1"
-            className="w-full bg-[#09090B] border border-[#27272A] rounded-lg px-4 py-2 text-sm placeholder-gray-400 focus:outline-none" />
-            <button className="ml-auto font-semibold bg-[#FFD600] text-[#232329] px-3 py-2 rounded-md text-sm whitespace-nowrap">View Deployment</button>
-            <button className="ml-auto p-2 rounded-md text-[#232329] bg-[#27272A]">
-            <Cog6ToothIcon className="w-5 h-5 text-white" />
+          <div className="flex items-center gap-4">
+            <input 
+              type="text" 
+              placeholder="terraform-aws-infrastructure • Main AWS infrastructure with VPC, EC2, and RDS • AWS • us-east-1"
+              className="w-full bg-[#09090B] border border-[#27272A] rounded-lg px-4 py-2 text-sm placeholder-gray-400 focus:outline-none" 
+            />
+            <button className="font-semibold bg-[#FFD600] text-[#232329] px-3 py-2 rounded-md text-sm whitespace-nowrap">
+              View Deployment
+            </button>
+            <button className="p-2 rounded-md text-[#232329] bg-[#27272A]">
+              <Cog6ToothIcon className="w-5 h-5 text-white" />
             </button>
           </div>
-          {/* Cards grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-6">
+        </div>
+
+        {/* Scrollable content area */}
+        <div className="flex-1 bg-[#0b0b0b] px-14 overflow-y-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-8">
             {spaces.map((space) => (
               <div
                 key={space.spaceId}
@@ -88,7 +98,9 @@ export default function SpacesPage() {
                 </div>
                 <div className="text-[#A1A1AA] text-xs pb-3">Managed by {space.userName}</div>
                 <div className="flex justify-between w-full p-2 items-center bg-[#111111]">
-                  <span className="text-[#FFFFFF] text-xs">{space.status === 'deployed' ? 'Last Run' : 'Not Deployed'}</span>
+                  <span className="text-[#FFFFFF] text-xs">
+                    {space.status === 'deployed' ? 'Last Run' : 'Not Deployed'}
+                  </span>
                   <span className="text-[#9CA3AF] text-xs">
                     {space.lastRun ? new Date(space.lastRun).toLocaleDateString() : 'Never'}
                   </span>
@@ -96,7 +108,6 @@ export default function SpacesPage() {
               </div>
             ))}
           </div>
-
         </div>
       </div>
     </div>
