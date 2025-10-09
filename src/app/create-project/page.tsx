@@ -10,7 +10,6 @@ import Button from '@/components/ui/button';
 import Sidebar from '@/components/common/Sidebar'; 
 import PrivateHeader from '@/components/common/PrivateHeader';
 
-
 export default function CreateProjectPage() {
   const router = useRouter();
   
