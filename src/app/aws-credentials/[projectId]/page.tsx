@@ -11,30 +11,28 @@ import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '@/redux/store';
 import { configureAwsProfileThunk } from '@/redux/slice/Creds/credsSlice';
 import Swal from 'sweetalert2';
-import '@/components/customSwal/customGlass.css';
 
 export default function AWSCredentialsPage() {
   const { projectId } = useParams<{ projectId: string }>();
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
   const { loading, error } = useSelector((state: RootState) => state.creds);
+  const { projects } = useSelector((state: RootState) => state.projectList);
+  // Prefill project info if available
+  const project = projects.find((p) => p.projectId === projectId);
   const [profileName, setProfileName] = useState('');
   const [accessKeyId, setAccessKeyId] = useState('');
   const [secretAccessKey, setSecretAccessKey] = useState('');
   const [defaultRegion, setDefaultRegion] = useState('');
+  // Determine if project is fully created (all steps done)
+  const isProjectComplete = Boolean(project && project.csp && project.profile && project.repoUrl);
 
   const handleSaveCredentials = async () => {
+    if (isProjectComplete) return;
     if (!profileName || !accessKeyId || !secretAccessKey) {
       Swal.fire({
         title: 'Validation Error',
-        text: 'Please fill in all required fields.',
-        customClass: {
-          popup: 'customBagelGlass',
-          title: 'customBagelTitle',
-          htmlContainer: 'customBagelContent',
-          confirmButton: 'customBagelButton',
-          icon: 'customBagelIcon',
-        },
+        text: 'Please fill in all required fields.'
       });
       return;
     }
@@ -54,28 +52,14 @@ export default function AWSCredentialsPage() {
         title: 'Success',
         text: 'AWS credentials configured successfully!',
         timer: 2000,
-        showConfirmButton: false,
-        customClass: {
-          popup: 'customBagelGlass',
-          title: 'customBagelTitle',
-          htmlContainer: 'customBagelContent',
-          confirmButton: 'customBagelButton',
-          icon: 'customBagelIcon',
-        },
+        showConfirmButton: false
       });
 
       router.push(`/github-repo/${projectId}`);
     } catch {
       Swal.fire({
         title: 'Error',
-        text: error || 'Failed to configure AWS credentials.',
-        customClass: {
-          popup: 'customBagelGlass',
-          title: 'customBagelTitle',
-          htmlContainer: 'customBagelContent',
-          confirmButton: 'customBagelButton',
-          icon: 'customBagelIcon',
-        },
+        text: error || 'Failed to configure AWS credentials.'
       });
     }
   };
@@ -112,20 +96,31 @@ export default function AWSCredentialsPage() {
             </div>
 
             {/* Form Section */}
-            <div className="rounded-lg border p-8 bg-[#1A1A1A] border-gray-700">
+            <div className="rounded-lg border p-8 bg-[#1A1A1A] border-[#232329]">
               <h2 className="text-2xl font-semibold mb-6 text-white">
                 Enter AWS Credentials
               </h2>
 
               <div className="space-y-6">
                 {/* Profile Name */}
-                <TextInput
-                  label="Profile Name"
-                  placeholder="e.g., production, staging, development"
-                  value={profileName}
-                  onChange={(e) => setProfileName(e.target.value)}
-                  type="text"
-                />
+                <div className="flex flex-col w-full">
+                  <label className="text-white text-sm mb-2 flex items-center gap-1">
+                    Profile Name
+                    <span className="relative group cursor-pointer">
+                      <Info className="w-4 h-4 text-yellow-500" />
+                      <span className="absolute left-6 top-1/2 -translate-y-1/2 z-10 hidden group-hover:block bg-black text-white text-xs rounded px-2 py-1 border border-[#CD9C20] whitespace-nowrap">
+                        This should match the profile name in your Terraform code.
+                      </span>
+                    </span>
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g., production, staging, development"
+                    value={profileName}
+                    onChange={(e) => setProfileName(e.target.value)}
+                    className="w-full bg-[#09090B] border border-[#232329] rounded px-3 py-2 text-white text-sm focus:outline-none focus:border-[#D4A253]"
+                  />
+                </div>
 
                 {/* AWS Access Key ID */}
                 <TextInput
@@ -152,7 +147,7 @@ export default function AWSCredentialsPage() {
                   <select
                     value={defaultRegion}
                     onChange={(e) => setDefaultRegion(e.target.value)}
-                    className="w-full px-4 py-3 rounded-lg border outline-none bg-[#000000] border-gray-700 text-white"
+                    className="w-full px-4 py-3 rounded-lg border outline-none bg-[#000000] border-[#232329] text-white"
                   >
                     <option value="">Select Region</option>
                     <option value="us-east-1">US East (N. Virginia) - us-east-1</option>
@@ -174,7 +169,7 @@ export default function AWSCredentialsPage() {
                 <h3 className="text-lg font-semibold mb-4 text-white">
                   Configuration Preview
                 </h3>
-                <div className="p-4 rounded-lg border space-y-2 bg-[#000000] border-gray-700">
+                <div className="p-4 rounded-lg border space-y-2 bg-[#000000] border-[#232329]">
                   <div className="flex justify-between">
                     <span className="text-sm text-gray-400">Profile:</span>
                     <span className={`text-sm ${profileName ? 'text-white' : 'text-gray-400'}`}>
@@ -201,15 +196,37 @@ export default function AWSCredentialsPage() {
             <div className="mt-6 text-center">
               <button
                 onClick={handleSaveCredentials}
-                disabled={loading}
+                disabled={loading || isProjectComplete}
                 className={`w-100 font-semibold py-3 px-6 rounded-lg transition-colors duration-200 ${
-                  loading
+                  loading || isProjectComplete
                     ? 'bg-gray-500 text-gray-300 cursor-not-allowed'
                     : 'bg-[#F5CB5C] hover:bg-yellow-500 text-black cursor-pointer'
                 }`}
               >
-                {loading ? 'Saving...' : 'Save Credentials'}
+                {isProjectComplete ? 'Credentials Already Set' : loading ? 'Saving...' : 'Save Credentials'}
               </button>
+            {/* Project Info Preview */}
+            {project && (
+              <div className="mt-8">
+                <h3 className="text-lg font-semibold mb-4 text-white">
+                  Project Info
+                </h3>
+                <div className="p-4 rounded-lg border space-y-2 bg-[#000000] border-[#232329]">
+                  <div className="flex gap-2">
+                    <span className="text-sm text-[#cd9c20]">Project Name:</span>
+                    <span className={`text-sm ${project.projectName ? 'text-white' : 'text-gray-400'}`}>
+                      {project.projectName || 'Not provided'}
+                    </span>
+                  </div>
+                  <div className="flex gap-6 text-start">
+                    <span className="text-sm text-[#cd9c20]">Description:</span>
+                    <span className={`text-sm ${project.projectDescription ? 'text-white' : 'text-gray-400'}`}>
+                      {project.projectDescription || 'Not provided'}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
             </div>
           </div>
         </div>

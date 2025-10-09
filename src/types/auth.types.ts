@@ -18,6 +18,7 @@ export interface SignupCredentials {
 export interface LoginResponse {
 	token: string;
 	userId: string;
+	name: string;
 	username: string;
 	role: string;
 	email: string;
@@ -49,6 +50,7 @@ export interface SignupState {
 // Redux slice state for authentication (token-bearing state)
 export interface AuthState {
 	token: string | null;
+	name: string | null;
 	userId: string | null;
 	username: string | null;
 	role: string | null;

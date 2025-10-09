@@ -1,5 +1,7 @@
 // slices/login.ts
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import { persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 import Cookies from "js-cookie";
 import axiosPrivate from "@/config/axios";
 import { apiEndpoints } from "@/config/api-endpoints";
@@ -14,6 +16,7 @@ const initialState: AuthState = {
   token: Cookies.get("token") || null,
   userId: null,
   username: null,
+  name: null,
   role: null,
   email: null,
   githubPAT: null,
@@ -63,6 +66,7 @@ const authSlice = createSlice({
       state.token = null;
       state.userId = null;
       state.username = null;
+      state.name = null;
       state.role = null;
       state.email = null;
       state.githubPAT = null;
@@ -82,6 +86,7 @@ const authSlice = createSlice({
         state.token = action.payload.token;
         state.userId = action.payload.userId;
         state.username = action.payload.username;
+        state.name = action.payload.name;
         state.role = action.payload.role;
         state.email = action.payload.email;
         state.githubPAT = action.payload.githubPAT;
@@ -95,5 +100,16 @@ const authSlice = createSlice({
   },
 });
 
+
 export const { logout } = authSlice.actions;
-export default authSlice.reducer;
+
+// Persist only username and email in localStorage
+const persistConfig = {
+  key: 'auth',
+  storage,
+  whitelist: ['username', 'email', 'name'],
+};
+
+const persistedReducer = persistReducer(persistConfig, authSlice.reducer);
+
+export default persistedReducer;

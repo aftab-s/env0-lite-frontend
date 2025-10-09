@@ -7,7 +7,6 @@ import { useSelector } from 'react-redux';
 import type { RootState } from '@/redux/store';
 import { updateProjectCsp } from '@/services/csp/selectCsp';
 import Swal from 'sweetalert2';
-import { customSwal } from '@/components/Template/customSwal/page';
 
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
@@ -68,9 +67,9 @@ export default function CloudProviderPage() {
       // Use an IIFE to avoid async issues with setState
       (async () => {
         try {
-          customSwal({
+          Swal.fire({
             title: 'Adding Provider to your Bagel',
-            text: '<div class="flex justify-center items-center"><svg class="animate-spin h-8 w-8 text-yellow-600 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path></svg></div>',
+            html: '<div class="flex justify-center items-center"><svg class="animate-spin h-8 w-8 text-yellow-600 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path></svg></div>',
             icon: undefined,
             showConfirmButton: false,
             allowOutsideClick: false,
@@ -97,41 +96,6 @@ export default function CloudProviderPage() {
     }
   };
 
-  const handleContinue = async () => {
-    if (selectedProvider && projects.length > 0) {
-  // setLoading(true);
-  // setError(null);
-      try {
-        customSwal({
-          title: 'Adding Provider to your Bagel',
-          text: '<div class="flex justify-center items-center"><svg class="animate-spin h-8 w-8 text-yellow-600 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path></svg></div>',
-          icon: undefined,
-          showConfirmButton: false,
-          allowOutsideClick: false,
-          allowEscapeKey: false,
-        });
-        await updateProjectCsp(projectId, selectedProvider);
-        await new Promise(res => setTimeout(res, 2000));
-        Swal.close();
-        router.push(`/aws-credentials/${projectId}`);
-      } catch (err: unknown) {
-        let message = 'Failed to update CSP';
-        if (err && typeof err === 'object' && 'response' in err && (err as { response?: { data?: { error?: string } } }).response?.data?.error) {
-          message = (err as { response: { data: { error: string } } }).response.data.error;
-        }
-  // setError(message);
-        Swal.close();
-            Swal.fire({
-              icon: 'error',
-              title: 'Failed to add provider',
-              text: message,
-              confirmButtonColor: '#CD9C20',
-            });
-      } finally {
-  // setLoading(false);
-      }
-    }
-  };
 
   return (
     <div className="flex h-screen w-screen">

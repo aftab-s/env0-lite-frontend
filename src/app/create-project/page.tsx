@@ -9,7 +9,7 @@ import Swal from 'sweetalert2';
 import Button from '@/components/ui/button';
 import Sidebar from '@/components/common/Sidebar'; 
 import PrivateHeader from '@/components/common/PrivateHeader';
-import '@/components/Template/customSwal/page.tsx';
+
 
 export default function CreateProjectPage() {
   const router = useRouter();
@@ -38,13 +38,6 @@ export default function CreateProjectPage() {
         title: 'Project created',
         timer: 1000,
         showConfirmButton: false,
-        customClass: {
-          popup: 'customBagelGlass',
-          title: 'customBagelTitle',
-          htmlContainer: 'customBagelContent',
-          confirmButton: 'customBagelButton',
-          icon: 'customBagelIcon',
-        },
       });
       router.push(`/cloud-provider/${response.project.projectId}`); // Navigate to cloud provider setup after creation
     } catch (e: unknown) {
@@ -60,13 +53,6 @@ export default function CreateProjectPage() {
         title: 'Error', 
         text: msg, 
         confirmButtonColor: '#CD9C20',
-        customClass: {
-          popup: 'customBagelGlass',
-          title: 'customBagelTitle',
-          htmlContainer: 'customBagelContent',
-          confirmButton: 'customBagelButton',
-          icon: 'customBagelIcon',
-        },
       });
     } finally {
       setSubmitting(false);
@@ -95,7 +81,7 @@ export default function CreateProjectPage() {
             </p>
 
             {/* Form Container */}
-            <div className="w-full max-w-4xl p-6 rounded-lg bg-gradient-to-br from-[#cd9c20]/7 to-black/10 backdrop-blur-md border border-[#232329] rounded-md px-6 py-5 shadow-lg">
+            <div className="w-full max-w-4xl p-6 bg-gradient-to-br from-[#cd9c20]/7 to-black/10 backdrop-blur-md border border-[#232329] rounded-md px-6 py-5 shadow-lg">
               <div className="flex flex-col gap-4">
                 <h1 className="text-xl font-semibold text-gray-300">Project Details</h1>
                 {/* Project Name Field */}

@@ -17,7 +17,7 @@ export default function TextInput({ label, placeholder, value, onChange, type = 
         placeholder={placeholder}
         value={value}
         onChange={onChange}
-        className="w-full bg-[#09090B] border border-[#3a3a3a] rounded px-3 py-2 text-white text-sm focus:outline-none focus:border-[#D4A253]"
+        className="w-full bg-[#09090B] border border-[#232329] rounded px-3 py-2 text-white text-sm focus:outline-none focus:border-[#D4A253]"
       />
     </div>
   );

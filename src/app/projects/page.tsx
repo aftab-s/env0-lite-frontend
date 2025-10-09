@@ -9,7 +9,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '@/redux/store';
 import { getProjectsByOwner } from '@/redux/slice/Projects/projectListByOwnerSlice';
 import type { ProjectWithTime } from '@/types/project.types';
-import { Loader } from 'lucide-react';
 import AnimatedLogo from '@/components/Template/logoAnimation';
 import { useRouter } from 'next/navigation';
 import { Trash2, X } from 'lucide-react';
