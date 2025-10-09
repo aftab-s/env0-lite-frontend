@@ -1,7 +1,7 @@
 "use client";
 
 import { ReactNode } from "react";
-import Sidebar from "@/components/Sidebar/page";
+import Sidebar from "@/components/Sidebar";
 
 interface TerraformAwsLayoutProps {
   children: ReactNode;

@@ -2,7 +2,8 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
-import { Search, Loader } from "lucide-react";
+import { Search } from "lucide-react";
+import AnimatedLogo from "@/components/logoAnimation";
 
 import { fetchDeployments } from "@/redux/slice/Deployements/deploymentSlice";
 import { RootState, AppDispatch } from "@/redux/store";
@@ -43,7 +44,7 @@ const DeploymentsPage: React.FC = () => {
 
   if (loading) return (
     <div className="flex flex-col items-center justify-center h-full text-white p-6">
-      <Loader className="animate-spin mb-4" size={48} />
+      <div className="mb-4"><AnimatedLogo /></div>
       <div>Loading deployments...</div>
     </div>
   );

@@ -1,6 +1,6 @@
 'use client';
 
-import Sidebar from "@/components/Sidebar/page";
+import Sidebar from "@/components/Sidebar";
 import PrivateHeader from "@/components/PrivateHeader/page";
 import InfrastructureBanner from "./_newProjectComponent/page";
 

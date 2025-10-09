@@ -2,12 +2,12 @@
 
 import { useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import Input from '@/components/TextInput/TextInput';
+import Input from '@/components/TextInput';
 import { createProject } from '@/services/project/createProject';
 import type { CreateProjectPayload } from '@/types/project.types';
 import Swal from 'sweetalert2';
 import Button from '@/components/ui/button';
-import Sidebar from '@/components/Sidebar/page'; 
+import Sidebar from '@/components/Sidebar'; 
 import PrivateHeader from '@/components/PrivateHeader/page';
 import '@/components/customSwal/customGlass.css';
 
@@ -131,14 +131,6 @@ export default function CreateProjectPage() {
               className="w-full max-w-md px-8 py-2 rounded-[3px]"
             >
               {submitting ? 'Working...' : 'Create Project'}
-            </Button>
-            <Button
-              variant="secondary"
-              disabled={submitting}
-              onClick={() => router.push('/projects')}  // Assuming "Back to Dashboard" should navigate back
-              className="w-full max-w-md px-8 py-2 rounded-[3px] pointer-cursor"
-            >
-              {submitting ? 'Working...' : 'Back to Projects'}
             </Button>
           </div>
         </div>

@@ -2,7 +2,7 @@
 import React, { useEffect } from "react";
 import { useParams, useSearchParams } from "next/navigation";
 import { useSelector, useDispatch } from "react-redux";
-import Sidebar from "@/components/Sidebar/page";
+import Sidebar from "@/components/Sidebar";
 import PrivateHeader from "@/components/PrivateHeader/page";
 import TerraformAccordions from "./terraformAccordion";
 import { RootState, AppDispatch } from "@/redux/store";

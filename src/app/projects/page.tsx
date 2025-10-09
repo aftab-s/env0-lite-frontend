@@ -1,6 +1,6 @@
 'use client';
 
-import Sidebar from '@/components/Sidebar/page'; 
+import Sidebar from '@/components/Sidebar'; 
 import Button from '@/components/ui/button';
 import PrivateHeader from '@/components/PrivateHeader/page';
 import { useEffect, useState } from 'react';
@@ -10,6 +10,7 @@ import type { AppDispatch, RootState } from '@/redux/store';
 import { getProjectsByOwner } from '@/redux/slice/Projects/projectListByOwnerSlice';
 import type { ProjectWithTime } from '@/types/project.types';
 import { Loader } from 'lucide-react';
+import AnimatedLogo from '@/components/logoAnimation';
 import { useRouter } from 'next/navigation';
 import { Trash2, X } from 'lucide-react';
 
@@ -109,7 +110,7 @@ export default function ProjectsPage() {
         <div className="flex flex-col flex-1 h-screen">
           <PrivateHeader />
           <div className="flex-1 flex flex-col items-center justify-center bg-black">
-            <Loader className="animate-spin text-white mb-4" size={48} />
+            <div className="mb-4"><AnimatedLogo /></div>
             <div className="text-white">Loading projects...</div>
           </div>
         </div>

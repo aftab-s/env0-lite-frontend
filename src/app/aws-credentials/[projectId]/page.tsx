@@ -2,9 +2,9 @@
 
 import { useState } from 'react';
 import { Info } from 'lucide-react';
-import TextInput from '@/components/TextInput/TextInput';
+import TextInput from '@/components/TextInput';
 import PasswordInput from '@/components/PasswordInput/PasswordInput';
-import Sidebar from '@/components/Sidebar/page'; 
+import Sidebar from '@/components/Sidebar'; 
 import PrivateHeader from '@/components/PrivateHeader/page';
 import { useParams, useRouter } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';

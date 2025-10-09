@@ -8,7 +8,7 @@ import type { RootState, AppDispatch } from '@/redux/store';
 import { fetchRepositories } from '@/redux/slice/Github/repoListSlice';
 import { updateProjectRepoThunk } from '@/redux/slice/Projects/projectListByOwnerSlice';
 import { cloneRepoAndCreateSpaces } from '@/services/project/cloneRepo';
-import Sidebar from '@/components/Sidebar/page';
+import Sidebar from '@/components/Sidebar';
 import PrivateHeader from '@/components/PrivateHeader/page';
 import ConfirmationModal from '@/components/ConfirmationModal/ConfirmationModal';
 import Swal from 'sweetalert2';

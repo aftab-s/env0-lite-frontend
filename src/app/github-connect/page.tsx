@@ -1,11 +1,11 @@
 "use client";
-import TextInput from "@/components/TextInput/TextInput"; 
+import TextInput from "@/components/TextInput"; 
 import Button from "@/components/PrimaryButton/PrimaryButton";
 import { useState, useCallback, useEffect } from 'react';
 import { saveGithubPAT } from '@/services/githubPAT/githubPat.service';
 import Swal from 'sweetalert2';
 import { useRouter } from 'next/navigation';
-import PublicHeader from '@/components/PublicHeader/page';
+import PublicHeader from '@/components/PublicHeader';
 
 function Step({
   number,
