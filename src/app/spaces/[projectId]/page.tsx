@@ -3,7 +3,8 @@ import Sidebar from '@/components/common/Sidebar';
 import PrivateHeader from '@/components/common/PrivateHeader';
 import { CheckCircleIcon, ClockIcon } from '@heroicons/react/24/outline';
 import { Cog6ToothIcon } from '@heroicons/react/24/outline';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import ProfileSettingsModal from '@/components/SettingsModal/ProfileSettingsModal';
 import { useParams, useRouter } from 'next/navigation';
 import Button from '@/components/ui/button';
 import { useDispatch, useSelector } from 'react-redux';
@@ -12,6 +13,7 @@ import { getSpacesByProjectIdThunk } from '@/redux/slice/Projects/SpaceListSlice
 import { Loader } from 'lucide-react';
 
 export default function SpacesPage() {
+  const [showProfileSettings, setShowProfileSettings] = useState(false);
   const params = useParams();
   const projectId = params.projectId as string;
   const id = params.projectId as string;
@@ -60,16 +62,31 @@ export default function SpacesPage() {
       <div className="flex flex-col flex-1 h-screen overflow-hidden">
         <PrivateHeader />
         
+        {/* Warning Box */}
+        <div className="w-full px-14 pt-6">
+          <div className="w-full bg-yellow-900/30 border border-yellow-600/40 text-yellow-200 rounded-lg px-6 py-3 mb-4 flex items-center gap-3">
+            <svg className="w-5 h-5 text-yellow-400 shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.054 0 1.658-1.14 1.105-2.045l-6.928-12.02c-.526-.912-1.684-.912-2.21 0l-6.928 12.02c-.553.905.051 2.045 1.105 2.045z"/>
+            </svg>
+            <span className='text-sm'>
+              Make sure you click the <b>Rebase</b> button once any change is pushed to the connected branch here to keep the code up to date.
+            </span>
+          </div>
+        </div>
+
         {/* Fixed header section */}
         <div className="bg-[#0b0b0b] px-14 pt-8 pb-4">
           <h1 className="text-white text-4xl font-bold mb-6">Spaces</h1>
           <div className="flex items-center mb-7 gap-4">
             <input type="text" placeholder="terraform-aws-infrastructure • Main AWS infrastructure with VPC, EC2, and RDS • AWS • us-east-1"
             className="w-full bg-[#09090B] border border-[#27272A] rounded-lg px-4 py-2 text-sm placeholder-gray-400 focus:outline-none" />
-            <Button variant="primary" width="w-45" className="ml-auto">View Deployment</Button>
-            <Button variant="extraSetting" width="auto">
-            <Cog6ToothIcon className="w-5 h-5 text-white" />
+            <Button variant="primary" width="w-55" className="ml-auto">View Deployment</Button>
+              <Button variant="rebaseButton" width="w-45" className="ml-auto">Rebase</Button>
+            <Button variant="extraSetting" width="auto" onClick={() => setShowProfileSettings(true)}>
+              <Cog6ToothIcon className="w-5 h-5 text-white" />
             </Button>
+  {/* Profile Settings Modal */}
+  <ProfileSettingsModal isOpen={showProfileSettings} onClose={() => setShowProfileSettings(false)} />
           </div>
         </div>
 
