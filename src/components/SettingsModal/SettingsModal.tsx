@@ -4,7 +4,7 @@ import { X, SlidersHorizontal, Shield, User } from 'lucide-react';
 import { useSelector } from 'react-redux';
 import type { RootState } from '@/redux/store';
 import Button from '@/components/ui/button';
-import TextInput from '@/components/TextInput/TextInput';
+import TextInput from '@/components/ui/TextInput';
 
 interface SettingsModalProps {
   isOpen: boolean;

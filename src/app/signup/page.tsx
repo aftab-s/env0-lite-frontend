@@ -3,7 +3,7 @@ import { useState, useCallback, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { User, Mail, Lock } from 'lucide-react';
-import AuthInput from '@/components/AuthInput/AuthInput';
+import AuthInput from '@/components/ui/AuthInput';
 import Button from '@/components/PrimaryButton/PrimaryButton';
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '@/redux/store';

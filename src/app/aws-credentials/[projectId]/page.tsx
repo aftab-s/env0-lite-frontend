@@ -2,10 +2,10 @@
 
 import { useState } from 'react';
 import { Info } from 'lucide-react';
-import TextInput from '@/components/TextInput/TextInput';
-import PasswordInput from '@/components/PasswordInput/PasswordInput';
-import Sidebar from '@/components/Sidebar/page'; 
-import PrivateHeader from '@/components/PrivateHeader/page';
+import TextInput from '@/components/ui/TextInput';
+import PasswordInput from '@/components/ui/PasswordInput';
+import Sidebar from '@/components/common/Sidebar'; 
+import PrivateHeader from '@/components/common/PrivateHeader';
 import { useParams, useRouter } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '@/redux/store';
