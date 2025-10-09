@@ -5,6 +5,7 @@ import { CheckCircleIcon, ClockIcon } from '@heroicons/react/24/outline';
 import { Cog6ToothIcon } from '@heroicons/react/24/outline';
 import { useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import Button from '@/components/ui/button';
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '@/redux/store';
 import { getSpacesByProjectIdThunk } from '@/redux/slice/Projects/SpaceListSlice';
@@ -63,10 +64,10 @@ export default function SpacesPage() {
           <div className="flex items-center mb-7 gap-4">
             <input type="text" placeholder="terraform-aws-infrastructure • Main AWS infrastructure with VPC, EC2, and RDS • AWS • us-east-1"
             className="w-full bg-[#09090B] border border-[#27272A] rounded-lg px-4 py-2 text-sm placeholder-gray-400 focus:outline-none" />
-            <button className="ml-auto font-semibold bg-[#FFD600] text-[#232329] px-3 py-2 rounded-md text-sm whitespace-nowrap">View Deployment</button>
-            <button className="ml-auto p-2 rounded-md text-[#232329] bg-[#27272A]">
+            <Button variant="primary" width="w-45" className="ml-auto">View Deployment</Button>
+            <Button variant="extraSetting" width="auto">
             <Cog6ToothIcon className="w-5 h-5 text-white" />
-            </button>
+            </Button>
           </div>
           {/* Cards grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-6">

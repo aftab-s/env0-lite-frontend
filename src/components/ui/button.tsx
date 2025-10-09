@@ -1,7 +1,7 @@
 import React from "react";
 import clsx from "clsx";
 
-type ButtonVariant = "primary" | "secondary" | "tertiary" | "extra" | "destructive";
+type ButtonVariant = "primary" | "secondary" | "tertiary" | "extra" | "destructive" | "extraSetting";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
@@ -24,6 +24,8 @@ const Button: React.FC<ButtonProps> = ({
     tertiary: "bg-blue-100 text-blue-800 hover:bg-blue-200",
     extra: "bg-none border border-[#474747] text-white hover:bg-[#bb1600] hover:border-red-700",
     destructive: "bg-[#bb1600] border border-red-700 text-white hover:bg-red-500 hover:border-red-700",
+    extraSetting: "bg-none border border-[#474747] text-white hover:bg-[#F5CB5C] hover:border-[#FFC52D]",
+
   };
 
   return (

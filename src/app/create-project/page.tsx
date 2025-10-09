@@ -9,7 +9,7 @@ import Swal from 'sweetalert2';
 import Button from '@/components/ui/button';
 import Sidebar from '@/components/common/Sidebar'; 
 import PrivateHeader from '@/components/common/PrivateHeader';
-import '@/components/customSwal/customGlass.css';
+import '@/components/Template/customSwal/page.tsx';
 
 export default function CreateProjectPage() {
   const router = useRouter();
