@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '@/redux/store';
 import { configureAwsProfileThunk } from '@/redux/slice/Creds/credsSlice';
 import Swal from 'sweetalert2';
-import '@/components/customSwal/customGlass.css';
+import '@/components/Template/customSwal/page';
 
 export default function AWSCredentialsPage() {
   const { projectId } = useParams<{ projectId: string }>();

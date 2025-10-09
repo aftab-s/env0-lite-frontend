@@ -12,7 +12,7 @@ import Sidebar from '@/components/common/Sidebar';
 import PrivateHeader from '@/components/common/PrivateHeader';
 import ConfirmationModal from '@/components/Template/ConfirmationModal';
 import Swal from 'sweetalert2';
-import '@/components/customSwal/customGlass.css';
+import '@/components/Template/customSwal/page';
 import type { ProjectWithTime } from '@/types/project.types';
 
 interface UIRepository {
