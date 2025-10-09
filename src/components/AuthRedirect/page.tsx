@@ -1,18 +1,13 @@
-"use client"
-import { useEffect } from "react"
-import { useSession } from "next-auth/react"
-import { useRouter } from "next/navigation"
+// "use client"
+// import { useEffect } from "react"
+// import { useRouter } from "next/navigation"
 
-export default function AuthRedirect() {
-  const { status } = useSession()
-  const router = useRouter()
+// export default function AuthRedirect() {
+//   const router = useRouter()
 
-  useEffect(() => {
-    if (status === "authenticated") {
-      // user is logged in → redirect to dashboard
-      router.replace("/dashboard")
-    }
-  }, [status, router])
+//   useEffect(() => {
+//     // No next-auth state; implement custom auth check if needed
+//   }, [router])
 
-  return null
-}
+//   return null
+// }
