@@ -1,18 +1,22 @@
 'use client';
 import { useState } from 'react';
-import { X, SlidersHorizontal, Shield, User } from 'lucide-react';
+import { X, SlidersHorizontal, Shield, User, Github } from 'lucide-react'; // Added Github icon
 import { useSelector } from 'react-redux';
 import type { RootState } from '@/redux/store';
 import Button from '@/components/ui/button';
 import TextInput from '@/components/ui/TextInput';
 import PasswordInput from '@/components/ui/PasswordInput';
+import GeneralSettings from '@/components/Logic/Settings/GeneralSettings';
+import SecuritySettings from '@/components/Logic/Settings/SecuritySettings';
+import AccountSettings from '@/components/Logic/Settings/AccountSettings';
+import GithubPatSettings from '@/components/Logic/Settings/GithubPatSettings';
 
 interface SettingsModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-type SettingsTab = 'General' | 'Security' | 'Account';
+type SettingsTab = 'General' | 'Security' | 'Account' | 'Github PAT'; // Added 'Github PAT'
 
 const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
   const [activeTab, setActiveTab] = useState<SettingsTab>('General');
@@ -20,7 +24,7 @@ const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
   const [email, setEmail] = useState('');
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
-  const [twoFactorEnabled, setTwoFactorEnabled] = useState(false);
+  const [patToken, setPatToken] = useState('');
 
   const { name, email: userEmail } = useSelector((state: RootState) => ({
     name: state.auth.name,
@@ -29,167 +33,37 @@ const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
 
   if (!isOpen) return null;
 
-  const renderGeneralContent = () => (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl text-white mb-1 font-semibold">General</h2>
-        <p className="text-gray-400 text-xs">Manage your general account settings</p>
-      </div>
-
-      <div className="space-y-4">
-        <div>
-          <TextInput
-            label="Full Name"
-            placeholder=""
-            value={fullName}
-            onChange={(e) => setFullName(e.target.value)}
-            type="text"
-          />
-        </div>
-
-        <div>
-          <TextInput
-            label="Email"
-            placeholder=""
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            type="email"
-          />
-        </div>
-      </div>
-      <div>
-        <Button variant="primary" width="w-45" onClick={() => console.log('Save clicked')}>
-          Save
-        </Button>
-      </div>
-    </div>
-  );
-
-  const renderSecurityContent = () => (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl text-white mb-1 font-semibold">Security</h2>
-
-        <p className="text-gray-400 text-xs  ">Manage your security settings and password</p>
-      </div>
-
-      <div className="space-y-4">
-        <div>
-          <PasswordInput
-            label="Current Password"
-            value={currentPassword}
-            placeholder="••••••••"
-            onChange={(e) => setCurrentPassword(e.target.value)}
-          />
-        </div>
-
-        <div>
-          <PasswordInput
-            label="New Password"
-            value={newPassword}
-            placeholder="••••••••"
-            onChange={(e) => setNewPassword(e.target.value)}
-          />
-        </div>
-
-        <div>
-          <PasswordInput
-            label="Confirm New Password"
-            value={newPassword}
-            placeholder="••••••••"
-            onChange={(e) => setNewPassword(e.target.value)}
-          />
-        </div>
-
-        <div className="bg-black border border-[#3a3a3a] rounded-lg p-4 flex items-center justify-between opacity-60 cursor-not-allowed relative group select-none">
-          <div>
-            <h3 className="text-white text-sm mb-1">Two-Factor Authentication</h3>
-            <p className="text-gray-400 text-xs">Add an extra layer of security to your account</p>
-          </div>
-          <div className="relative">
-            <button
-              disabled
-              className={`relative inline-flex h-6 w-11 items-center rounded-full bg-gray-700 cursor-not-allowed`}
-              tabIndex={-1}
-            >
-              <span
-                className={`inline-block h-4 w-4 transform rounded-full bg-black transition-transform translate-x-1`}
-              />
-            </button>
-            <span className="absolute left-1/2 -translate-x-1/2 top-10 z-20 hidden group-hover:block bg-black text-white text-xs rounded px-3 py-1 border border-[#CD9C20] whitespace-nowrap pointer-events-none">
-              Coming soon
-            </span>
-          </div>
-        </div>
-
-        <Button
-          variant="primary"
-          width="w-45"
-          onClick={() => console.log('Update Password clicked')}
-        >
-          Update Password
-        </Button>
-      </div>
-    </div>
-  );
-
-  const renderAccountContent = () => (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl  text-white mb-1 font-semibold">Account</h2>
-
-        <p className="text-gray-400 text-xs  ">Manage your account settings</p>
-      </div>
-
-      <div className="bg-black border border-gray-800 rounded-lg p-3 space-y-1">
-        <h3 className="text-white   mb-2">Account Information</h3>
-
-        <div className="flex justify-between items-center">
-          <span className="text-gray-400 text-xs  ">Account ID</span>
-
-          <span className="text-white text-xs  ">acc_2kj3h4kj5h6k7j8</span>
-        </div>
-
-        <div className="flex justify-between items-center">
-          <span className="text-gray-400 text-xs  ">Member Since</span>
-
-          <span className="text-white text-xs  ">January 15, 2024</span>
-        </div>
-
-        <div className="flex justify-between items-center">
-          <span className="text-gray-400 text-xs  ">Plan</span>
-
-          <span className="text-white text-xs  ">Pro</span>
-        </div>
-      </div>
-
-      <div className="bg-red-950/30 border border-red-900/50 rounded-lg p-3">
-        <h3 className="text-red-500 mb-1  ">Danger Zone</h3>
-
-        <p className="text-gray-400 text-xs mb-4  ">
-          Once you delete your account, there is no going back. Please be certain.
-        </p>
-
-        <Button variant="destructive" width="w-45" onClick={() => console.log('Delete clicked')}>
-          Delete
-        </Button>
-      </div>
-    </div>
-  );
-
   const renderContent = () => {
     switch (activeTab) {
       case 'General':
-        return renderGeneralContent();
-
+        return (
+          <GeneralSettings
+            fullName={fullName}
+            setFullName={setFullName}
+            email={email}
+            setEmail={setEmail}
+          />
+        );
       case 'Security':
-        return renderSecurityContent();
-
+        return (
+          <SecuritySettings
+            currentPassword={currentPassword}
+            setCurrentPassword={setCurrentPassword}
+            newPassword={newPassword}
+            setNewPassword={setNewPassword}
+          />
+        );
       case 'Account':
-        return renderAccountContent();
-
+        return <AccountSettings />;
+      case 'Github PAT':
+        return (
+          <GithubPatSettings
+            patToken={patToken}
+            setPatToken={setPatToken}
+          />
+        );
       default:
-        return renderGeneralContent();
+        return null;
     }
   };
 
@@ -266,6 +140,19 @@ const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
                 >
                   <User size={18} />
                   Account
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => setActiveTab('Github PAT')}
+                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
+                    activeTab === 'Github PAT'
+                      ? 'bg-[#2A2A2A] text-yellow-500'
+                      : 'text-gray-400 hover:bg-[#1A1A1A] hover:text-white'
+                  }`}
+                >
+                  <Github size={18} />
+                  Github PAT
                 </button>
               </li>
             </ul>

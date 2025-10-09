@@ -16,7 +16,7 @@ export default function AWSCredentialsPage() {
   const { projectId } = useParams<{ projectId: string }>();
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
-  const { loading, error } = useSelector((state: RootState) => state.creds);
+  const { loading } = useSelector((state: RootState) => state.creds);
   const { projects } = useSelector((state: RootState) => state.projectList);
   // Prefill project info if available
   const project = projects.find((p) => p.projectId === projectId);
@@ -52,15 +52,51 @@ export default function AWSCredentialsPage() {
         title: 'Success',
         text: 'AWS credentials configured successfully!',
         timer: 2000,
-        showConfirmButton: false
+        showConfirmButton: false,
+        customClass: {
+          popup: 'customBagelGlass',
+          title: 'customBagelTitle',
+          htmlContainer: 'customBagelContent',
+          confirmButton: 'customBagelButton',
+          icon: 'customBagelIcon',
+        },
       });
 
       router.push(`/github-repo/${projectId}`);
-    } catch {
-      Swal.fire({
-        title: 'Error',
-        text: error || 'Failed to configure AWS credentials.'
-      });
+    } catch (err: unknown) {
+      let errorMessage: string;
+      if (typeof err === 'string') {
+        errorMessage = err;
+      } else if (err instanceof Error) {
+        errorMessage = err.message;
+      } else {
+        errorMessage = 'Failed to configure AWS credentials.';
+      }
+      if (errorMessage.includes('A profile already exists. This can only be changed in the project settings')) {
+        Swal.fire({
+          title: 'Profile Already Exists',
+          text: 'A profile already exists. This can only be changed in the project settings.',
+          customClass: {
+            popup: 'customBagelGlass',
+            title: 'customBagelTitle',
+            htmlContainer: 'customBagelContent',
+            confirmButton: 'customBagelButton',
+            icon: 'customBagelIcon',
+          },
+        });
+      } else {
+        Swal.fire({
+          title: 'Error',
+          text: errorMessage,
+          customClass: {
+            popup: 'customBagelGlass',
+            title: 'customBagelTitle',
+            htmlContainer: 'customBagelContent',
+            confirmButton: 'customBagelButton',
+            icon: 'customBagelIcon',
+          },
+        });
+      }
     }
   };
 
