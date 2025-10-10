@@ -67,11 +67,12 @@ export default function GithubRepositoryPage() {
 
   const branchList = selectedRepo?.branches || [];
 
-  const handleContinue = async () => {
-    if (!selectedRepo || !selectedBranch) return;
+  const handleContinue = async (branch: string) => {
+  if (!selectedRepo || !branch) return;
 
-    setConnecting(true);
-    setShowModal(true);
+  setSelectedBranch(branch);
+  setConnecting(true);
+  setShowModal(true);
 
     try {
       const result = await dispatch(updateProjectRepoThunk({
@@ -254,8 +255,7 @@ export default function GithubRepositoryPage() {
                         key={br}
                         disabled={connecting}
                         onClick={() => {
-                          setSelectedBranch(br);
-                          handleContinue();
+                          handleContinue(br);
                         }}
                         className={`w-full text-left px-3 py-2 text-sm border-b border-[#444] ${
                           selectedBranch === br

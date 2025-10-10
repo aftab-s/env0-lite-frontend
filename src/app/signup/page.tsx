@@ -9,7 +9,7 @@ import Button from '@/components/PrimaryButton/PrimaryButton';
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '@/redux/store';
 import { signupUser, resetSignupState } from '@/redux/slice/Auth/signUpSlice';
-import type { SignupCredentials, SignupResponse } from '@/types/auth.types';
+import type { SignupCredentials} from '@/types/auth.types';
 import Cookies from "js-cookie";
 import Swal from 'sweetalert2';
 

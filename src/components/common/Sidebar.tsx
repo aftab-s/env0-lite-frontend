@@ -1,6 +1,6 @@
 'use client';
 import Image from 'next/image';
-import { useState, useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import type { AppDispatch } from '@/redux/store';
 import { logout } from '@/redux/slice/Auth/loginSlice';
