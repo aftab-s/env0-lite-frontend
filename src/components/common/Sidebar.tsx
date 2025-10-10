@@ -1,24 +1,29 @@
 'use client';
 import Image from 'next/image';
-import { useState, useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import type { RootState, AppDispatch } from '@/redux/store';
+import { useState, useCallback, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import type { AppDispatch } from '@/redux/store';
 import { logout } from '@/redux/slice/Auth/loginSlice';
 import { useRouter, usePathname } from 'next/navigation';
 import { LogOut } from 'lucide-react';
 import SettingsModal from '@/components/SettingsModal/SettingsModal';
+import Cookies from 'js-cookie';
 
 const Sidebar = () => {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const pathname = usePathname();
-  const { username, email } = useSelector((state: RootState) => ({
-    username: state.auth.username,
-    email: state.auth.email,
-  }));
   const [isOpen, setIsOpen] = useState(true);
   const [isLogoHovered, setIsLogoHovered] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [name, setName] = useState<string | undefined>(undefined);
+  const [email, setEmail] = useState<string | undefined>(undefined);
+
+  // Fetch name and email from cookies on mount
+  useEffect(() => {
+    setName(Cookies.get('name'));
+    setEmail(Cookies.get('email'));
+  }, []);
 
   const menuItems = [
     { icon: '/sidebar/projects.svg', name: 'Projects', route: '/projects' },
@@ -66,9 +71,6 @@ const Sidebar = () => {
       router.push(item.route);
     }
   };
-
-  const displayName = username || 'User';
-  const displayEmail = email || 'user@gmail.com';
 
   return (
     <>
@@ -153,7 +155,7 @@ const Sidebar = () => {
             className={`group flex items-center justify-between gap-3 px-2 py-2 text-sm font-inter font-medium text-gray-400 hover:bg-[#2A2A2A] hover:text-white ${
               !isOpen ? 'justify-center' : ''
             }`}
-            title={!isOpen ? displayName : ''}
+            title={!isOpen ? name || 'Profile' : ''}
             role="button"
             tabIndex={0}
             onKeyDown={(e) => {
@@ -179,8 +181,8 @@ const Sidebar = () => {
               </svg>
               {isOpen && (
                 <div className="flex flex-col text-left">
-                  <span className="text-white font-semibold">{displayName}</span>
-                  <span className="text-xs text-gray-400">{displayEmail}</span>
+                  <span className="text-white font-semibold">{name}</span>
+                  <span className="text-xs text-gray-400">{email}</span>
                 </div>
               )}
             </div>

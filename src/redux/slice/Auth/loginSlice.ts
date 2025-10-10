@@ -1,4 +1,3 @@
-// slices/login.ts
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
@@ -39,8 +38,10 @@ export const loginUser = createAsyncThunk<
       { email, password }
     );
 
-    // Persist token (7 day expiry)
+    // Persist token, name, and email in cookies (7 day expiry)
     Cookies.set("token", response.data.token, { expires: 7 });
+    Cookies.set("name", response.data.name, { expires: 7 });
+    Cookies.set("email", response.data.email, { expires: 7 });
 
     return response.data; // includes token + user info
   } catch (error: unknown) {
@@ -72,7 +73,9 @@ const authSlice = createSlice({
       state.githubPAT = null;
       state.onboardingCompleted = false;
       state.isProjectThere = null;
-      Cookies.remove("token"); // clear cookie
+      Cookies.remove("token"); // clear token cookie
+      Cookies.remove("name"); // clear name cookie
+      Cookies.remove("email"); // clear email cookie
     },
   },
   extraReducers: (builder) => {
@@ -99,7 +102,6 @@ const authSlice = createSlice({
       });
   },
 });
-
 
 export const { logout } = authSlice.actions;
 

@@ -1,11 +1,6 @@
 'use client';
 import { useState } from 'react';
-import { X, SlidersHorizontal, Shield, User, Github } from 'lucide-react'; // Added Github icon
-import { useSelector } from 'react-redux';
-import type { RootState } from '@/redux/store';
-import Button from '@/components/ui/button';
-import TextInput from '@/components/ui/TextInput';
-import PasswordInput from '@/components/ui/PasswordInput';
+import { X, SlidersHorizontal, Shield, User, Github } from 'lucide-react'; // Added Github icony
 import GeneralSettings from '@/components/Logic/Settings/GeneralSettings';
 import SecuritySettings from '@/components/Logic/Settings/SecuritySettings';
 import AccountSettings from '@/components/Logic/Settings/AccountSettings';
@@ -26,10 +21,6 @@ const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
   const [newPassword, setNewPassword] = useState('');
   const [patToken, setPatToken] = useState('');
 
-  const { name, email: userEmail } = useSelector((state: RootState) => ({
-    name: state.auth.name,
-    email: state.auth.email,
-  }));
 
   if (!isOpen) return null;
 
@@ -94,8 +85,8 @@ const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
                 </svg>
               </div>
               <div className="flex-1">
-                <h3 className="text-white font-semibold">{name || 'Bagel User'}</h3>
-                <p className="text-gray-400 text-sm">{userEmail || 'you@bagel.com'}</p>
+                <h3 className="text-white font-semibold">{'Bagel User'}</h3>
+                <p className="text-gray-400 text-sm">{'you@bagel.com'}</p>
               </div>
             </div>
           </div>

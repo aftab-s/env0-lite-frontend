@@ -8,9 +8,10 @@ import Button from '@/components/PrimaryButton/PrimaryButton';
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '@/redux/store';
 import { signupUser, resetSignupState } from '@/redux/slice/Auth/signUpSlice';
-import type { SignupCredentials } from '@/types/auth.types';
+import type { SignupCredentials, SignupResponse } from '@/types/auth.types';
 import Swal from 'sweetalert2';
 import { useRouter } from 'next/navigation';
+import Cookies from 'js-cookie';
 
 export default function AuthForm() {
   const dispatch = useDispatch<AppDispatch>();
@@ -38,6 +39,11 @@ export default function AuthForm() {
     };
     const action = await dispatch(signupUser(payload));
     if (signupUser.fulfilled.match(action)) {
+      // Store name and email in cookies
+      const response = action.payload as SignupResponse;
+      Cookies.set('name', response.name, { expires: 7 });
+      Cookies.set('email', response.email, { expires: 7 });
+
       Swal.fire({
         icon: 'success',
         title: 'Account created',
