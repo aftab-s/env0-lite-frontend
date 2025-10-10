@@ -2,6 +2,8 @@ const apiEndpoints = {
     auth : {
         signUp: "/api/users/signup",
         login: "/api/users/login",
+        getUserById: "/api/users/get-user-by-id",
+        updateUserById: "/api/users/update-user",
     },
     github: {
         savePat: "/api/github-pat/save-pat",

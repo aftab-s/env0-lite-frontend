@@ -3,9 +3,6 @@ import { useState } from 'react';
 import { X, SlidersHorizontal, Shield, User, Github } from 'lucide-react'; // Added Github icon
 import { useSelector } from 'react-redux';
 import type { RootState } from '@/redux/store';
-import Button from '@/components/ui/button';
-import TextInput from '@/components/ui/TextInput';
-import PasswordInput from '@/components/ui/PasswordInput';
 import GeneralSettings from '@/components/Logic/Settings/GeneralSettings';
 import SecuritySettings from '@/components/Logic/Settings/SecuritySettings';
 import AccountSettings from '@/components/Logic/Settings/AccountSettings';
@@ -20,15 +17,13 @@ type SettingsTab = 'General' | 'Security' | 'Account' | 'Github PAT'; // Added '
 
 const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
   const [activeTab, setActiveTab] = useState<SettingsTab>('General');
-  const [fullName, setFullName] = useState('');
-  const [email, setEmail] = useState('');
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [patToken, setPatToken] = useState('');
 
   const { name, email: userEmail } = useSelector((state: RootState) => ({
-    name: state.auth.name,
-    email: state.auth.email,
+    name: state.userManagement.user?.name,
+    email: state.userManagement.user?.email,
   }));
 
   if (!isOpen) return null;
@@ -36,14 +31,7 @@ const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
   const renderContent = () => {
     switch (activeTab) {
       case 'General':
-        return (
-          <GeneralSettings
-            fullName={fullName}
-            setFullName={setFullName}
-            email={email}
-            setEmail={setEmail}
-          />
-        );
+        return <GeneralSettings />;
       case 'Security':
         return (
           <SecuritySettings

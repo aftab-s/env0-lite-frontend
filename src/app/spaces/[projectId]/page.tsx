@@ -57,13 +57,13 @@ export default function SpacesPage() {
   }
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden">
+    <div className="flex bg-black h-screen w-screen overflow-hidden">
       <Sidebar />
       <div className="flex flex-col flex-1 h-screen overflow-hidden">
         <PrivateHeader />
         
         {/* Warning Box */}
-        <div className="w-full px-14 pt-6">
+        <div className="w-full px-14 bg-black pt-6">
           <div className="w-full bg-yellow-900/30 border border-yellow-600/40 text-yellow-200 rounded-lg px-6 py-3 mb-4 flex items-center gap-3">
             <svg className="w-5 h-5 text-yellow-400 shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.054 0 1.658-1.14 1.105-2.045l-6.928-12.02c-.526-.912-1.684-.912-2.21 0l-6.928 12.02c-.553.905.051 2.045 1.105 2.045z"/>
@@ -75,7 +75,7 @@ export default function SpacesPage() {
         </div>
 
         {/* Fixed header section */}
-        <div className="bg-[#0b0b0b] px-14 pt-8 pb-4">
+        <div className="bg-[#000000] px-14 pt-8 pb-4">
           <h1 className="text-white text-4xl font-bold mb-6">Spaces</h1>
           <div className="flex items-center mb-7 gap-4">
             <input type="text" placeholder="terraform-aws-infrastructure • Main AWS infrastructure with VPC, EC2, and RDS • AWS • us-east-1"
@@ -91,7 +91,7 @@ export default function SpacesPage() {
         </div>
 
         {/* Scrollable content area */}
-        <div className="flex-1 bg-[#0b0b0b] px-14 overflow-y-auto">
+        <div className="flex-1 bg-[#000000] px-14 overflow-y-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-8">
             {spaces.map((space) => (
               <div

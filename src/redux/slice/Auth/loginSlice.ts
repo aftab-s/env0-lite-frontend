@@ -14,11 +14,11 @@ import {
 
 const initialState: AuthState = {
   token: Cookies.get("token") || null,
-  userId: null,
+  userId: Cookies.get("userId") || null,
   username: null,
-  name: null,
+  name: Cookies.get("name") || null,
   role: null,
-  email: null,
+  email: Cookies.get("email") || null,
   githubPAT: null,
   onboardingCompleted: false,
   isProjectThere: null,
@@ -41,6 +41,9 @@ export const loginUser = createAsyncThunk<
 
     // Persist token (7 day expiry)
     Cookies.set("token", response.data.token, { expires: 7 });
+    Cookies.set("userId", response.data.userId, { expires: 7 });
+    Cookies.set("name", response.data.name, { expires: 7 });
+    Cookies.set("email", response.data.email, { expires: 7 });
 
     return response.data; // includes token + user info
   } catch (error: unknown) {
@@ -73,6 +76,9 @@ const authSlice = createSlice({
       state.onboardingCompleted = false;
       state.isProjectThere = null;
       Cookies.remove("token"); // clear cookie
+      Cookies.remove("userId");
+      Cookies.remove("name");
+      Cookies.remove("email");
     },
   },
   extraReducers: (builder) => {
@@ -103,11 +109,11 @@ const authSlice = createSlice({
 
 export const { logout } = authSlice.actions;
 
-// Persist only username and email in localStorage
+// Persist only username in localStorage
 const persistConfig = {
   key: 'auth',
   storage,
-  whitelist: ['username', 'email', 'name'],
+  whitelist: ['username'],
 };
 
 const persistedReducer = persistReducer(persistConfig, authSlice.reducer);
