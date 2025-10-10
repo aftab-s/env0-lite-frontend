@@ -27,8 +27,9 @@ export interface LoginResponse {
 	isProjectThere: string;
 }
 
-// Response returned by backend after successful signup (no token here)
+// Response returned by backend after successful signup
 export interface SignupResponse {
+	token: string;
 	userId: string;
 	username: string;
 	name: string;
