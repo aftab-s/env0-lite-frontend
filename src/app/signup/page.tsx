@@ -62,11 +62,9 @@ export default function AuthForm() {
     if (signupUser.fulfilled.match(action)) {
       // Store token in cookies, same as login
       Cookies.set("token", action.payload.token, { expires: 7 });
-            const response = action.payload as SignupResponse;
-       Cookies.set('name', response.name);
-      Cookies.set('email', response.email);
-
-
+      Cookies.set("userId", action.payload.userId, { expires: 7 });
+      Cookies.set("name", action.payload.name, { expires: 7 });
+      Cookies.set("email", action.payload.email, { expires: 7 });
       Swal.fire({
         icon: 'success',
         title: 'Account created',

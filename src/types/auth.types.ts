@@ -66,3 +66,14 @@ export interface AuthState {
 // The rejection (error) value we standardize on for async thunks
 export type AuthRejectValue = string;
 
+// User profile response from getUserById API
+export interface UserProfile {
+	userId: string;
+	username: string;
+	name: string;
+	email: string;
+	role: string;
+	createdAt: string;
+	updatedAt: string;
+}
+
