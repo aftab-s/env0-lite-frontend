@@ -85,8 +85,8 @@ const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
                 </svg>
               </div>
               <div className="flex-1">
-                <h3 className="text-white font-semibold">{name || 'Bagel User'}</h3>
-                <p className="text-gray-400 text-sm">{userEmail || 'you@bagel.com'}</p>
+                <h3 className="text-white font-semibold">{'Bagel User'}</h3>
+                <p className="text-gray-400 text-sm">{'you@bagel.com'}</p>
               </div>
             </div>
           </div>
