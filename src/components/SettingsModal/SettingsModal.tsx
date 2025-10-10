@@ -19,6 +19,7 @@ const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
   const [activeTab, setActiveTab] = useState<SettingsTab>('General');
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [patToken, setPatToken] = useState('');
 
   const { name, email: userEmail } = useSelector((state: RootState) => ({
@@ -39,6 +40,8 @@ const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
             setCurrentPassword={setCurrentPassword}
             newPassword={newPassword}
             setNewPassword={setNewPassword}
+            confirmPassword={confirmPassword}
+            setConfirmPassword={setConfirmPassword}
           />
         );
       case 'Account':

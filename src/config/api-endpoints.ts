@@ -4,6 +4,8 @@ const apiEndpoints = {
         login: "/api/users/login",
         getUserById: "/api/users/get-user-by-id",
         updateUserById: "/api/users/update-user",
+        deleteAccount: "/api/users/delete-hard",
+        updatePassword: "/api/users/update-password",
     },
     github: {
         savePat: "/api/github-pat/save-pat",
