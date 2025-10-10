@@ -1,5 +1,6 @@
 'use client';
 import { useState, useCallback, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { User, Mail, Lock } from 'lucide-react';
@@ -9,9 +10,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '@/redux/store';
 import { signupUser, resetSignupState } from '@/redux/slice/Auth/signUpSlice';
 import type { SignupCredentials, SignupResponse } from '@/types/auth.types';
+import Cookies from "js-cookie";
 import Swal from 'sweetalert2';
-import { useRouter } from 'next/navigation';
-import Cookies from 'js-cookie';
+
 
 export default function AuthForm() {
   const dispatch = useDispatch<AppDispatch>();
@@ -22,11 +23,31 @@ export default function AuthForm() {
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
   const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const name = `${firstName.trim()} ${lastName.trim()}`.trim();
-  const canSubmit = !!firstName && !!lastName && !!email && !!password && agreedToTerms && !loading;
+  const canSubmit = !!firstName && !!email && !!password && agreedToTerms && !loading && !emailError && !passwordError;
+
+  const validateEmail = (email: string) => {
+    const domain = email.split('@')[1];
+    if (!domain) return 'Invalid email';
+    const forbidden = ['example.com', 'test.com', 'admin.com'];
+    if (forbidden.includes(domain.toLowerCase())) {
+      return 'This email domain is not allowed';
+    }
+    return '';
+  };
+
+  const validatePassword = (password: string) => {
+    if (password.length < 8) return 'Password must be at least 8 characters';
+    if (!/[A-Z]/.test(password)) return 'Password must contain at least one uppercase letter';
+    if (!/\d/.test(password)) return 'Password must contain at least one number';
+    if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) return 'Password must contain at least one special character';
+    return '';
+  };
 
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,10 +60,12 @@ export default function AuthForm() {
     };
     const action = await dispatch(signupUser(payload));
     if (signupUser.fulfilled.match(action)) {
-      // Store name and email in cookies
-      const response = action.payload as SignupResponse;
-      Cookies.set('name', response.name, { expires: 7 });
-      Cookies.set('email', response.email, { expires: 7 });
+      // Store token in cookies, same as login
+      Cookies.set("token", action.payload.token, { expires: 7 });
+            const response = action.payload as SignupResponse;
+       Cookies.set('name', response.name);
+      Cookies.set('email', response.email);
+
 
       Swal.fire({
         icon: 'success',
@@ -115,10 +138,14 @@ export default function AuthForm() {
               type="email"
               placeholder="you@company.com"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                setEmailError(validateEmail(e.target.value));
+              }}
               icon={<Mail />}
               bgClass="bg-[#1a1a2e]"
             />
+            {emailError && <p className="text-red-500 text-xs">{emailError}</p>}
 
             {/* Password */}
             <AuthInput
@@ -126,12 +153,16 @@ export default function AuthForm() {
               type="password"
               placeholder="••••••••"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                setPasswordError(validatePassword(e.target.value));
+              }}
               icon={<Lock />}
               showPassword={showPassword}
               onTogglePassword={togglePassword}
               bgClass="bg-[#1a1a2e]"
             />
+            {passwordError && <p className="text-red-500 text-xs">{passwordError}</p>}
             <p className="text-xs text-gray-500 mt-1">
               Must be at least 8 characters with a mix of letters and numbers
             </p>

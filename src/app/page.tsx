@@ -29,12 +29,10 @@ export default function AuthForm() {
       const payload = resultAction.payload;
       setNavigating(true);
       let to = '/github-connect'; // default
-      if (payload.githubPAT) {
-        if (payload.isProjectThere === 'yes') {
-          to = '/projects';
-        } else {
-          to = '/dashboard';
-        }
+      if (payload.isProjectThere === 'yes') {
+        to = '/projects';
+      } else if (payload.githubPAT) {
+        to = '/github-connect';
       } else if (payload.onboardingCompleted) {
         to = '/dashboard';
       }
