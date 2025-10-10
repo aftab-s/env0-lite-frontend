@@ -2,14 +2,13 @@
 
 import { useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import Input from '@/components/TextInput/TextInput';
+import Input from '@/components/ui/TextInput';
 import { createProject } from '@/services/project/createProject';
 import type { CreateProjectPayload } from '@/types/project.types';
 import Swal from 'sweetalert2';
 import Button from '@/components/ui/button';
-import Sidebar from '@/components/Sidebar/page'; 
-import PrivateHeader from '@/components/PrivateHeader/page';
-import '@/components/customSwal/customGlass.css';
+import Sidebar from '@/components/common/Sidebar'; 
+import PrivateHeader from '@/components/common/PrivateHeader';
 
 export default function CreateProjectPage() {
   const router = useRouter();
@@ -38,13 +37,6 @@ export default function CreateProjectPage() {
         title: 'Project created',
         timer: 1000,
         showConfirmButton: false,
-        customClass: {
-          popup: 'customBagelGlass',
-          title: 'customBagelTitle',
-          htmlContainer: 'customBagelContent',
-          confirmButton: 'customBagelButton',
-          icon: 'customBagelIcon',
-        },
       });
       router.push(`/cloud-provider/${response.project.projectId}`); // Navigate to cloud provider setup after creation
     } catch (e: unknown) {
@@ -60,13 +52,6 @@ export default function CreateProjectPage() {
         title: 'Error', 
         text: msg, 
         confirmButtonColor: '#CD9C20',
-        customClass: {
-          popup: 'customBagelGlass',
-          title: 'customBagelTitle',
-          htmlContainer: 'customBagelContent',
-          confirmButton: 'customBagelButton',
-          icon: 'customBagelIcon',
-        },
       });
     } finally {
       setSubmitting(false);
@@ -95,7 +80,7 @@ export default function CreateProjectPage() {
             </p>
 
             {/* Form Container */}
-            <div className="w-full max-w-4xl p-6 rounded-lg bg-gradient-to-br from-[#cd9c20]/7 to-black/10 backdrop-blur-md border border-[#232329] rounded-md px-6 py-5 shadow-lg">
+            <div className="w-full max-w-4xl p-6 bg-gradient-to-br from-[#cd9c20]/7 to-black/10 backdrop-blur-md border border-[#232329] rounded-md px-6 py-5 shadow-lg">
               <div className="flex flex-col gap-4">
                 <h1 className="text-xl font-semibold text-gray-300">Project Details</h1>
                 {/* Project Name Field */}
@@ -131,14 +116,6 @@ export default function CreateProjectPage() {
               className="w-full max-w-md px-8 py-2 rounded-[3px]"
             >
               {submitting ? 'Working...' : 'Create Project'}
-            </Button>
-            <Button
-              variant="secondary"
-              disabled={submitting}
-              onClick={() => router.push('/projects')}  // Assuming "Back to Dashboard" should navigate back
-              className="w-full max-w-md px-8 py-2 rounded-[3px] pointer-cursor"
-            >
-              {submitting ? 'Working...' : 'Back to Projects'}
             </Button>
           </div>
         </div>

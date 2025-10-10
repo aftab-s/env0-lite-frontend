@@ -8,11 +8,11 @@ import type { RootState, AppDispatch } from '@/redux/store';
 import { fetchRepositories } from '@/redux/slice/Github/repoListSlice';
 import { updateProjectRepoThunk } from '@/redux/slice/Projects/projectListByOwnerSlice';
 import { cloneRepoAndCreateSpaces } from '@/services/project/cloneRepo';
-import Sidebar from '@/components/Sidebar/page';
-import PrivateHeader from '@/components/PrivateHeader/page';
-import ConfirmationModal from '@/components/ConfirmationModal/ConfirmationModal';
+import Sidebar from '@/components/common/Sidebar';
+import PrivateHeader from '@/components/common/PrivateHeader';
+import ConfirmationModal from '@/components/Template/ConfirmationModal';
 import Swal from 'sweetalert2';
-import '@/components/customSwal/customGlass.css';
+import '@/components/Template/customSwal/page';
 import type { ProjectWithTime } from '@/types/project.types';
 
 interface UIRepository {

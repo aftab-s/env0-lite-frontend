@@ -1,21 +1,18 @@
 'use client';
 import Image from 'next/image';
 import { useState, useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import type { RootState, AppDispatch } from '@/redux/store';
+import { useDispatch } from 'react-redux';
+import type { AppDispatch } from '@/redux/store';
 import { logout } from '@/redux/slice/Auth/loginSlice';
 import { useRouter, usePathname } from 'next/navigation';
+import Cookies from "js-cookie";
+import SettingsModal from '../SettingsModal/SettingsModal';
 import { LogOut } from 'lucide-react';
-import SettingsModal from '@/components/SettingsModal/SettingsModal';
 
 const Sidebar = () => {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const pathname = usePathname();
-  const { username, email } = useSelector((state: RootState) => ({
-    username: state.auth.username,
-    email: state.auth.email,
-  }));
   const [isOpen, setIsOpen] = useState(true);
   const [isLogoHovered, setIsLogoHovered] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -67,8 +64,8 @@ const Sidebar = () => {
     }
   };
 
-  const displayName = username || 'User';
-  const displayEmail = email || 'user@gmail.com';
+  const displayName = Cookies.get("name") || 'User';
+  const displayEmail = Cookies.get("email") || 'user@gmail.com';
 
   return (
     <>

@@ -3,7 +3,7 @@ import { useState, useCallback, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Mail, Lock } from 'lucide-react';
-import AuthInput from '@/components/AuthInput/AuthInput';
+import AuthInput from '@/components/ui/AuthInput';
 import Button from '@/components/PrimaryButton/PrimaryButton';
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '@/redux/store';
@@ -29,12 +29,10 @@ export default function AuthForm() {
       const payload = resultAction.payload;
       setNavigating(true);
       let to = '/github-connect'; // default
-      if (payload.githubPAT) {
-        if (payload.isProjectThere === 'yes') {
-          to = '/projects';
-        } else {
-          to = '/dashboard';
-        }
+      if (payload.isProjectThere === 'yes') {
+        to = '/projects';
+      } else if (payload.githubPAT) {
+        to = '/github-connect';
       } else if (payload.onboardingCompleted) {
         to = '/dashboard';
       }
