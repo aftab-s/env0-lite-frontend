@@ -9,6 +9,7 @@ const apiEndpoints = {
     },
     github: {
         savePat: "/api/github-pat/save-pat",
+        updatePat: "/api/github-pat/update-pat",
         getRepo: "/api/github-pat/list-repos",
     },
        project: {
@@ -18,8 +19,9 @@ const apiEndpoints = {
         selectCsp:"/api/project/:projectId/csp",
         spaceList:"/api/project/:projectId/spaces",
         repoInsert:"/api/project/:projectId/repo",
-        clonetoContainer:"/api/project/:projectId/inject-to-container"
-    },  
+        clonetoContainer:"/api/project/:projectId/inject-to-container",
+        deleteProject: "/api/project/:projectId/delete"
+    },
     deployment: {
         getDeployments: "/api/deployment/",
         terraform: "/api/terraform",
