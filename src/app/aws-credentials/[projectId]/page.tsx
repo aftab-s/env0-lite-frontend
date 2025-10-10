@@ -29,10 +29,31 @@ export default function AWSCredentialsPage() {
 
   const handleSaveCredentials = async () => {
     if (isProjectComplete) return;
+
+    // Validation patterns
+    const accessKeyPattern = /^(AKIA|ASIA)[A-Z0-9]{16}$/;
+    const secretKeyPattern = /^[A-Za-z0-9/+=]{40}$/;
+
     if (!profileName || !accessKeyId || !secretAccessKey) {
       Swal.fire({
         title: 'Validation Error',
         text: 'Please fill in all required fields.'
+      });
+      return;
+    }
+
+    if (!accessKeyPattern.test(accessKeyId)) {
+      Swal.fire({
+        title: 'Invalid Access Key ID',
+        text: 'Access Key ID must start with AKIA or ASIA followed by 16 uppercase alphanumeric characters.'
+      });
+      return;
+    }
+
+    if (!secretKeyPattern.test(secretAccessKey)) {
+      Swal.fire({
+        title: 'Invalid Secret Access Key',
+        text: 'Secret Access Key must be a 40-character string containing A-Z, a-z, 0-9, +, /, or =.'
       });
       return;
     }

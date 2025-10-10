@@ -1,6 +1,6 @@
 "use client";
 import TextInput from "@/components/ui/TextInput"; 
-import Button from "@/components/PrimaryButton/PrimaryButton";
+import Button from "@/components/ui/button";
 import { useState, useCallback, useEffect } from 'react';
 import { saveGithubPAT } from '@/services/githubPAT/githubPat.service';
 import Swal from 'sweetalert2';
@@ -96,7 +96,7 @@ export default function GithubConnectPage() {
               to access your repositories
             </h1>
             <TextInput
-              placeholder="gph_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+              placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
               value={pat}
               onChange={(e) => setPat(e.target.value)}
             />
@@ -105,6 +105,7 @@ export default function GithubConnectPage() {
                 Invalid token format. It must start with <span className="font-mono">ghp_</span> or <span className="font-mono">github_pat_</span>.
               </h4>
             )}
+            <br />
             <div className="w-[54%]">
               <Button onClick={handleVerify} disabled={!canSubmit}>
                 {loading ? 'Saving...' : 'Verify Token'}

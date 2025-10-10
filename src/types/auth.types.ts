@@ -73,6 +73,8 @@ export interface UserProfile {
 	name: string;
 	email: string;
 	role: string;
+	memberSince: string;
+	plan: string;
 	createdAt: string;
 	updatedAt: string;
 }

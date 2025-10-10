@@ -12,6 +12,8 @@ import type { ProjectWithTime } from '@/types/project.types';
 import AnimatedLogo from '@/components/Template/logoAnimation';
 import { useRouter } from 'next/navigation';
 import { Trash2, X } from 'lucide-react';
+import { deleteProject } from '@/services/project/deleteProject';
+import Swal from 'sweetalert2';
 
 interface DeploymentCard {
   name: string;
@@ -49,6 +51,39 @@ export default function ProjectsPage() {
     } else {
       // Pending CSP
       router.push(`/cloud-provider/${project.projectId}`);
+    }
+  };
+
+  const handleDeleteProject = async (projectId: string, projectName: string) => {
+    const result = await Swal.fire({
+      title: 'Delete Project',
+      text: `Are you sure you want to delete "${projectName}"? This action cannot be undone.`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, delete it!',
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await deleteProject(projectId);
+        Swal.fire({
+          title: 'Deleted!',
+          text: `Project "${projectName}" has been deleted.`,
+          icon: 'success',
+          timer: 2000,
+          showConfirmButton: false,
+        });
+        // Reload the page to refresh the project list
+        window.location.reload();
+      } catch (error) {
+        Swal.fire({
+          title: 'Error',
+          text: (error as Error).message,
+          icon: 'error',
+        });
+      }
     }
   };
 
@@ -203,7 +238,7 @@ export default function ProjectsPage() {
                         </p>
                         {deleteMode && (
                           <div className="flex justify-end mt-4">
-                            <Button variant="destructive">Delete</Button>
+                            <Button variant="destructive" onClick={() => handleDeleteProject(card.project.projectId, card.name)}>Delete</Button>
                           </div>
                         )}
                       </div>
