@@ -1,9 +1,10 @@
 'use client';
 import Sidebar from '@/components/common/Sidebar';
 import PrivateHeader from '@/components/common/PrivateHeader';
-import { CheckCircleIcon, ClockIcon } from '@heroicons/react/24/outline';
 import { Cog6ToothIcon } from '@heroicons/react/24/outline';
 import { useEffect, useState } from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { LayoutGrid, GalleryVertical } from 'lucide-react';
 import ProfileSettingsModal from '@/components/SettingsModal/ProfileSettingsModal';
 import { useParams, useRouter } from 'next/navigation';
 import Button from '@/components/ui/button';
@@ -11,9 +12,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '@/redux/store';
 import { getSpacesByProjectIdThunk } from '@/redux/slice/Projects/SpaceListSlice';
 import { Loader } from 'lucide-react';
+import { resetBranchAndSyncSpaces } from '@/services/project/pullRepo';
+import Swal from 'sweetalert2';
 
 export default function SpacesPage() {
   const [showProfileSettings, setShowProfileSettings] = useState(false);
+  const [search, setSearch] = useState('');
+  const [page, setPage] = useState(1);
+  const [isGallery, setIsGallery] = useState(false);
   const params = useParams();
   const projectId = params.projectId as string;
   const id = params.projectId as string;
@@ -21,11 +27,73 @@ export default function SpacesPage() {
   const dispatch = useDispatch<AppDispatch>();
   const { spaces, loading, error } = useSelector((state: RootState) => state.spaceList);
 
+  // Filter spaces by search (case-insensitive substring match)
+  const filteredSpaces = search.trim() === ''
+    ? spaces
+    : spaces.filter(space =>
+        space.spaceName.toLowerCase().includes(search.trim().toLowerCase())
+      );
+
+  // Pagination logic
+  const pageSize = 6;
+  const totalPages = Math.max(1, Math.ceil(filteredSpaces.length / pageSize));
+  const pagedSpaces = filteredSpaces.slice((page - 1) * pageSize, page * pageSize);
+
+  // Reset to page 1 if search/filter changes and current page is out of range
+  useEffect(() => {
+    if (page > totalPages) setPage(1);
+  }, [search, filteredSpaces.length, totalPages, page]);
+
   useEffect(() => {
     if (projectId) {
       dispatch(getSpacesByProjectIdThunk(projectId));
     }
   }, [projectId, dispatch]);
+
+  const handleRebase = async () => {
+    if (!projectId) return;
+    // Show loading Swal
+    Swal.fire({
+      title: 'Rebasing…',
+      html: 'Rebasing it to your GitHub code',
+      didOpen: () => {
+        Swal.showLoading();
+      },
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      showConfirmButton: false,
+      background: '#0b0b0b',
+    });
+
+    const result = await resetBranchAndSyncSpaces(projectId);
+
+    if (result.success) {
+      // Refresh spaces after successful rebase/sync
+      await dispatch(getSpacesByProjectIdThunk(projectId));
+      Swal.fire({
+        title: 'Rebased',
+        text: 'Repository reset and spaces synced with latest GitHub code.',
+        icon: 'success',
+        confirmButtonText: 'OK',
+      });
+    } else {
+      Swal.fire({
+        title: 'Rebase failed',
+        text: result.error || 'Something went wrong while rebasing.',
+        icon: 'error',
+        confirmButtonText: 'OK',
+      });
+    }
+  };
+
+  const handleToggleLayout = () => {
+    setIsGallery((prev) => {
+      const next = !prev;
+      // Reset page when switching back to grid for a consistent view
+      if (!next) setPage(1);
+      return next;
+    });
+  };
 
   if (loading) {
     return (
@@ -61,7 +129,6 @@ export default function SpacesPage() {
       <Sidebar />
       <div className="flex flex-col flex-1 h-screen overflow-hidden">
         <PrivateHeader />
-        
         {/* Warning Box */}
         <div className="w-full px-14 bg-black pt-6">
           <div className="w-full bg-yellow-900/30 border border-yellow-600/40 text-yellow-200 rounded-lg px-6 py-3 mb-4 flex items-center gap-3">
@@ -76,24 +143,62 @@ export default function SpacesPage() {
 
         {/* Fixed header section */}
         <div className="bg-[#000000] px-14 pt-8 pb-4">
-          <h1 className="text-white text-4xl font-bold mb-6">Spaces</h1>
+          <div className="flex items-center justify-between mb-6">
+            <h1 className="text-white text-4xl font-bold">Spaces</h1>
+            {/* Pagination controls in heading row (hidden in gallery mode) */}
+            {!isGallery && (
+              <div className="flex items-center gap-2">
+                <button
+                  className="border border-[#232329] rounded-lg bg-[#09090B] w-10 h-10 flex items-center justify-center disabled:opacity-40 hover:border-[#CD9C20] transition"
+                  onClick={() => setPage(p => Math.max(1, p - 1))}
+                  disabled={page === 1}
+                  aria-label="Previous page"
+                >
+                  <ChevronLeft className="w-5 h-5 text-[#CD9C20]" />
+                </button>
+                <div className="border border-[#232329] rounded-lg bg-[#09090B] w-10 h-10 flex items-center justify-center select-none text-white text-base font-semibold">
+                  {page}
+                </div>
+                <button
+                  className="border border-[#232329] rounded-lg bg-[#09090B] w-10 h-10 flex items-center justify-center disabled:opacity-40 hover:border-[#CD9C20] transition"
+                  onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                  disabled={page === totalPages}
+                  aria-label="Next page"
+                >
+                  <ChevronRight className="w-5 h-5 text-[#CD9C20]" />
+                </button>
+              </div>
+            )}
+          </div>
           <div className="flex items-center mb-7 gap-4">
-            <input type="text" placeholder="terraform-aws-infrastructure • Main AWS infrastructure with VPC, EC2, and RDS • AWS • us-east-1"
-            className="w-full bg-[#09090B] border border-[#27272A] rounded-lg px-4 py-2 text-sm placeholder-gray-400 focus:outline-none" />
+            <input
+              type="text"
+              placeholder="Search Spaces"
+              className="w-full bg-[#09090B] border border-[#27272A] rounded-lg px-4 py-2 text-sm placeholder-gray-400 focus:outline-none"
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+            />
             <Button variant="primary" width="w-55" className="ml-auto">View Deployment</Button>
-              <Button variant="rebaseButton" width="w-45" className="ml-auto">Rebase</Button>
+            <Button variant="rebaseButton" width="w-45" className="ml-auto" onClick={handleRebase}>Rebase</Button>
             <Button variant="extraSetting" width="auto" onClick={() => setShowProfileSettings(true)}>
               <Cog6ToothIcon className="w-5 h-5 text-white" />
             </Button>
-  {/* Profile Settings Modal */}
-  <ProfileSettingsModal isOpen={showProfileSettings} onClose={() => setShowProfileSettings(false)} />
+              <Button variant="extraSetting" width="auto" className="ml-auto" onClick={handleToggleLayout}>
+                {isGallery ? (
+                  <GalleryVertical className="w-5 h-5 text-white" />
+                ) : (
+                  <LayoutGrid className="w-5 h-5 text-white" />
+                )}
+              </Button>
+            {/* Profile Settings Modal */}
+            <ProfileSettingsModal isOpen={showProfileSettings} onClose={() => setShowProfileSettings(false)} />
           </div>
         </div>
 
         {/* Scrollable content area */}
         <div className="flex-1 bg-[#000000] px-14 overflow-y-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-8">
-            {spaces.map((space) => (
+          <div className={isGallery ? "grid grid-cols-1 gap-8 pb-8" : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-8"}>
+            {(isGallery ? filteredSpaces : pagedSpaces).map((space) => (
               <div
                 key={space.spaceId}
                 className="bg-gradient-to-br from-[#cd9c20]/7 to-black/10 backdrop-blur-md border border-[#232329] rounded-md px-6 py-5 shadow-lg cursor-pointer hover:bg-[#232329]/30 transition"
@@ -102,11 +207,6 @@ export default function SpacesPage() {
                 <div className="flex justify-between items-center pb-2">
                   <div className="text-white text-lg font-semibold">{space.spaceName}</div>
                   <div className="rounded-full w-8 h-8 flex items-center justify-center">
-                    {space.status === 'deployed' ? (
-                      <CheckCircleIcon className="w-6 h-6 text-[#22C55E]" />
-                    ) : (
-                      <ClockIcon className="w-6 h-6 text-[#FFD600]" />
-                    )}
                   </div>
                 </div>
                 <div className="text-[#A1A1AA] text-xs pb-3">Managed by {space.userName}</div>

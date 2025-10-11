@@ -20,7 +20,8 @@ const apiEndpoints = {
         spaceList:"/api/project/:projectId/spaces",
         repoInsert:"/api/project/:projectId/repo",
         clonetoContainer:"/api/project/:projectId/inject-to-container",
-        deleteProject: "/api/project/:projectId/delete"
+        deleteProject: "/api/project/:projectId/delete",
+        pullInjector:"/api/project/:projectId/reset-branch",
     },
     deployment: {
         getDeployments: "/api/deployment/",
@@ -28,6 +29,7 @@ const apiEndpoints = {
     },
       credsInjector: {
         configureAwsProfile: "/api/project/:projectId/configure-aws-profile",
+        updateAWSProfile: "/api/project/:projectId/update-aws-profile",
     },
 }
 
