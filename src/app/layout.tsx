@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import "./globals.css";
 import Providers from "./providers";
+import LayoutContent from "@/components/LayoutComponent/LayoutContent";
 
 
 const montserrat = Montserrat({
@@ -28,7 +29,7 @@ export default function RootLayout({
         className={`min-h-screen flex ${montserrat.variable} antialiased bg-[#000000]`}
       >
         <Providers>
-          {children}
+          <LayoutContent>{children}</LayoutContent>
         </Providers>
       </body>
     </html>

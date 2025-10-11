@@ -53,14 +53,16 @@ const AccordionItem: React.FC<AccordionItemProps> = ({ title, status, children }
   );
 };
 
-const StatusBadge: React.FC<{ label: string; color: string; bg: string }> = ({
+const StatusBadge: React.FC<{ label: string; color: string; bg: string; title?: string }> = ({
   label,
   color,
   bg,
+  title,
 }) => (
   <div
     className="flex items-center gap-1 rounded-md px-2 py-1.5 text-xs font-medium"
     style={{ backgroundColor: bg }}
+    title={title}
   >
     <span className="w-2 h-2 rounded-md" style={{ backgroundColor: color }}></span>
     <span style={{ color }}>{label}</span>
@@ -193,13 +195,24 @@ const TerraformAccordions: React.FC<TerraformAccordionsProps> = ({ deployment, p
         const filtered = prev.filter((s) => s.step !== stepName);
         return [...filtered, stepObj];
       });
+
+      // For new deployments, run plan after init
+      if (stepName === "init" && !deployment) {
+        await runStep("plan");
+      }
     } catch (err) {
       console.error(err);
       const failedStep: DeploymentStep = {
         _id: `${stepName}-generated`,
         step: stepName,
         stepStatus: "failed",
-        message: (err as Error).message,
+        message:
+          (typeof err === "object" &&
+            err !== null &&
+            "response" in err &&
+            typeof (err as any).response?.data?.error === "string")
+            ? (err as any).response.data.error
+            : (err instanceof Error ? err.message : "Unknown error"),
         timestamp: new Date().toISOString(),
       };
       setSteps((prev) => {
@@ -212,20 +225,19 @@ const TerraformAccordions: React.FC<TerraformAccordionsProps> = ({ deployment, p
   };
 
 
-  // Common function to run init and plan sequentially
-  const runInitAndPlan = async () => {
-    await runStep("init");
-    await runStep("plan");
-  };
-
   useEffect(() => {
-    if (!deployment) {
-      runInitAndPlan();
+    if (deployment) {
+      // For existing deployments, run only the steps that are present in deployment.steps
+      const existingSteps = new Set(deployment.steps.map(s => s.step));
+      const stepsToRun = stepNames.filter(step => existingSteps.has(step));
+      const runExistingSteps = async () => {
+        for (const step of stepsToRun) {
+          await runStep(step);
+        }
+      };
+      runExistingSteps();
     }
-    if (!steps || steps.length === 0) {
-      if (!deployment) return;
-      stepNames.forEach((name) => runStep(name));
-    }
+    // For new deployments, no auto-run; handled by button
   }, []);
 
   const handleApprove = async () => {
@@ -253,16 +265,16 @@ const TerraformAccordions: React.FC<TerraformAccordionsProps> = ({ deployment, p
     <div className="w-full h-full max-h-screen mx-auto p-6 overflow-hidden flex flex-col">
       <div className="flex items-center justify-between mb-2">
         <h2 className="text-white text-2xl font-semibold">{deployment?.deploymentName || initDeploymentName}</h2>
-        {deployment?.deploymentName && (
-          <div className="ml-4">
-            <PrimaryButton
-              onClick={runInitAndPlan}
-              className="w-auto px-6 py-2 text-sm font-semibold"
-            >
-              Re-deploy
-            </PrimaryButton>
-          </div>
-        )}
+          {!deployment && (
+            <div className="ml-4">
+              <PrimaryButton
+                onClick={() => runStep("init")}
+                className="w-auto px-6 py-2 text-sm font-semibold"
+              >
+                Deploy
+              </PrimaryButton>
+            </div>
+          )}
       </div>
 
       <div className="flex items-center gap-4 mb-5">
@@ -293,7 +305,7 @@ const TerraformAccordions: React.FC<TerraformAccordionsProps> = ({ deployment, p
             <AccordionItem
               key={stepName}
               title={`Terraform ${stepName.charAt(0).toUpperCase() + stepName.slice(1)}`}
-              status={<StatusBadge label={status.label} color={status.color} bg={status.bg} />}
+              status={<StatusBadge label={status.label} color={status.color} bg={status.bg} title={status.label === "Failed" ? step?.message : undefined} />}
             >
               {renderColoredMessage(step?.message)}
               {stepName === "plan" && !allSuccessful && (

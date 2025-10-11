@@ -1,18 +1,19 @@
 "use client"
 import { useEffect } from "react"
-import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
+import { useSelector } from "react-redux"
+import { RootState } from "@/redux/store"
 
 export default function AuthRedirect() {
-  const { status } = useSession()
+  const token = useSelector((state: RootState) => state.auth.token)
   const router = useRouter()
 
   useEffect(() => {
-    if (status === "authenticated") {
+    if (token) {
       // user is logged in → redirect to dashboard
       router.replace("/dashboard")
     }
-  }, [status, router])
+  }, [token, router])
 
   return null
 }

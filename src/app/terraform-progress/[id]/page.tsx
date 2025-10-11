@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "next/navigation";
 import { useSelector, useDispatch } from "react-redux";
 import Sidebar from "@/components/Sidebar/page";
@@ -10,6 +10,7 @@ import { fetchDeployments } from "@/redux/slice/Deployements/deploymentSlice";
 
 
 const DashboardPage: React.FC = () => {
+  const [isClient, setIsClient] = useState(false);
   const params = useParams();
   let id: string | undefined;
   if (Array.isArray(params.id)) {
@@ -24,6 +25,7 @@ const DashboardPage: React.FC = () => {
   );
 
   useEffect(() => {
+    setIsClient(true);
     if (deployments.length === 0) {
       dispatch(fetchDeployments());
     }
@@ -35,6 +37,7 @@ const DashboardPage: React.FC = () => {
   const spaceId = searchParams.get("spaceId") || "";
   console.log({ id, spaceId });
 
+  if (!isClient) return null;
   if (loading) return <div className="text-white p-6">Loading...</div>;
   if (error) return <div className="text-red-500 p-6">{error}</div>;
 
