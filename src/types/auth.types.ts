@@ -18,6 +18,7 @@ export interface SignupCredentials {
 export interface LoginResponse {
 	token: string;
 	userId: string;
+	name: string;
 	username: string;
 	role: string;
 	email: string;
@@ -26,8 +27,9 @@ export interface LoginResponse {
 	isProjectThere: string;
 }
 
-// Response returned by backend after successful signup (no token here)
+// Response returned by backend after successful signup
 export interface SignupResponse {
+	token: string;
 	userId: string;
 	username: string;
 	name: string;
@@ -49,6 +51,7 @@ export interface SignupState {
 // Redux slice state for authentication (token-bearing state)
 export interface AuthState {
 	token: string | null;
+	name: string | null;
 	userId: string | null;
 	username: string | null;
 	role: string | null;
@@ -62,4 +65,17 @@ export interface AuthState {
 
 // The rejection (error) value we standardize on for async thunks
 export type AuthRejectValue = string;
+
+// User profile response from getUserById API
+export interface UserProfile {
+	userId: string;
+	username: string;
+	name: string;
+	email: string;
+	role: string;
+	memberSince: string;
+	plan: string;
+	createdAt: string;
+	updatedAt: string;
+}
 

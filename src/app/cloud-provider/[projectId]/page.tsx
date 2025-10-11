@@ -6,13 +6,14 @@ import { useRouter, useParams } from 'next/navigation';
 import { useSelector } from 'react-redux';
 import type { RootState } from '@/redux/store';
 import { updateProjectCsp } from '@/services/csp/selectCsp';
-import { Loader } from 'lucide-react';
+import Swal from 'sweetalert2';
+
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { getProjectsByOwner } from '@/redux/slice/Projects/projectListByOwnerSlice';
 import type { AppDispatch } from '@/redux/store';
-import Sidebar from '@/components/Sidebar/page';
-import PrivateHeader from '@/components/PrivateHeader/page';
+import Sidebar from '@/components/common/Sidebar';
+import PrivateHeader from '@/components/common/PrivateHeader';
 
 interface CloudProvider {
   id: string;
@@ -28,8 +29,8 @@ export default function CloudProviderPage() {
   const dispatch = useDispatch<AppDispatch>();
   const { projects } = useSelector((state: RootState) => state.projectList);
   const [selectedProvider, setSelectedProvider] = useState<string>('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  // const [loading, setLoading] = useState(false);
+  // const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     dispatch(getProjectsByOwner());
@@ -57,65 +58,44 @@ export default function CloudProviderPage() {
     },
   ];
 
-  const handleProviderSelect = async (providerId: string) => {
+  const handleProviderSelect = (providerId: string) => {
     // Only allow selection for providers that are not 'gcp' or 'azure'
-    if (providerId !== 'gcp' && providerId !== 'azure') {
-      const newSelected = selectedProvider === providerId ? '' : providerId;
-      setSelectedProvider(newSelected);
-      if (providerId === 'aws' && newSelected === 'aws') {
-        // For AWS, directly proceed
-        if (projects.length > 0) {
-          // const projectId = projects[0].projectId;
-          setLoading(true);
-          setError(null);
-          try {
-            console.log('Calling updateProjectCsp with projectId:', projectId, 'csp:', providerId);
-            await updateProjectCsp(projectId, providerId);
-            console.log('API call successful, redirecting to /aws-credentials');
-            router.push(`/aws-credentials/${projectId}`);
-          } catch (err: unknown) {
-            let message = 'Failed to update CSP';
-            if (err && typeof err === 'object' && 'response' in err && (err as { response?: { data?: { error?: string } } }).response?.data?.error) {
-              message = (err as { response: { data: { error: string } } }).response.data.error;
-            }
-            console.error('API call failed:', message);
-            setError(message);
-          } finally {
-            setLoading(false);
+    if (providerId === 'gcp' || providerId === 'azure') return;
+    // Always set selectedProvider and then proceed
+    setSelectedProvider(providerId);
+    if (providerId === 'aws' && projects.length > 0) {
+      // Use an IIFE to avoid async issues with setState
+      (async () => {
+        try {
+          Swal.fire({
+            title: 'Adding Provider to your Bagel',
+            html: '<div class="flex justify-center items-center"><svg class="animate-spin h-15 w-8 text-yellow-600 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path></svg></div>',
+            icon: undefined,
+            showConfirmButton: false,
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+          });
+          await updateProjectCsp(projectId, providerId);
+          await new Promise(res => setTimeout(res, 2000));
+          Swal.close();
+          router.push(`/aws-credentials/${projectId}`);
+        } catch (err: unknown) {
+          let message = 'Failed to update CSP';
+          if (err && typeof err === 'object' && 'response' in err && (err as { response?: { data?: { error?: string } } }).response?.data?.error) {
+            message = (err as { response: { data: { error: string } } }).response.data.error;
           }
-        } else {
-          console.log('No projects available');
+          Swal.close();
+          Swal.fire({
+            icon: 'error',
+            title: 'Failed to add provider',
+            text: message,
+            confirmButtonColor: '#CD9C20',
+          });
         }
-      }
+      })();
     }
   };
 
-  const handleContinue = async () => {
-    console.log('handleContinue called, selectedProvider:', selectedProvider, 'projects.length:', projects.length);
-    if (selectedProvider && projects.length > 0) {
-      // const projectId = projects[0].projectId;
-      console.log('Proceeding with projectId:', projectId, 'csp:', selectedProvider);
-      setLoading(true);
-      setError(null);
-      try {
-        console.log('Calling updateProjectCsp');
-        await updateProjectCsp(projectId, selectedProvider);
-        console.log('Success, redirecting');
-        router.push(`/aws-credentials/${projectId}`);
-      } catch (err: unknown) {
-        let message = 'Failed to update CSP';
-        if (err && typeof err === 'object' && 'response' in err && (err as { response?: { data?: { error?: string } } }).response?.data?.error) {
-          message = (err as { response: { data: { error: string } } }).response.data.error;
-        }
-        console.error('Error:', message);
-        setError(message);
-      } finally {
-        setLoading(false);
-      }
-    } else {
-      console.log('Conditions not met: selectedProvider or no projects');
-    }
-  };
 
   return (
     <div className="flex h-screen w-screen">
@@ -132,7 +112,7 @@ export default function CloudProviderPage() {
               Select the cloud platform where you want to deploy your infrastructure.
             </p>
             <p className="text-base text-gray-400">
-              {" Don't worry, you can configure credentials and add more providers in your dashboard later. "}
+              {" Don't worry, you can configure credentials and add more providers in your project later. "}
             </p>
           </header>
 
@@ -145,11 +125,11 @@ export default function CloudProviderPage() {
                     key={provider.id}
                     className={`relative p-6 pt-10 rounded-lg border-2 bg-[#1A1A1A] ${
                       provider.id === 'gcp' || provider.id === 'azure'
-                        ? 'cursor-not-allowed border-gray-700 hover:bg-gray-700'
+                        ? 'cursor-not-allowed border-[#232329] hover:bg-gray-700'
                         : `cursor-pointer ${
                             selectedProvider === provider.id
                               ? 'border-[#CD9C20]'
-                              : 'border-gray-700 hover:border-gray-600'
+                              : 'border-[#232329] hover:border-[#ffcd4f]'
                           }`
                     }`}
                     onClick={() => handleProviderSelect(provider.id)}
@@ -198,29 +178,6 @@ export default function CloudProviderPage() {
                     )}
                   </div>
                 ))}
-              </div>
-
-              {/* Continue Button */}
-              <div className="flex flex-col items-center gap-4">
-                <button
-                  onClick={handleContinue}
-                  disabled={!selectedProvider || loading}
-                  className={`px-15 py-3 rounded-lg font-medium text-sm flex items-center gap-2 ${
-                    selectedProvider && !loading
-                      ? 'bg-[#F5CB5C] hover:bg-[#CD9C20] text-black cursor-pointer'
-                      : 'bg-gray-400 text-gray-600 cursor-not-allowed'
-                  }`}
-                >
-                  {loading && <Loader className="animate-spin" size={16} />}
-                  {loading ? 'Updating...' : 'Continue with the selection'}
-                </button>
-                <button
-                  onClick={() => router.push('/dashboard')}
-                  className="px-15 py-3 rounded-lg font-medium transition-all duration-200 text-sm bg-[#CD9C20] hover:bg-[#b5871c] text-black cursor-pointer"
-                >
-                  Go to Dashboard
-                </button>
-                {error && <p className="text-red-500 text-sm">{error}</p>}
               </div>
             </div>
           </main>

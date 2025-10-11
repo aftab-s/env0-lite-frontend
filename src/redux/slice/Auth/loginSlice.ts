@@ -1,5 +1,6 @@
-// slices/login.ts
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import { persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 import Cookies from "js-cookie";
 import axiosPrivate from "@/config/axios";
 import { apiEndpoints } from "@/config/api-endpoints";
@@ -12,10 +13,11 @@ import {
 
 const initialState: AuthState = {
   token: Cookies.get("token") || null,
-  userId: null,
+  userId: Cookies.get("userId") || null,
   username: null,
+  name: Cookies.get("name") || null,
   role: null,
-  email: null,
+  email: Cookies.get("email") || null,
   githubPAT: null,
   onboardingCompleted: false,
   isProjectThere: null,
@@ -36,8 +38,11 @@ export const loginUser = createAsyncThunk<
       { email, password }
     );
 
-    // Persist token (7 day expiry)
+    // Persist token, name, and email in cookies (7 day expiry)
     Cookies.set("token", response.data.token, { expires: 7 });
+    Cookies.set("userId", response.data.userId, { expires: 7 });
+    Cookies.set("name", response.data.name, { expires: 7 });
+    Cookies.set("email", response.data.email, { expires: 7 });
 
     return response.data; // includes token + user info
   } catch (error: unknown) {
@@ -63,12 +68,16 @@ const authSlice = createSlice({
       state.token = null;
       state.userId = null;
       state.username = null;
+      state.name = null;
       state.role = null;
       state.email = null;
       state.githubPAT = null;
       state.onboardingCompleted = false;
       state.isProjectThere = null;
       Cookies.remove("token"); // clear cookie
+      Cookies.remove("userId");
+      Cookies.remove("name");
+      Cookies.remove("email");
     },
   },
   extraReducers: (builder) => {
@@ -82,6 +91,7 @@ const authSlice = createSlice({
         state.token = action.payload.token;
         state.userId = action.payload.userId;
         state.username = action.payload.username;
+        state.name = action.payload.name;
         state.role = action.payload.role;
         state.email = action.payload.email;
         state.githubPAT = action.payload.githubPAT;
@@ -96,4 +106,14 @@ const authSlice = createSlice({
 });
 
 export const { logout } = authSlice.actions;
-export default authSlice.reducer;
+
+// Persist only username in localStorage
+const persistConfig = {
+  key: 'auth',
+  storage,
+  whitelist: ['username'],
+};
+
+const persistedReducer = persistReducer(persistConfig, authSlice.reducer);
+
+export default persistedReducer;

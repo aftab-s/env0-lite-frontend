@@ -1,6 +1,5 @@
 // components/customSwal/page.ts
 import Swal, { SweetAlertOptions } from "sweetalert2";
-import "./customGlass.css";
 
 export const showBagelAlert = (options: SweetAlertOptions) => {
   return Swal.fire({
