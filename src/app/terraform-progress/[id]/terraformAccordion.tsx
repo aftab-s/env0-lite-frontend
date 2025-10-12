@@ -325,7 +325,7 @@ const TerraformAccordions: React.FC<TerraformAccordionsProps> = ({ deployment, p
         <div className="flex items-center justify-start gap-2 bg-[#09090B] border border-[#27272A] rounded-md px-4 py-2 text-gray-300 text-sm">
           <span>{deployment?.projectId || projectId}</span>
           <span>•</span>
-          <span>Deployment ID: {deployment?.deploymentId || "_____-_____-_____-_____" || initDeploymentId}</span>
+          <span>Deployment ID: {deployment?.deploymentId  || initDeploymentId || "_____-_____-_____-_____"}</span>
           <span>•</span>
           <span>
             Started: {(startedAt || deployment?.startedAt)
