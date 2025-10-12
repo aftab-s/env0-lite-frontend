@@ -226,17 +226,25 @@ const TerraformAccordions: React.FC<TerraformAccordionsProps> = ({ deployment, p
       }
     } catch (err) {
       console.error(err);
+      // Safely derive an error message without using 'any'
+      let errorMessage = "Unknown error";
+      if (typeof err === "object" && err !== null) {
+        const e = err as { response?: { data?: { error?: unknown } } };
+        const apiError = e.response?.data?.error;
+        if (typeof apiError === "string") {
+          errorMessage = apiError;
+        } else if (err instanceof Error) {
+          errorMessage = err.message;
+        }
+      } else if (err instanceof Error) {
+        errorMessage = err.message;
+      }
+
       const failedStep: DeploymentStep = {
         _id: `${stepName}-generated`,
         step: stepName,
         stepStatus: "failed",
-        message:
-          (typeof err === "object" &&
-            err !== null &&
-            "response" in err &&
-            typeof (err as any).response?.data?.error === "string")
-            ? (err as any).response.data.error
-            : (err instanceof Error ? err.message : "Unknown error"),
+        message: errorMessage,
         timestamp: new Date().toISOString(),
       };
       setSteps((prev) => {

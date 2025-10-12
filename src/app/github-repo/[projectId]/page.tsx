@@ -68,11 +68,11 @@ export default function GithubRepositoryPage() {
   const branchList = selectedRepo?.branches || [];
 
   const handleContinue = async (branch: string) => {
-  if (!selectedRepo || !branch) return;
+    if (!selectedRepo || !branch) return;
 
-  setSelectedBranch(branch);
-  setConnecting(true);
-  setShowModal(true);
+    setSelectedBranch(branch);
+    setConnecting(true);
+    setShowModal(true);
 
     try {
       const result = await dispatch(updateProjectRepoThunk({
@@ -80,7 +80,7 @@ export default function GithubRepositoryPage() {
         payload: {
           repoUrl: `https://github.com/${selectedRepo.owner}/${selectedRepo.name}`,
           ownerName: selectedRepo.owner || '',
-          branch: selectedBranch,
+          branch: branch,
         },
       })).unwrap();
 
