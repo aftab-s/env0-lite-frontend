@@ -20,7 +20,11 @@ export default function CreateProjectPage() {
 
   const validateForm = useCallback(() => {
     const newErrors: { projectName?: string; projectDescription?: string } = {};
-    if (!projectName.trim()) newErrors.projectName = 'Project name is required';
+    if (!projectName.trim()) {
+      newErrors.projectName = 'Project name is required';
+    } else if (/\s/.test(projectName)) {
+      newErrors.projectName = 'Project name cannot contain spaces. Use - or _ instead.';
+    }
     if (!projectDescription.trim()) newErrors.projectDescription = 'Project description is required';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -88,7 +92,16 @@ export default function CreateProjectPage() {
                   label="Project Name"
                   placeholder="e.g., Production Infrastructure, Dev Environment"
                   value={projectName}
-                  onChange={(e) => setProjectName(e.target.value)}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setProjectName(value);
+                    setErrors((prev) => ({
+                      ...prev,
+                      projectName: /\s/.test(value)
+                        ? 'Project name cannot contain spaces. Use - or _ instead.'
+                        : undefined,
+                    }));
+                  }}
                 />
                 {errors.projectName && (
                   <p className="text-red-500 text-xs -mt-2" role="alert">{errors.projectName}</p>

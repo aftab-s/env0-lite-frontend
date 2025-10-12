@@ -29,6 +29,8 @@ export default function ProjectsPage() {
   const [search, setSearch] = useState('');
   // Delete mode state
   const [deleteMode, setDeleteMode] = useState(false);
+  // Pagination state
+  const [page, setPage] = useState(1);
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const { projects, loading, error } = useSelector((state: RootState) => state.projectList);
@@ -129,6 +131,7 @@ export default function ProjectsPage() {
     project,
   }));
 
+
   // Filter cards by search
   const filteredCards = deploymentCards.filter(card => {
     const searchLower = search.toLowerCase();
@@ -136,6 +139,16 @@ export default function ProjectsPage() {
       card.name.toLowerCase().includes(searchLower)
     );
   });
+
+  // Pagination logic
+  const pageSize = 6;
+  const totalPages = Math.max(1, Math.ceil(filteredCards.length / pageSize));
+  const pagedCards = filteredCards.slice((page - 1) * pageSize, page * pageSize);
+
+  // Reset to page 1 if search/filter changes and current page is out of range
+  useEffect(() => {
+    if (page > totalPages) setPage(1);
+  }, [search, filteredCards.length, totalPages, page]);
 
   if (loading) {
     return (
@@ -206,6 +219,28 @@ export default function ProjectsPage() {
               >
                 {deleteMode ? <X /> : <Trash2 />}
               </Button>
+              {/* Pagination control */}
+              <div className="flex items-center gap-2 ml-4">
+                <button
+                  className="border border-[#232329] rounded-lg bg-[#09090B] w-10 h-10 flex items-center justify-center disabled:opacity-40 hover:border-[#CD9C20] transition"
+                  onClick={() => setPage(p => Math.max(1, p - 1))}
+                  disabled={page === 1}
+                  aria-label="Previous page"
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#CD9C20" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                </button>
+                <div className="border border-[#232329] rounded-lg bg-[#09090B] w-10 h-10 flex items-center justify-center select-none text-white text-base font-semibold">
+                  {page}
+                </div>
+                <button
+                  className="border border-[#232329] rounded-lg bg-[#09090B] w-10 h-10 flex items-center justify-center disabled:opacity-40 hover:border-[#CD9C20] transition"
+                  onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                  disabled={page === totalPages}
+                  aria-label="Next page"
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#CD9C20" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </button>
+              </div>
             </div>
 
             {/* Main Content Grid */}
@@ -214,7 +249,7 @@ export default function ProjectsPage() {
                 {filteredCards.length === 0 ? (
                   <div className="col-span-full text-center text-gray-400 py-8">No projects found.</div>
                 ) : (
-                  filteredCards.map((card, index) => {
+                  pagedCards.map((card, index) => {
                     const statusColor = getStatusColor(card.project);
                     return (
                       <div
