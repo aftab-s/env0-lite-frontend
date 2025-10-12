@@ -8,16 +8,13 @@ import TerraformAccordions from "./terraformAccordion";
 import { RootState, AppDispatch } from "@/redux/store";
 import { fetchDeployments } from "@/redux/slice/Deployements/deploymentSlice";
 
-
 const DashboardPage: React.FC = () => {
   const [isClient, setIsClient] = useState(false);
-  const params = useParams();
-  let id: string | undefined;
-  if (Array.isArray(params.id)) {
-    id = params.id[0];
-  } else {
-    id = params.id;
-  }
+  const [id, setId] = useState<string | undefined>();
+  const [spaceId, setSpaceId] = useState<string>("");
+
+  const params = useParams(); // Move to top
+  const searchParams = useSearchParams(); // Move to top
 
   const dispatch = useDispatch<AppDispatch>();
   const { list: deployments, loading, error } = useSelector(
@@ -26,6 +23,18 @@ const DashboardPage: React.FC = () => {
 
   useEffect(() => {
     setIsClient(true);
+    let idVal: string | undefined;
+    if (Array.isArray(params.id)) {
+      idVal = params.id[0];
+    } else {
+      idVal = params.id;
+    }
+    setId(idVal);
+
+    setSpaceId(searchParams.get("spaceId") || "");
+  }, [params, searchParams]); // Add dependencies
+
+  useEffect(() => {
     if (deployments.length === 0) {
       dispatch(fetchDeployments());
     }
@@ -33,11 +42,8 @@ const DashboardPage: React.FC = () => {
 
   // Find the deployment by ID
   const deployment = deployments.find((d) => d._id === id);
-  const searchParams = useSearchParams();
-  const spaceId = searchParams.get("spaceId") || "";
-  console.log({ id, spaceId });
 
-  if (!isClient) return null;
+  if (!isClient || !id) return null;
   if (loading) return <div className="text-white p-6">Loading...</div>;
   if (error) return <div className="text-red-500 p-6">{error}</div>;
 
@@ -57,7 +63,7 @@ const DashboardPage: React.FC = () => {
           <div className="flex-1 overflow-auto bg-[#09090B]">
             <TerraformAccordions
               deployment={deployment ?? null}
-              projectId={id}
+              projectId={deployment?.projectId || id || ""}
               spaceId={spaceId}
             />
           </div>

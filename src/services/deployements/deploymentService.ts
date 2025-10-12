@@ -1,6 +1,6 @@
 import axiosPrivate from '@/config/axios';
 import { apiEndpoints } from '@/config/api-endpoints';
-import { DeploymentsResponse, TerraformApplyResponse, TerraformCommandResponse, TerraformPlanResponse } from '@/types/deployment.types';
+import { DeploymentsResponse, TerraformApplyResponse, TerraformCommandResponse, TerraformPlanResponse, TerraformDestroyResponse } from '@/types/deployment.types';
 
 const apiBaseUrl = apiEndpoints.deployment;
 export async function getDeployments(): Promise<DeploymentsResponse> {
@@ -23,4 +23,9 @@ export async function terraformPlan(projectId: string, spaceName: string, deploy
 export async function terraformApply(projectId: string, spaceName: string, deploymentId: string): Promise<TerraformApplyResponse> {
     const response = await axiosPrivate.post(`${apiBaseUrl.terraform}/${projectId}/apply`, {spaceName, deploymentId});
     return response.data;
+}
+
+export async function terraformDestroy(projectId: string, spaceName: string, deploymentId: string): Promise<TerraformDestroyResponse> {
+  const response = await axiosPrivate.post(`${apiBaseUrl.terraform}/${projectId}/destroy`, { spaceName, deploymentId });
+  return response.data;
 }

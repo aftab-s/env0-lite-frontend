@@ -51,5 +51,13 @@ export interface TerraformApplyResponse {
   summary: TerraformApplySummary | null;
 }
 
+export interface TerraformDestroyResponse {
+  command: string;
+  deploymentId: string;
+  exitCode: number;
+  stdout: string;
+  stderr: string;
+  summary: TerraformApplySummary | null;
+}
 
 export type DeploymentsResponse = Deployment[];
