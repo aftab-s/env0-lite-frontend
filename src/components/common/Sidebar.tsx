@@ -7,7 +7,7 @@ import { logout } from '@/redux/slice/Auth/loginSlice';
 import { useRouter, usePathname } from 'next/navigation';
 import Cookies from "js-cookie";
 import SettingsModal from '../SettingsModal/SettingsModal';
-import { LogOut } from 'lucide-react';
+import { LogOut, FolderGit2 } from 'lucide-react';
 
 const Sidebar = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -134,17 +134,28 @@ const Sidebar = () => {
                   title={!isOpen ? item.name : ''}
                   onClick={() => handleMenuClick(item)}
                 >
-                  <Image
-                    src={item.icon}
-                    alt={item.name}
-                    width={18}
-                    height={18}
-                    className={`shrink-0 ${
-                      activeItem === item.name
-                        ? 'brightness-0 saturate-100 invert-[0.5] sepia hue-rotate-[25deg]'
-                        : 'brightness-0 saturate-100 invert-[0.6] group-hover:brightness-0 group-hover:saturate-100 group-hover:invert-[1]'
-                    }`}
-                  />
+                  {item.name === 'Projects' ? (
+                    <FolderGit2
+                      size={18}
+                      className={`shrink-0 ${
+                        activeItem === item.name
+                          ? 'text-yellow-500'
+                          : 'text-gray-300 group-hover:text-white'
+                      }`}
+                    />
+                  ) : (
+                    <Image
+                      src={item.icon}
+                      alt={item.name}
+                      width={18}
+                      height={18}
+                      className={`shrink-0 ${
+                        activeItem === item.name
+                          ? 'brightness-0 saturate-100 invert-[0.5] sepia hue-rotate-[25deg]'
+                          : 'brightness-0 saturate-100 invert-[0.6] group-hover:brightness-0 group-hover:saturate-100 group-hover:invert-[1]'
+                      }`}
+                    />
+                  )}
                   {isOpen && item.name}
                 </button>
               </li>
