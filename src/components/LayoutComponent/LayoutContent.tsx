@@ -10,8 +10,8 @@ interface LayoutContentProps {
 export default function LayoutContent({ children }: LayoutContentProps) {
   const pathname = usePathname();
 
-  // Exclude PrivateRoute on the login page (/)
-  if (pathname === "/") {
+  // Exclude PrivateRoute on the login page (/) and signup page (/signup)
+  if (pathname === "/" || pathname === "/signup") {
     return <>{children}</>;
   }
 
