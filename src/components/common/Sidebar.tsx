@@ -72,8 +72,6 @@ const Sidebar = () => {
     }
   };
 
-  const displayName = Cookies.get("name") || 'User';
-  const displayEmail = Cookies.get("email") || 'user@gmail.com';
 
   return (
     <>
@@ -195,8 +193,12 @@ const Sidebar = () => {
               </svg>
               {isOpen && (
                 <div className="flex flex-col text-left">
-                  <span className="text-white font-semibold">{name}</span>
-                  <span className="text-xs text-gray-400">{email}</span>
+                  <span className="text-white font-semibold">
+                    {name && name.length > 10 ? `${name.substring(0, 15)}...` : name || ''}
+                  </span>
+                  <span className="text-xs text-gray-400">
+                    {email && email.length > 10 ? `${email.substring(0, 15)}...` : email || ''}
+                  </span>
                 </div>
               )}
             </div>
