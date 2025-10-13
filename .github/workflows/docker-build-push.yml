@@ -56,7 +56,14 @@ jobs:
           type=ref,event=branch
           type=ref,event=pr
           type=sha,prefix={{branch}}-
-          type=raw,value=latest,enable={{is_default_branch}}
+          type=raw,value={{branch}}-{{sha}},enable={{is_default_branch}}
+
+    - name: Generate latest tag
+      id: latest_tag
+      if: github.ref_name == 'main' && (github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.merged == true))
+      run: |
+        echo "should_tag_latest=true" >> $GITHUB_OUTPUT
+        echo "latest_tags=${{ env.DOCKER_IMAGE }}:latest,${{ steps.meta.outputs.tags }}" >> $GITHUB_OUTPUT
 
     - name: Build and push Docker image
       id: build
@@ -65,7 +72,7 @@ jobs:
         context: .
         file: ./Dockerfile
         push: true
-        tags: ${{ steps.meta.outputs.tags }}
+        tags: ${{ steps.latest_tag.outputs.should_tag_latest == 'true' && steps.latest_tag.outputs.latest_tags || steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
