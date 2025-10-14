@@ -1,12 +1,8 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useSelector } from "react-redux";
-import { store } from "../redux/store";
 import { ReactNode } from "react";
-
-type RootState = ReturnType<typeof store.getState>;
 
 interface PrivateRouteProps {
   children: ReactNode;
@@ -14,13 +10,20 @@ interface PrivateRouteProps {
 
 export default function PrivateRoute({ children }: PrivateRouteProps) {
   const router = useRouter();
-  const token = useSelector((state: RootState) => state.auth.token);
+  const [token, setToken] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!token) {
+    // Read token from cookies on client
+    const cookieToken = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("token="))
+      ?.split("=")[1] || null;
+    setToken(cookieToken);
+    
+    if (!cookieToken) {
       router.push("/");
     }
-  }, [token, router]);
+  }, [router]);
 
   if (!token) {
     return null; // or a loading spinner
