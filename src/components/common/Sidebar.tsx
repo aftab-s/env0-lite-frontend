@@ -1,11 +1,11 @@
 'use client';
 import Image from 'next/image';
 import { useEffect, useState, useCallback } from 'react';
-import { useDispatch } from 'react-redux';
-import type { AppDispatch } from '@/redux/store';
+import { useDispatch, useSelector } from 'react-redux';
+import type { RootState, AppDispatch } from '@/redux/store';
 import { logout } from '@/redux/slice/Auth/loginSlice';
+import { getUserById } from '@/redux/slice/Auth/userManagementSlice';
 import { useRouter, usePathname } from 'next/navigation';
-import Cookies from "js-cookie";
 import SettingsModal from '../SettingsModal/SettingsModal';
 import { LogOut, FolderGit2 } from 'lucide-react';
 
@@ -13,17 +13,25 @@ const Sidebar = () => {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const pathname = usePathname();
+  const { user } = useSelector((state: RootState) => state.userManagement);
   const [isOpen, setIsOpen] = useState(true);
   const [isLogoHovered, setIsLogoHovered] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [name, setName] = useState<string | undefined>(undefined);
   const [email, setEmail] = useState<string | undefined>(undefined);
 
-  // Fetch name and email from cookies on mount
   useEffect(() => {
-    setName(Cookies.get('name'));
-    setEmail(Cookies.get('email'));
-  }, []);
+    if (!user) {
+      dispatch(getUserById());
+    }
+  }, [dispatch, user]);
+
+  useEffect(() => {
+    if (user) {
+      setName(user.name);
+      setEmail(user.email);
+    }
+  }, [user]);
 
   const menuItems = [
     { icon: '/sidebar/projects.svg', name: 'Projects', route: '/projects' },
@@ -71,7 +79,6 @@ const Sidebar = () => {
       router.push(item.route);
     }
   };
-
 
   return (
     <>
