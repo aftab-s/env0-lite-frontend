@@ -10,6 +10,7 @@ import {
   TerraformApplyResponse,
 } from "@/types/deployment.types";
 import PrimaryButton from "@/components/PrimaryButton/PrimaryButton";
+import DestroyConfirmationModal from "@/components/DestroyConfirmationModal/DestroyConfirmationModal";
 import {
   terraformInit,
   terraformPlan,
@@ -121,10 +122,11 @@ const TerraformAccordions: React.FC<TerraformAccordionsProps> = ({ deployment, p
   const [initDeploymentId, setInitDeploymentId] = useState<string | null>(null);
   const [initDeploymentName, setInitDeploymentName] = useState<string | null>(null);
   const [startedAt, setStartedAt] = useState<string | null>(null);
-  const [isClient, setIsClient] = useState(false); // Add client check
-  const [dots, setDots] = useState("."); // Add dots state for animation
+  const [isClient, setIsClient] = useState(false);
+  const [dots, setDots] = useState(".");
+  const [isDestroyModalOpen, setIsDestroyModalOpen] = useState(false);
 
-  const stepNames = ["init", "plan", "apply", "destroy"]; // Add destroy
+  const stepNames = ["init", "plan", "apply", "destroy"];
 
   const getStepStatus = (step?: DeploymentStep) => {
     if (!step) return { label: "Pending", color: "#F5A623", bg: "#F5A62333" };
@@ -137,7 +139,6 @@ const TerraformAccordions: React.FC<TerraformAccordionsProps> = ({ deployment, p
   const runStep = async (stepName: string, deploymentIdOverride?: string) => {
     setLoadingSteps((prev) => ({ ...prev, [stepName]: true }));
 
-    // Set stepStatus to in_progress before API call
     setSteps((prev) => {
       const filtered = prev.filter((s) => s.step !== stepName);
       return [
@@ -156,7 +157,7 @@ const TerraformAccordions: React.FC<TerraformAccordionsProps> = ({ deployment, p
       | TerraformCommandResponse
       | TerraformPlanResponse
       | TerraformApplyResponse;
-    let deploymentIdFromResponse = ""; // Declare here for broader scope
+    let deploymentIdFromResponse = "";
 
     try {
       if (stepName === "init") {
@@ -165,12 +166,10 @@ const TerraformAccordions: React.FC<TerraformAccordionsProps> = ({ deployment, p
           (deployment?.spaceId ?? spaceId) || "",
           (deployment?.deploymentId ?? deployment?._id) || null
         );
-        // Store deploymentId for later plan/apply
         if (response && typeof response === "object" && "deploymentId" in response) {
           deploymentIdFromResponse = response.deploymentId;
           setInitDeploymentId(response.deploymentId);
         } else {
-          // Fallback to spaceId if deploymentId not in response
           deploymentIdFromResponse = (deployment?.spaceId ?? spaceId) || "";
           setInitDeploymentId(deploymentIdFromResponse);
         }
@@ -183,7 +182,6 @@ const TerraformAccordions: React.FC<TerraformAccordionsProps> = ({ deployment, p
           (deployment?.spaceId ?? spaceId) || "",
           deploymentIdOverride || initDeploymentId || (deployment?.deploymentId ?? deployment?._id) || ""
         );
-        // Store rawFormat in stepObj.message below
       } else if (stepName === "apply") {
         response = await terraformApply(
           (deployment?.projectId ?? projectId) || "",
@@ -198,7 +196,6 @@ const TerraformAccordions: React.FC<TerraformAccordionsProps> = ({ deployment, p
         );
       } else throw new Error("Unknown step");
 
-      // For init, use stdout; for plan, use rawFormat; for apply/destroy, use stdout
       let message = "";
       if (stepName === "plan" && response && typeof response === "object" && "rawFormat" in response) {
         message = response.rawFormat || "";
@@ -219,14 +216,12 @@ const TerraformAccordions: React.FC<TerraformAccordionsProps> = ({ deployment, p
         return [...filtered, stepObj];
       });
 
-      // For new deployments, run plan after init with the deploymentId from response
       if (stepName === "init" && !deployment) {
         setLoadingSteps((prev) => ({ ...prev, [stepName]: false }));
         await runStep("plan", deploymentIdFromResponse);
       }
     } catch (err) {
       console.error(err);
-      // Safely derive an error message without using 'any'
       let errorMessage = "Unknown error";
       if (typeof err === "object" && err !== null) {
         const e = err as { response?: { data?: { error?: unknown } } };
@@ -257,14 +252,10 @@ const TerraformAccordions: React.FC<TerraformAccordionsProps> = ({ deployment, p
   };
 
   useEffect(() => {
-    setIsClient(true); // Set client flag
+    setIsClient(true);
     if (deployment) {
-      // For existing deployments, display the steps and messages from the deployment object without re-running APIs
       setSteps(deployment.steps);
     }
-    // For new deployments, no auto-run; handled by button
-
-    // Animate dots always
     const interval = setInterval(() => {
       setDots((prev) => {
         if (prev === "....") return ".";
@@ -290,42 +281,54 @@ const TerraformAccordions: React.FC<TerraformAccordionsProps> = ({ deployment, p
     setSteps([]);
     setInitDeploymentId(null);
     setInitDeploymentName(null);
-    setStartedAt(null); // Reset startedAt on reload
+    setStartedAt(null);
     runStep("init");
   };
 
-  // Determine if all steps are successful
+  const handleDestroyClick = () => {
+    setIsDestroyModalOpen(true);
+  };
+
+  const handleDestroyConfirm = async () => {
+    await runStep("destroy");
+    setIsDestroyModalOpen(false);
+  };
+
+  const handleDestroyCancel = () => {
+    setIsDestroyModalOpen(false);
+  };
+
   const allSuccessful = stepNames.every((stepName) => {
     const step = steps.find((s) => s.step === stepName);
     return step && step.stepStatus === "successful";
   });
 
-  if (!isClient) return null; // Prevent server rendering
+  if (!isClient) return null;
 
   return (
     <div className="w-full h-full max-h-screen mx-auto p-6 overflow-hidden flex flex-col">
       <div className="flex items-center justify-between mb-2">
         <h2 className="text-white text-2xl font-semibold">{deployment?.deploymentName || initDeploymentName || "New Deployment"}</h2>
-          {!deployment && (
-            <div className="ml-4">
-              <PrimaryButton
-                onClick={() => {
-                  setStartedAt(new Date().toISOString()); // Set startedAt when Deploy is clicked
-                  runStep("init");
-                }}
-                className="w-auto px-6 py-2 text-sm font-semibold cursor-pointer"
-              >
-                Deploy
-              </PrimaryButton>
-            </div>
-          )}
+        {!deployment && (
+          <div className="ml-4">
+            <PrimaryButton
+              onClick={() => {
+                setStartedAt(new Date().toISOString());
+                runStep("init");
+              }}
+              className="w-auto px-6 py-2 text-sm font-semibold cursor-pointer"
+            >
+              Deploy
+            </PrimaryButton>
+          </div>
+        )}
       </div>
 
       <div className="flex items-center gap-4 mb-5">
         <div className="flex items-center justify-start gap-2 bg-[#09090B] border border-[#27272A] rounded-md px-4 py-2 text-gray-300 text-sm">
           <span>{deployment?.projectId || projectId}</span>
           <span>•</span>
-          <span>Deployment ID: {deployment?.deploymentId  || initDeploymentId || "_____-_____-_____-_____"}</span>
+          <span>Deployment ID: {deployment?.deploymentId || initDeploymentId || "_____-_____-_____-_____"}</span>
           <span>•</span>
           <span>
             Started: {(startedAt || deployment?.startedAt)
@@ -351,7 +354,6 @@ const TerraformAccordions: React.FC<TerraformAccordionsProps> = ({ deployment, p
           const planStep = steps.find((s) => s.step === "plan");
           const applyStep = steps.find((s) => s.step === "apply");
 
-          // Only show destroy accordion if apply is successful
           if (stepName === "destroy" && (!applyStep || applyStep.stepStatus !== "successful")) {
             return null;
           }
@@ -366,7 +368,7 @@ const TerraformAccordions: React.FC<TerraformAccordionsProps> = ({ deployment, p
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        runStep("destroy");
+                        handleDestroyClick();
                       }}
                       className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-md text-xs cursor-pointer"
                       disabled={loadingSteps["destroy"]}
@@ -407,6 +409,14 @@ const TerraformAccordions: React.FC<TerraformAccordionsProps> = ({ deployment, p
           );
         })}
       </div>
+
+      <DestroyConfirmationModal
+        isOpen={isDestroyModalOpen}
+        onClose={handleDestroyCancel}
+        onConfirm={handleDestroyConfirm}
+        deploymentName={deployment?.deploymentName || initDeploymentName || "New Deployment"}
+        isLoading={loadingSteps["destroy"]}
+      />
     </div>
   );
 };

@@ -1,8 +1,9 @@
 'use client';
-import { useState } from 'react';
-import { X, SlidersHorizontal, Shield, User, Github } from 'lucide-react'; // Added Github icon
-import { useSelector } from 'react-redux';
-import type { RootState } from '@/redux/store';
+import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import type { RootState, AppDispatch } from '@/redux/store';
+import { getUserById } from '@/redux/slice/Auth/userManagementSlice';
+import { X, SlidersHorizontal, Shield, User, Github } from 'lucide-react';
 import GeneralSettings from '@/components/Logic/Settings/GeneralSettings';
 import SecuritySettings from '@/components/Logic/Settings/SecuritySettings';
 import AccountSettings from '@/components/Logic/Settings/AccountSettings';
@@ -13,9 +14,10 @@ interface SettingsModalProps {
   onClose: () => void;
 }
 
-type SettingsTab = 'General' | 'Security' | 'Account' | 'Github PAT'; // Added 'Github PAT'
+type SettingsTab = 'General' | 'Security' | 'Account' | 'Github PAT';
 
 const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
+  const dispatch = useDispatch<AppDispatch>();
   const [activeTab, setActiveTab] = useState<SettingsTab>('General');
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -26,6 +28,13 @@ const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
     name: state.userManagement.user?.name,
     email: state.userManagement.user?.email,
   }));
+
+  // Fetch user data on mount if not already loaded
+  useEffect(() => {
+    if (!name && !userEmail) {
+      dispatch(getUserById());
+    }
+  }, [dispatch, name, userEmail]);
 
   if (!isOpen) return null;
 
@@ -85,8 +94,8 @@ const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
                 </svg>
               </div>
               <div className="flex-1">
-                <h3 className="text-white font-semibold">{'Bagel User'}</h3>
-                <p className="text-gray-400 text-sm">{'you@bagel.com'}</p>
+                <h3 className="text-white font-semibold">{name || ''}</h3>
+                <p className="text-gray-400 text-sm">{userEmail || ''}</p>
               </div>
             </div>
           </div>
