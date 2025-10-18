@@ -14,6 +14,7 @@ import DestroyConfirmationModal from "@/components/DestroyConfirmationModal/Dest
 import {
   terraformInit,
   terraformPlan,
+  terraformPlanDeny,
   terraformApply,
   terraformDestroy,
 } from "@/services/deployements/deploymentService";
@@ -22,10 +23,17 @@ interface AccordionItemProps {
   title: string;
   status?: React.ReactNode;
   children?: React.ReactNode;
+  defaultOpen?: boolean;
 }
 
-const AccordionItem: React.FC<AccordionItemProps> = ({ title, status, children }) => {
-  const [open, setOpen] = useState(false);
+const AccordionItem: React.FC<AccordionItemProps> = ({ title, status, children, defaultOpen = false }) => {
+  const [open, setOpen] = useState<boolean>(defaultOpen);
+
+  // keep open state in sync if parent controls defaultOpen
+  useEffect(() => {
+    setOpen(defaultOpen);
+  }, [defaultOpen]);
+
   return (
     <div className="rounded-md overflow-hidden mb-3 bg-[#000000] w-full border-t border-[#27272A]">
       <div
@@ -107,8 +115,8 @@ const renderColoredMessage = (message?: string, stepName?: string) => {
         {line}
       </div>
     );
-  });
-};
+});
+}
 
 interface TerraformAccordionsProps {
   deployment: Deployment | null;
@@ -125,12 +133,27 @@ const TerraformAccordions: React.FC<TerraformAccordionsProps> = ({ deployment, p
   const [isClient, setIsClient] = useState(false);
   const [dots, setDots] = useState(".");
   const [isDestroyModalOpen, setIsDestroyModalOpen] = useState(false);
+  const [showDestroyAccordion, setShowDestroyAccordion] = useState(false);
+  const [isDestroyClicked, setIsDestroyClicked] = useState(false);
+
+  // Prevent multiple approve/deny clicks for the same plan until a new plan is produced
+  const [planActionTaken, setPlanActionTaken] = useState(false);
+  // disable approve action while apply is running (prevents double-click)
+  const [planActionClicked, setPlanActionClicked] = useState(false);
 
   const stepNames = ["init", "plan", "apply", "destroy"];
 
   const getStepStatus = (step?: DeploymentStep) => {
     if (!step) return { label: "Pending", color: "#F5A623", bg: "#F5A62333" };
     if (step.stepStatus === "in_progress") return { label: "In Progress", color: "#3B82F6", bg: "#3B82F633" };
+    // cancelled -> orange theme (keep special handling for destroy)
+    if (step.stepStatus === "cancelled") {
+      // For destroy step, show failed instead of "Cancelled"
+      if (step.step === "destroy") return { label: "Failed", color: "#F87171", bg: "#F8717133" };
+      return { label: "Cancelled", color: "#F97316", bg: "#F9731633" }; // orange theme
+    }
+    // For destroy step, show Terminated instead of Completed
+    if (step.step === "destroy" && step.stepStatus === "successful") return { label: "Terminated", color: "#9CA3AF", bg: "#9CA3AF33" };
     if (step.stepStatus === "successful") return { label: "Completed", color: "#00B15C", bg: "#00B15C33" };
     if (step.stepStatus === "failed") return { label: "Failed", color: "#F87171", bg: "#F8717133" };
     return { label: "Pending", color: "#F5A623", bg: "#F5A62333" };
@@ -211,6 +234,11 @@ const TerraformAccordions: React.FC<TerraformAccordionsProps> = ({ deployment, p
         timestamp: new Date().toISOString(),
       };
 
+      // If this was a newly produced plan, allow actions again
+      if (stepName === "plan") {
+        setPlanActionTaken(false);
+      }
+
       setSteps((prev) => {
         const filtered = prev.filter((s) => s.step !== stepName);
         return [...filtered, stepObj];
@@ -270,11 +298,65 @@ const TerraformAccordions: React.FC<TerraformAccordionsProps> = ({ deployment, p
   }, []);
 
   const handleApprove = async () => {
-    await runStep("apply");
+    // mark that an action was taken for this plan to disable further approve/deny until a new plan arrives
+    if (planActionTaken) return;
+    setPlanActionTaken(true);
+    // prevent double-click during apply
+    if (planActionClicked || loadingSteps["apply"]) return;
+    setPlanActionClicked(true);
+    try {
+      await runStep("apply");
+    } finally {
+      setPlanActionClicked(false);
+    }
   };
 
-  const handleDeny = () => {
-    
+  const handleDeny = async () => {
+    // disable plan buttons while denying
+    setLoadingSteps((prev) => ({ ...prev, plan: true }));
+    // mark action taken to prevent re-clicks
+    setPlanActionTaken(true);
+    try {
+      const deploymentId = initDeploymentId || (deployment?.deploymentId ?? deployment?._id) || "";
+      const response = await terraformPlanDeny(
+        (deployment?.projectId ?? projectId) || "",
+        (deployment?.spaceId ?? spaceId) || "",
+        deploymentId
+      );
+
+      const message =
+        (response && typeof response === "object" && ("stdout" in response ? response.stdout : (response as any).message)) ||
+        JSON.stringify(response || {});
+
+      const cancelledStep: DeploymentStep = {
+        _id: `plan-cancelled-${Date.now()}`,
+        step: "plan",
+        stepStatus: "cancelled",
+        message: message,
+        timestamp: new Date().toISOString(),
+      };
+
+      setSteps((prev) => {
+        const filtered = prev.filter((s) => s.step !== "plan");
+        return [...filtered, cancelledStep];
+      });
+    } catch (err) {
+      console.error("Deny failed", err);
+      const errMsg = (err && typeof err === "object" && (err as any).response?.data?.error) || (err instanceof Error ? err.message : "Unknown error");
+      const failedStep: DeploymentStep = {
+        _id: `plan-failed-${Date.now()}`,
+        step: "plan",
+        stepStatus: "failed",
+        message: errMsg,
+        timestamp: new Date().toISOString(),
+      };
+      setSteps((prev) => {
+        const filtered = prev.filter((s) => s.step !== "plan");
+        return [...filtered, failedStep];
+      });
+    } finally {
+      setLoadingSteps((prev) => ({ ...prev, plan: false }));
+    }
   };
 
   const handleReload = () => {
@@ -282,16 +364,34 @@ const TerraformAccordions: React.FC<TerraformAccordionsProps> = ({ deployment, p
     setInitDeploymentId(null);
     setInitDeploymentName(null);
     setStartedAt(null);
+    // hide any destroy UI when redeploying
+    setShowDestroyAccordion(false);
+    setIsDestroyClicked(false);
+    setIsDestroyModalOpen(false);
     runStep("init");
+    setStartedAt(new Date().toISOString());
   };
 
   const handleDestroyClick = () => {
-    setIsDestroyModalOpen(true);
+    // open the destroy accordion with an initial warning message
+    setShowDestroyAccordion(true);
+    // mark clicked so approve button is disabled once user clicks it (until action completes)
+    setIsDestroyClicked(false);
   };
 
   const handleDestroyConfirm = async () => {
-    await runStep("destroy");
-    setIsDestroyModalOpen(false);
+    // prevent double confirm clicks by using loadingSteps flag
+    if (loadingSteps["destroy"]) return;
+    setLoadingSteps((prev) => ({ ...prev, destroy: true }));
+    try {
+      await runStep("destroy");
+    } finally {
+      setLoadingSteps((prev) => ({ ...prev, destroy: false }));
+      setIsDestroyModalOpen(false);
+      // keep destroy accordion hidden after running
+      setShowDestroyAccordion(false);
+      setIsDestroyClicked(false);
+    }
   };
 
   const handleDestroyCancel = () => {
@@ -305,12 +405,30 @@ const TerraformAccordions: React.FC<TerraformAccordionsProps> = ({ deployment, p
 
   if (!isClient) return null;
 
+  // find the apply step once so it's available in the header and accordion rendering
+  const applyStep = steps.find((s) => s.step === "apply");
+
   return (
     <div className="w-full h-full max-h-screen mx-auto p-6 overflow-hidden flex flex-col">
       <div className="flex items-center justify-between mb-2">
         <h2 className="text-white text-2xl font-semibold">{deployment?.deploymentName || initDeploymentName || "New Deployment"}</h2>
-        {!deployment && (
-          <div className="ml-4">
+        <div className="ml-4 flex items-center gap-2">
+          {/* Move Destroy button next to Deploy button (left side) */}
+          {applyStep?.stepStatus === "successful" && (
+            <PrimaryButton
+              onClick={() => {
+                // ensure destroy UI is reset when user opens destroy flow
+                setShowDestroyAccordion(true);
+                setIsDestroyClicked(false);
+                setIsDestroyModalOpen(false);
+              }}
+               className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm cursor-pointer"
+               disabled={loadingSteps["destroy"]}
+             >
+               Destroy
+             </PrimaryButton>
+           )}
+          {!deployment && (
             <PrimaryButton
               onClick={() => {
                 setStartedAt(new Date().toISOString());
@@ -320,8 +438,8 @@ const TerraformAccordions: React.FC<TerraformAccordionsProps> = ({ deployment, p
             >
               Deploy
             </PrimaryButton>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
       <div className="flex items-center gap-4 mb-5">
@@ -352,9 +470,10 @@ const TerraformAccordions: React.FC<TerraformAccordionsProps> = ({ deployment, p
             ? { label: "In Progress", color: "#3B82F6", bg: "#3B82F633" }
             : getStepStatus(step);
           const planStep = steps.find((s) => s.step === "plan");
-          const applyStep = steps.find((s) => s.step === "apply");
+          // const applyStep = steps.find((s) => s.step === "apply"); // removed duplicate
 
-          if (stepName === "destroy" && (!applyStep || applyStep.stepStatus !== "successful")) {
+          // show destroy accordion when user clicked Destroy OR when a destroy step already exists
+          if (stepName === "destroy" && !showDestroyAccordion && !step) {
             return null;
           }
 
@@ -362,24 +481,20 @@ const TerraformAccordions: React.FC<TerraformAccordionsProps> = ({ deployment, p
             <AccordionItem
               key={stepName}
               title={`Terraform ${stepName.charAt(0).toUpperCase() + stepName.slice(1)}`}
+              defaultOpen={true}
               status={
                 <div className="flex items-center gap-2">
-                  {stepName === "destroy" && applyStep?.stepStatus === "successful" && !step && (
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDestroyClick();
-                      }}
-                      className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-md text-xs cursor-pointer"
-                      disabled={loadingSteps["destroy"]}
-                    >
-                      Destroy
-                    </button>
-                  )}
+                  {/* removed inline destroy button from accordion status (moved to header) */}
                   <StatusBadge label={status.label} color={status.color} bg={status.bg} title={status.label === "Failed" ? step?.message : undefined} />
                 </div>
               }
             >
+              {/* Destroy initial message shown when user opened destroy accordion but destroy step not yet present */}
+              {stepName === "destroy" && showDestroyAccordion && !step && (
+                <div className="mb-3 text-sm text-gray-300">
+                  This action will terminate the deployed resources and cannot be undone. All running infrastructure associated with this deployment will be destroyed.
+                </div>
+              )}
               {step?.stepStatus === "in_progress" ? (
                 <div className="text-white">
                   <span>Running{dots}</span>
@@ -387,21 +502,64 @@ const TerraformAccordions: React.FC<TerraformAccordionsProps> = ({ deployment, p
               ) : (
                 renderColoredMessage(step?.message, stepName)
               )}
-              {stepName === "plan" && !allSuccessful && planStep?.stepStatus === "successful" &&(
+
+              {/* PLAN: show Approve/Deny only when plan is successful */}
+              {stepName === "plan" && planStep?.stepStatus === "successful" && !allSuccessful && (
                 <div className="flex gap-2 mt-4">
                   <button
-                    onClick={handleApprove}
-                    className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded-md text-sm cursor-pointer"
-                    disabled={allSuccessful || loadingSteps["plan"]}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (planActionTaken || planActionClicked || loadingSteps["apply"]) return;
+                      setPlanActionTaken(true); // immediate guard
+                      setPlanActionClicked(true);
+                      handleApprove();
+                    }}
+                    className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded-md text-sm cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={allSuccessful || loadingSteps["plan"] || planActionTaken || planActionClicked || loadingSteps["apply"]}
                   >
                     Approve
                   </button>
                   <button
-                    onClick={handleDeny}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (planActionTaken || loadingSteps["plan"]) return;
+                      setPlanActionTaken(true);
+                      handleDeny();
+                    }}
                     className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-md text-sm cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-                    disabled={true || allSuccessful || loadingSteps["plan"]}
+                    disabled={loadingSteps["plan"] || planActionTaken || planActionClicked || loadingSteps["apply"]}
                   >
                     Deny
+                  </button>
+                </div>
+              )}
+
+              {/* DESTROY: only show Approve/Cancel BEFORE a destroy step exists (pre-action). Once a destroy step is present (successful/failed/cancelled) controls are hidden */}
+              {stepName === "destroy" && !step && showDestroyAccordion && (
+                <div className="flex gap-2 mt-4">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      // mark clicked so user can't click approve twice before modal opens
+                      setIsDestroyClicked(true);
+                      // open confirmation modal — actual destroy runs on modal confirm
+                      setIsDestroyModalOpen(true);
+                    }}
+                    className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-md text-sm cursor-pointer"
+                    disabled={loadingSteps["destroy"] || isDestroyClicked}
+                  >
+                    Approve Destroy
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setShowDestroyAccordion(false);
+                      setIsDestroyClicked(false);
+                    }}
+                    className="bg-gray-700 hover:bg-gray-600 text-white px-3 py-1 rounded-md text-sm cursor-pointer"
+                    disabled={loadingSteps["destroy"]}
+                  >
+                    Cancel
                   </button>
                 </div>
               )}
@@ -410,6 +568,11 @@ const TerraformAccordions: React.FC<TerraformAccordionsProps> = ({ deployment, p
         })}
       </div>
 
+      {/*
+        Optional: keep legacy modal if needed. It's left here but not used when
+        user opens destroy via the header button. If you prefer to remove it,
+        you can delete the component below.
+      */}
       <DestroyConfirmationModal
         isOpen={isDestroyModalOpen}
         onClose={handleDestroyCancel}
