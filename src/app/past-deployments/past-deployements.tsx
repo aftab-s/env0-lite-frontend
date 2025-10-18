@@ -20,13 +20,14 @@ const DeploymentsPage: React.FC = () => {
   const router = useRouter();
   const { list: deployments, loading, error } = useSelector((state: RootState) => state.deployments);
 
+  // Refresh deployments every time this page is entered/mounted
+  useEffect(() => {
+    dispatch(fetchDeployments());
+  }, [dispatch]);
+
   const [search, setSearch] = useState("");
   const [isGallery, setIsGallery] = useState(false);
   const [page, setPage] = useState(1);
-
-  useEffect(() => {
-    if (deployments.length === 0) dispatch(fetchDeployments());
-  }, [dispatch, deployments.length]);
 
   const filtered = deployments.filter((d) =>
     d.deploymentName.toLowerCase().includes(search.toLowerCase())

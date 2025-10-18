@@ -1,9 +1,8 @@
-
 'use client'; // Next.js App Router page
 
 
-import { useState } from 'react';
-import { Info } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
+import { ChevronDownIcon, Info } from 'lucide-react';
 import TextInput from '@/components/ui/TextInput';
 import PasswordInput from '@/components/ui/PasswordInput';
 import Sidebar from '@/components/common/Sidebar';
@@ -143,6 +142,46 @@ export default function AWSCredentialsPage() {
     }
   };
 
+  // Controlled accordion component with smooth open/close (animates max-height)
+  const ControlledAccordion: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => {
+    const [open, setOpen] = useState(false);
+    const contentRef = useRef<HTMLDivElement | null>(null);
+    const [maxHeight, setMaxHeight] = useState('0px');
+
+    // update max-height when open state or content changes
+    useEffect(() => {
+      if (!contentRef.current) return;
+      // measure scrollHeight and set explicit max-height to animate
+      setMaxHeight(open ? `${contentRef.current.scrollHeight}px` : '0px');
+    }, [open, children]);
+
+    return (
+      <div className="rounded-md border-1 bg-[#000000] border-[#232329]">
+        <button
+          type="button"
+          onClick={() => setOpen((v) => !v)}
+          className="w-full flex items-center justify-between px-3 py-2 list-none cursor-pointer"
+        >
+          <span className="text-white text-sm">{title}</span>
+          <ChevronDownIcon
+            className={`h-5 w-5 text-gray-400 transition-transform duration-300 ${open ? 'rotate-180' : ''}`}
+          />
+        </button>
+
+        <div
+          ref={contentRef}
+          style={{ maxHeight }}
+          className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
+          aria-hidden={!open}
+        >
+          <div className="pt-3 px-3 pb-3 space-y-4">
+            {children}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   // Main render
   return (
     <div className="flex h-screen w-screen">
@@ -173,6 +212,58 @@ export default function AWSCredentialsPage() {
                     </p>
                   </div>
                 </div>
+              </div>
+              {/* How to get Credentials — redesigned to match provided screenshot */}
+              <div className="mb-8">
+                  <ControlledAccordion title="How to get Credentials?">
+                  {[
+                    {
+                      num: "1",
+                      title: "Create IAM User:",
+                      text:
+                        `Go to AWS Console → IAM → Users. Click “Create user”, provide a name (e.g., app-deploy-user). Select Access key – Programmatic access.`,
+                    },
+                    {
+                      num: "2",
+                      title: "Set Permissions (Least Privilege):",
+                      text:
+                        "Select Attach policies directly. Attach the required policies for deployment (e.g., PowerUserAccess or a custom policy with minimal permissions). Finish creating the user.",
+                    },
+                    {
+                      num: "3",
+                      title: "Get Keys:",
+                      text:
+                        "On the final screen, copy the Access Key ID (AKIA...) and the Secret Access Key (which you must reveal). Securely store these keys and enter them here. (Secret Key is shown only once.)",
+                    },
+                  ].map((step) => (
+                    <div
+                      key={step.num}
+                      className="rounded-md border border-[#222428] bg-[#000000] p-4"
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className="flex-shrink-0 flex items-center justify-center">
+                          <div className="w-9 h-9 rounded-md bg-[#000000] border border-[#222428] flex items-center justify-center text-xs font-semibold text-white">
+                            {step.num}
+                          </div>
+                        </div>
+                        <div className="flex-1">
+                          <div className="text-gray-300 text-sm leading-relaxed">{step.title}</div>
+
+                          {/* Split sentences at full stop and render each on its own line */}
+                          {step.text
+                            .replace(/\\n/g, " ") // normalize any literal \n sequences in the string
+                            .split(/\. +/) // split on period + space
+                            .map((line, i, arr) => (
+                              <p key={i} className="text-gray-300 text-xs leading-relaxed">
+                                {line.trim()}
+                                {i < arr.length - 1 ? "." : ""}
+                              </p>
+                            ))}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </ControlledAccordion>
               </div>
 
               {/* AWS Credentials Form Section */}

@@ -94,13 +94,28 @@ export default function AuthForm() {
   return (
     <div className="flex h-screen w-screen">
       {/* Left Side - Branding */}
-      <div className="w-1/2 relative">
-        <Image
-          src="authPages/signupBanner.svg"
-          alt="Signup Banner"
-          fill
-          className="object-cover"
-        />
+      {/* Left Side - Branding */}
+      <div className="w-1/2 relative h-full flex flex-col items-center justify-center bg-black p-25">
+        {/* Logo Image */}
+        <div className="w-full h-1/3.5 flex items-center justify-center">
+          <Image
+            src="authPages/BagelLogo.svg"
+            alt="Login Banner"
+            width={600}
+            height={240}
+            className="object-contain w-full h-auto"
+            priority
+          />
+        </div>
+
+        {/* Heading Below Image */}
+        <h1 className="mt-6 text-left text-xl md:text-xl lg:text-4xl font-bold text-neutral-gray dark:text-cream leading-tight">
+          Provision Cloud Infrastructure,{" "}
+          <span className="text-[#F5CB5C]">The Easy Way</span>
+        </h1>
+        <p className="mt-4 text-md md:text-md text-neutral-gray/80 dark:text-cream/80 leading-relaxed text-left max-w-prose">
+          Bagel - the easiest way for developers to manage Terraform infrastructure with confidence.
+        </p>
       </div>
 
       {/* Right Side - Signup Form */}

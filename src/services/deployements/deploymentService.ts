@@ -20,6 +20,11 @@ export async function terraformPlan(projectId: string, spaceName: string, deploy
 	return response.data;
 }
 
+export async function terraformPlanDeny(projectId: string, spaceName: string, deploymentId: string): Promise<TerraformPlanResponse> {
+	const response = await axiosPrivate.post(`${apiBaseUrl.terraform}/${projectId}/plan/cancel`, {spaceName, deploymentId});
+	return response.data;
+}
+
 export async function terraformApply(projectId: string, spaceName: string, deploymentId: string): Promise<TerraformApplyResponse> {
     const response = await axiosPrivate.post(`${apiBaseUrl.terraform}/${projectId}/apply`, {spaceName, deploymentId});
     return response.data;
