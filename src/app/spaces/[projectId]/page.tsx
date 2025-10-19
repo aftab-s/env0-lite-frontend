@@ -95,6 +95,19 @@ export default function SpacesPage() {
     });
   };
 
+  const formatDateTime = (iso?: string | Date | null) => {
+    if (!iso) return "Never";
+    const d = iso instanceof Date ? iso : new Date(iso);
+    if (isNaN(d.getTime())) return "Never";
+    const day = String(d.getDate()).padStart(2, "0");
+    const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    const month = monthNames[d.getMonth()];
+    const year = d.getFullYear();
+    const hours = String(d.getHours()).padStart(2, "0");
+    const minutes = String(d.getMinutes()).padStart(2, "0");
+    return `${day} ${month} ${year} - ${hours}:${minutes}`;
+  };
+
   if (loading) {
     return (
       <div className="flex h-screen w-screen">
@@ -178,7 +191,15 @@ export default function SpacesPage() {
               value={search}
               onChange={e => setSearch(e.target.value)}
             />
-            <Button variant="primary" width="w-55" className="ml-auto">View Deployment</Button>
+            <Button
+              variant="primary"
+              width="w-55"
+              className="ml-auto"
+              onClick={() => router.push(`/past-deployments?projectId=${encodeURIComponent(projectId)}`)}
+              title="View deployments for this project"
+            >
+              View Deployment
+            </Button>
             <Button variant="rebaseButton" width="w-45" className="ml-auto" onClick={handleRebase}>Rebase</Button>
             <Button variant="extraSetting" width="auto" onClick={() => setShowProfileSettings(true)}>
               <Cog6ToothIcon className="w-5 h-5 text-white" />
@@ -212,10 +233,10 @@ export default function SpacesPage() {
                 <div className="text-[#A1A1AA] text-xs pb-3">Managed by {space.userName}</div>
                 <div className="flex justify-between w-full p-2 items-center bg-[#111111]">
                   <span className="text-[#FFFFFF] text-xs">
-                    {space.status === 'deployed' ? 'Last Run' : 'Not Deployed'}
+                    {space.status === 'deployed' ? 'Last Deployment' : 'Not Deployed'}
                   </span>
                   <span className="text-[#9CA3AF] text-xs">
-                    {space.lastRun ? new Date(space.lastRun).toLocaleDateString() : 'Never'}
+                    {space.lastRun ? formatDateTime(space.lastRun) : 'Never'}
                   </span>
                 </div>
               </div>

@@ -9,13 +9,19 @@ import { fetchDeployments } from "@/redux/slice/Deployements/deploymentSlice";
 import { RootState, AppDispatch } from "@/redux/store";
 import { Deployment } from "@/types/deployment.types";
 
-const statusStyles: Record<"Deployed" | "Failed" | "Pending", { bg: string; color: string }> = {
+const statusStyles: Record<
+  "Deployed" | "Failed" | "Pending" | "Cancelled" | "Terminated",
+  { bg: string; color: string }
+> = {
   Deployed: { bg: "#00B15C33", color: "#00B15C" },
   Failed: { bg: "#F8717133", color: "#F87171" },
   Pending: { bg: "#F5A62333", color: "#F5A623" },
+  Cancelled: { bg: "#F9731633", color: "#F97316" }, // orange theme
+  Terminated: { bg: "#9CA3AF33", color: "#9CA3AF" }, // grey theme
 };
 
-const DeploymentsPage: React.FC = () => {
+// accept optional projectId prop (passed from page.tsx)
+const DeploymentsPage: React.FC<{ projectId?: string | null }> = ({ projectId = null }) => {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const { list: deployments, loading, error } = useSelector((state: RootState) => state.deployments);
@@ -33,21 +39,45 @@ const DeploymentsPage: React.FC = () => {
     d.deploymentName.toLowerCase().includes(search.toLowerCase())
   );
 
-  // Pagination logic
+  // If projectId provided, further filter by projectId
+  const filteredByProject = projectId ? filtered.filter((d) => d.projectId === projectId) : filtered;
+
+  // Pagination logic (use filteredByProject)
   const pageSize = 6;
-  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
-  const pagedDeployments = filtered.slice((page - 1) * pageSize, page * pageSize);
+  const totalPages = Math.max(1, Math.ceil(filteredByProject.length / pageSize));
+  const pagedDeployments = filteredByProject.slice((page - 1) * pageSize, page * pageSize);
 
   // Reset to page 1 if search/filter changes and current page is out of range
   useEffect(() => {
     if (page > totalPages) setPage(1);
-  }, [search, filtered.length, totalPages, page]);
+  }, [search, filteredByProject.length, totalPages, page]);
 
-  const getStatus = (steps: Deployment["steps"]): "Deployed" | "Failed" | "Pending" => {
+  const getStatus = (
+    steps: Deployment["steps"]
+  ): "Deployed" | "Failed" | "Pending" | "Cancelled" | "Terminated" => {
     if (!steps || steps.length === 0) return "Pending";
-    const latestStep = steps[steps.length - 1];
-    if (latestStep.stepStatus === "successful") return "Deployed";
-    if (latestStep.stepStatus === "failed") return "Failed";
+    const latest = steps[steps.length - 1];
+    const step = latest.step;
+    const status = latest.stepStatus;
+
+    if (step === "init") {
+      return status === "successful" ? "Pending" : "Failed";
+    }
+
+    if (step === "plan") {
+      if (status === "successful") return "Pending";
+      if (status === "cancelled") return "Cancelled";
+      return "Failed";
+    }
+
+    if (step === "apply") {
+      return status === "successful" ? "Deployed" : "Failed";
+    }
+
+    if (step === "destroy") {
+      return status === "successful" ? "Terminated" : "Deployed";
+    }
+
     return "Pending";
   };
 
@@ -78,7 +108,6 @@ const DeploymentsPage: React.FC = () => {
                 disabled={page === 1}
                 aria-label="Previous page"
               >
-                {/* Using text chevrons to avoid importing more icons */}
                 <span className="text-[#CD9C20]">&#x2039;</span>
               </button>
               <div className="border border-[#232329] rounded-lg bg-[#09090B] w-10 h-10 flex items-center justify-center select-none text-white text-base font-semibold">
@@ -126,15 +155,15 @@ const DeploymentsPage: React.FC = () => {
           )}
         </button>
       </div>
-      
+
 
       {/* Scrollable content area */}
       <div className="flex-1 overflow-y-auto">
         <div className={isGallery ? "grid grid-cols-1 gap-3" : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3"}>
-          {filtered.length === 0 ? (
+          {filteredByProject.length === 0 ? (
             <div className="text-gray-400 text-sm">No deployments found.</div>
           ) : (
-            (isGallery ? filtered : pagedDeployments).map((d) => {
+            (isGallery ? filteredByProject : pagedDeployments).map((d) => {
               const status = getStatus(d.steps);
               const style = statusStyles[status];
 
