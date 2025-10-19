@@ -3,8 +3,11 @@ import React from "react";
 import Sidebar from '@/components/common/Sidebar';
 import PrivateHeader from '@/components/common/PrivateHeader';
 import DeploymentsPage from "./past-deployements";
+import { useSearchParams } from "next/navigation";
 
 const DashboardPage: React.FC = () => {
+  const searchParams = useSearchParams();
+  const projectId = searchParams?.get("projectId") ?? null;
   return (
     <div className="h-screen w-screen bg-[#000000]">
       {/* Layout Row: Sidebar + Right Section */}
@@ -19,7 +22,7 @@ const DashboardPage: React.FC = () => {
 
           {/* Main Content Area */}
           <div className="flex-1 overflow-auto">
-            <DeploymentsPage />
+            <DeploymentsPage projectId={projectId} />
           </div>
         </div>
       </div>

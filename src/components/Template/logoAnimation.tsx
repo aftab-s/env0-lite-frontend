@@ -24,7 +24,7 @@ export default function AnimatedLogo() {
       }}
     >
       <Image
-        src="../../public/Logo/BagelLogo.svg"
+        src="/Logo/BagelLogo.svg"
         alt="Logo"
         width={100}
         height={100}
